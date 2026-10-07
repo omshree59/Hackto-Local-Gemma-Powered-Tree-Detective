@@ -23,6 +23,24 @@ body {
     scrollbar-width: none;
   }
 
+  .scrollbar-nature::-webkit-scrollbar {
+    width: 4px;
+  }
+  .scrollbar-nature::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-nature::-webkit-scrollbar-thumb {
+    background: rgba(49, 92, 59, 0.45);
+    border-radius: 9999px;
+  }
+  .scrollbar-nature::-webkit-scrollbar-thumb:hover {
+    background: rgba(79, 138, 82, 0.75);
+  }
+  .scrollbar-nature {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(49, 92, 59, 0.45) transparent;
+  }
+
   .nature-surface {
     background-color: rgba(9, 22, 14, 0.74);
     backdrop-filter: blur(20px);

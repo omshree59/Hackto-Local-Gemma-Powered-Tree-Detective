@@ -60,12 +60,12 @@ export default function Sidebar({
   return (
     <aside 
       className={clsx(
-        "hidden md:flex flex-col h-full border-r border-[#1e3f2b]/40 bg-[#06150e]/92 backdrop-blur-2xl transition-all duration-300 z-30 shrink-0 select-none shadow-2xl",
+        "hidden md:flex flex-col h-full border-r border-[#1e3f2b]/40 bg-[#06150e] transition-all duration-300 z-30 shrink-0 select-none shadow-2xl relative",
         collapsed ? "w-20" : "w-64 lg:w-72"
       )}
     >
-      {/* Sidebar Header */}
-      <div className="p-3.5 sm:p-4 border-b border-[#1e3f2b]/40 flex items-center justify-between gap-2 shrink-0">
+      {/* 1. Sidebar Header */}
+      <div className="p-3.5 border-b border-[#1e3f2b]/40 flex items-center justify-between gap-2 shrink-0 bg-[#06150e]">
         {!collapsed ? (
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="bg-[#0f3020] p-2 rounded-xl text-[#4f8a52] border border-[#1e3f2b] shadow-inner shrink-0">
@@ -76,11 +76,11 @@ export default function Sidebar({
                 <h1 className="text-sm font-black tracking-tight text-[#f3f1e7] leading-none">
                   NATUREQUEST
                 </h1>
-                <span className="text-[8px] font-mono font-bold text-[#4f8a52] bg-[#0c2619] px-1.5 py-0.2 rounded border border-[#1e3f2b]">
+                <span className="text-[8px] font-mono font-bold text-[#4f8a52] bg-[#0c2619] px-1.5 py-0.5 rounded border border-[#1e3f2b]">
                   OS
                 </span>
               </div>
-              <span className="text-[9px] font-mono font-semibold tracking-wider text-[#91b79a]/70 uppercase mt-0.5 block truncate">
+              <span className="text-[9px] font-mono font-semibold tracking-wider text-[#91b79a]/80 uppercase mt-0.5 block truncate">
                 FIELD INTELLIGENCE
               </span>
             </div>
@@ -103,13 +103,13 @@ export default function Sidebar({
         </button>
       </div>
 
-      {/* Main Scrollable Nav Section */}
-      <div className="flex-1 overflow-y-auto px-2.5 py-3 space-y-4 scrollbar-hide">
+      {/* 2. Unified Scrollable Nav Section (Clean & Non-overlapping) */}
+      <div className="flex-1 overflow-y-auto px-2.5 py-3 space-y-3.5 scrollbar-nature">
         
-        {/* Quick Local AI Pill (Expanded only) */}
-        {!collapsed && (
-          <div className="px-1">
-            <div className="p-2 rounded-xl bg-[#081a11]/80 border border-[#1e3f2b]/60 font-mono text-[10px] flex items-center justify-between">
+        {/* Quick Local AI Status Pill */}
+        {!collapsed ? (
+          <div className="px-0.5">
+            <div className="p-2 rounded-xl bg-[#081a11] border border-[#1e3f2b]/60 font-mono text-[10px] flex items-center justify-between shadow-sm">
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className={clsx(
                   "w-1.5 h-1.5 rounded-full shrink-0",
@@ -124,13 +124,23 @@ export default function Sidebar({
               </span>
             </div>
           </div>
+        ) : (
+          <div className="flex justify-center pb-1">
+            <span 
+              className={clsx(
+                "w-2 h-2 rounded-full",
+                ollamaStatus?.connected ? "bg-[#4f8a52] animate-pulse" : "bg-amber-400"
+              )}
+              title={ollamaStatus?.connected ? "Ollama Connected" : "Ollama Standby"}
+            />
+          </div>
         )}
 
         {/* Navigation Categories */}
         {NAV_GROUPS.map((group) => (
           <div key={group.title} className="space-y-1">
             {!collapsed && (
-              <div className="flex items-center justify-between px-2.5 mb-1">
+              <div className="flex items-center justify-between px-2 pt-1 mb-0.5">
                 <span className="text-[9px] font-mono font-bold tracking-wider uppercase text-[#91b79a]/60">
                   {group.title}
                 </span>
@@ -153,8 +163,8 @@ export default function Sidebar({
                       "w-full rounded-xl transition-all flex items-center text-left group cursor-pointer relative",
                       collapsed ? "p-2.5 justify-center" : "px-3 py-2 gap-2.5",
                       isActive
-                        ? "bg-[#123a27]/90 border border-[#315c3b]/70 text-[#f3f1e7] shadow-sm"
-                        : "border border-transparent hover:border-[#1e3f2b]/40 hover:bg-[#0c2417]/50 text-[#d8c8a8]/80 hover:text-[#f3f1e7]"
+                        ? "bg-[#123a27] border border-[#315c3b]/70 text-[#f3f1e7] shadow-sm"
+                        : "border border-transparent hover:border-[#1e3f2b]/40 hover:bg-[#0c2417]/50 text-[#d8c8a8]/85 hover:text-[#f3f1e7]"
                     )}
                     title={collapsed ? item.label : undefined}
                   >
@@ -179,7 +189,7 @@ export default function Sidebar({
                         <div className="flex items-center justify-between gap-1">
                           <span className={clsx(
                             "text-xs font-bold tracking-tight truncate leading-tight",
-                            isActive ? "text-[#f3f1e7]" : "text-[#d8c8a8]/90 group-hover:text-[#f3f1e7]"
+                            isActive ? "text-[#f3f1e7]" : "text-[#d8c8a8] group-hover:text-[#f3f1e7]"
                           )}>
                             {item.label}
                           </span>
@@ -204,16 +214,13 @@ export default function Sidebar({
           </div>
         ))}
 
-      </div>
-
-      {/* Bottom Pinned Widgets (Eliminates Blank Space!) */}
-      <div className="p-3 border-t border-[#1e3f2b]/40 bg-[#05130b]/80 shrink-0 space-y-2.5">
-        
-        {!collapsed ? (
-          <>
-            {/* Active Quest Mini Tracker */}
+        {/* In-Flow Expedition Widgets (Natural Scrolling, No Overlap!) */}
+        {!collapsed && (
+          <div className="pt-3 border-t border-[#1e3f2b]/40 space-y-2.5 pb-3">
+            
+            {/* Active Mission Mini Card */}
             {activeMission && (
-              <div className="p-2.5 rounded-xl bg-[#081a11]/90 border border-[#1e3f2b] space-y-2">
+              <div className="p-2.5 rounded-xl bg-[#081a11] border border-[#1e3f2b] space-y-1.5 shadow-sm">
                 <div className="flex items-center justify-between text-[9px] font-mono">
                   <span className="text-[#91b79a] font-bold uppercase flex items-center gap-1">
                     <Target className="w-3 h-3 text-[#4f8a52]" />
@@ -241,7 +248,7 @@ export default function Sidebar({
             )}
 
             {/* Expedition Level & Progress Bar */}
-            <div className="p-2.5 rounded-xl bg-[#07170e]/60 border border-[#1e3f2b]/60 space-y-1.5 font-mono">
+            <div className="p-2.5 rounded-xl bg-[#07170e] border border-[#1e3f2b]/60 space-y-1.5 font-mono">
               <div className="flex items-center justify-between text-[10px]">
                 <span className="text-[#f3f1e7] font-bold">
                   Tier {level} Naturalist
@@ -275,34 +282,36 @@ export default function Sidebar({
               </button>
             )}
 
-            {/* Offline Footnote */}
-            <div className="text-[9px] font-mono text-[#91b79a]/50 text-center tracking-wider pt-0.5">
-              100% OFFLINE • NO TELEMETRY
-            </div>
-          </>
+          </div>
+        )}
+
+      </div>
+
+      {/* 3. Sleek, Non-Obtrusive Pinned Footer */}
+      <div className="px-3 py-2.5 border-t border-[#1e3f2b]/40 bg-[#06150e] shrink-0 text-center">
+        {!collapsed ? (
+          <div className="flex items-center justify-between text-[9px] font-mono text-[#91b79a]/70">
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              OFFLINE READY
+            </span>
+            <span>NO TELEMETRY</span>
+          </div>
         ) : (
-          /* Collapsed Bottom Quick Actions */
           <div className="flex flex-col items-center gap-2">
             {onOpenScanner && (
               <button
                 onClick={onOpenScanner}
-                className="p-2.5 rounded-xl bg-[#4f8a52] hover:bg-[#315c3b] text-[#f3f1e7] cursor-pointer shadow-md"
+                className="p-2 rounded-xl bg-[#4f8a52] hover:bg-[#315c3b] text-[#f3f1e7] cursor-pointer shadow-md"
                 title="Scan Specimen"
               >
                 <Camera className="w-4 h-4" />
               </button>
             )}
-
-            <div 
-              className="p-2 rounded-xl bg-[#0c2619] text-[#4f8a52] font-mono text-[10px] font-bold border border-[#1e3f2b]"
-              title={`Tier ${level} Naturalist (${xp} XP)`}
-            >
-              T{level}
-            </div>
           </div>
         )}
-
       </div>
+
     </aside>
   );
 }
