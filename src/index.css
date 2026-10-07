@@ -45,3 +45,94 @@ body {
     box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
   }
 }
+
+/* ============================================================== */
+/* ANIMATED LIVING NATURE ATMOSPHERE */
+/* ============================================================== */
+@keyframes natureBreathingMotion {
+  0% {
+    transform: scale(1.02) translate(0%, 0%);
+  }
+  50% {
+    transform: scale(1.09) translate(-1.2%, -1.4%);
+  }
+  100% {
+    transform: scale(1.02) translate(0%, 0%);
+  }
+}
+
+@keyframes canopyGodRays {
+  0%, 100% {
+    opacity: 0.16;
+    transform: rotate(-18deg) translateY(-2%) scaleY(1);
+  }
+  50% {
+    opacity: 0.34;
+    transform: rotate(-14deg) translateY(2%) scaleY(1.08);
+  }
+}
+
+@keyframes driftingMistSlow {
+  0% {
+    transform: translateX(-18%) translateY(0%);
+    opacity: 0.22;
+  }
+  50% {
+    transform: translateX(12%) translateY(-3%);
+    opacity: 0.42;
+  }
+  100% {
+    transform: translateX(-18%) translateY(0%);
+    opacity: 0.22;
+  }
+}
+
+@keyframes driftingMistFast {
+  0% {
+    transform: translateX(18%) translateY(0%);
+    opacity: 0.18;
+  }
+  50% {
+    transform: translateX(-14%) translateY(2%);
+    opacity: 0.32;
+  }
+  100% {
+    transform: translateX(18%) translateY(0%);
+    opacity: 0.18;
+  }
+}
+
+@keyframes botanicalFoliageSway {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(3deg) scale(1.03);
+  }
+}
+
+.animate-nature-pan {
+  animation: natureBreathingMotion 28s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-god-rays {
+  animation: canopyGodRays 12s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
+.animate-mist-slow {
+  animation: driftingMistSlow 34s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-mist-fast {
+  animation: driftingMistFast 24s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-foliage-sway {
+  animation: botanicalFoliageSway 9s ease-in-out infinite;
+  transform-origin: top left;
+  will-change: transform;
+}

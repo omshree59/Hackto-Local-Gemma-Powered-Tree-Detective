@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   Camera, Compass, Target, BookOpen, 
-  Leaf, ArrowRight 
+  Leaf, ArrowRight, Upload 
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -10,7 +10,8 @@ export default function FieldStationView({
   onStartQuest,
   onOpenScanner,
   onNavigate,
-  recentPlants
+  recentPlants,
+  onSelectFile
 }) {
   return (
     <div className="space-y-12 animate-in fade-in duration-500 max-w-6xl mx-auto pb-12 select-none">
@@ -40,6 +41,20 @@ export default function FieldStationView({
               <Camera className="w-4 h-4 text-emerald-300" />
               <span>SCAN A PLANT</span>
             </button>
+
+            <label className="bg-[#0b1f16]/90 hover:bg-[#123a27] text-[#f3f1e7] border border-[#315c3b]/50 px-5 py-3.5 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer">
+              <Upload className="w-4 h-4 text-[#91b79a]" />
+              <span>UPLOAD PHOTO</span>
+              <input 
+                type="file" 
+                accept="image/*" 
+                className="hidden" 
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f && onSelectFile) onSelectFile(f);
+                }}
+              />
+            </label>
 
             <button
               onClick={() => onNavigate('quests')}

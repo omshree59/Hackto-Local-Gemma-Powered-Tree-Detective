@@ -142,6 +142,8 @@ export default function App() {
       setSelectedFileRaw(null);
       return;
     }
+    // Guarantee camera is closed and never turns on when uploading from local device
+    setCameraModalOpen(false);
     setErrorMsg('');
     setSelectedFileRaw(file);
     const reader = new FileReader();
