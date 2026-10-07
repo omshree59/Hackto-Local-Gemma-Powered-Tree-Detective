@@ -1,65 +1,8 @@
 // NATUREQUEST STATIC DATASETS
 // Plant & Nature Exploration OS — 100% Offline, Zero Cloud Dependency
 
-export const INITIAL_PLANTS = [
-  {
-    id: 'plant-1',
-    name: 'Neem Tree (Azadirachta indica)',
-    category: 'Tree',
-    confidence: 'High',
-    image: 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=600&q=80',
-    features: [
-      'Pinnately compound leaves with 20–30 opposite serrated leaflets',
-      'Asymmetrical sickle-shaped leaflet bases',
-      'Rough, dark grey-brown vertically fissured bark'
-    ],
-    fieldNotes: 'Native to dry tropical forests, neem leaves produce natural azadirachtin compounds that deter insect herbivory without harming beneficial pollinators.',
-    whereToLook: 'Sun-drenched parkways, suburban botanical collections, and open woodland margins with well-drained soil.',
-    observationChallenge: 'Find another nearby tree with a noticeably different leaf structure (e.g., simple unlobed vs. compound).',
-    safetyNote: 'Bark and foliage contain concentrated bitter triterpenes. Safe to observe, but never ingest wild foliage.',
-    xp: 50,
-    date: 'Oct 07, 2026',
-    time: '09:40 AM'
-  },
-  {
-    id: 'plant-2',
-    name: 'Common Meadow Violet (Viola sororia)',
-    category: 'Flower',
-    confidence: 'Moderate',
-    image: 'https://images.unsplash.com/photo-1508615039623-a25605d2b022?auto=format&fit=crop&w=600&q=80',
-    features: [
-      'Five distinct bilateral petals with spurred bottom petal',
-      'Deep violet-blue pigmentation with white bearded throat',
-      'Heart-shaped basal leaves with scalloped margins'
-    ],
-    fieldNotes: 'Violets produce two flower types: showy spring blossoms cross-pollinated by early solitary bees, and closed summer flowers that self-pollinate beneath leaf litter.',
-    whereToLook: 'Moist woodland paths, semi-shaded lawns, and forest transition zones beneath deciduous canopies.',
-    observationChallenge: 'Inspect the lower petal throat closely to find the dark nectar guide lines.',
-    safetyNote: 'Do not forage wild plants growing within runoff drainage ditches or treated turf areas.',
-    xp: 45,
-    date: 'Oct 06, 2026',
-    time: '11:15 AM'
-  },
-  {
-    id: 'plant-3',
-    name: 'English Oak (Quercus robur)',
-    category: 'Tree',
-    confidence: 'High',
-    image: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=600&q=80',
-    features: [
-      'Simple alternate leaves with 4–7 pairs of rounded lobes',
-      'Very short leaf stalk (petiole) with small ear-like basal auricles',
-      'Deeply ridged rugged grey bark providing microhabitats'
-    ],
-    fieldNotes: 'A mature oak tree supports a biodiversity web of over 2,300 species of fungi, lichens, birds, and insects throughout its centuries-long lifecycle.',
-    whereToLook: 'Old-growth parks, field hedgerows, and mixed hardwood woodland trails.',
-    observationChallenge: 'Look beneath the leaves for circular oak gall wasp formations or caterpillar leaf-folds.',
-    safetyNote: 'Acorns are high in astringent tannins; safe to handle, but do not consume raw.',
-    xp: 50,
-    date: 'Oct 05, 2026',
-    time: '02:30 PM'
-  }
-];
+// Initial user discoveries start at 0 so all categories and codex records begin fresh
+export const INITIAL_PLANTS = [];
 
 export const INITIAL_QUESTS = [
   {
@@ -515,3 +458,207 @@ export const SAMPLE_TEST_PLANTS = [
     xp: 40
   }
 ];
+
+// POPULAR & FINDABLE MILESTONE SPECIES LIST
+// These are target species for users to find outdoors. A milestone is satisfied ONLY when the user photographs and identifies it!
+export const POPULAR_MILESTONE_SPECIES = [
+  {
+    id: 'ms-pine',
+    name: 'Pine Tree',
+    scientificName: 'Pinus',
+    category: 'Tree',
+    difficulty: 'Common',
+    reward: 100,
+    keywords: ['pine', 'pinus', 'conifer', 'pinecone', 'needle'],
+    description: 'Evergreen gymnosperms known for slender needle leaves bound in bundles and woody cones.',
+    whereToLook: 'Parks, suburban gardens, highland paths, and evergreen borders.',
+    keyFeatures: ['Clustered needle-like leaves', 'Woody pinecones', 'Rough scaly bark']
+  },
+  {
+    id: 'ms-banyan',
+    name: 'Banyan Tree',
+    scientificName: 'Ficus benghalensis',
+    category: 'Tree',
+    difficulty: 'Iconic',
+    reward: 120,
+    keywords: ['banyan', 'ficus benghalensis', 'bargad', 'prop root', 'strangler fig'],
+    description: 'Vast canopy tree famous for hanging aerial prop roots that grow downward into supportive auxiliary trunks.',
+    whereToLook: 'Botanical collections, tropical avenues, temple courtyards, and open suburban parks.',
+    keyFeatures: ['Aerial roots hanging from branches', 'Large leathery oval leaves', 'Milky white sap']
+  },
+  {
+    id: 'ms-neem',
+    name: 'Neem Tree',
+    scientificName: 'Azadirachta indica',
+    category: 'Tree',
+    difficulty: 'Common',
+    reward: 80,
+    keywords: ['neem', 'azadirachta', 'margosa'],
+    description: 'Hardy shade tree with curved serrated compound leaflets known for natural insect resistance.',
+    whereToLook: 'Sidewalks, park borders, suburban gardens, and dry sunny avenues.',
+    keyFeatures: ['Serrated sickle-shaped leaflets', 'Rough dark grey bark', 'Pale green berries']
+  },
+  {
+    id: 'ms-peepal',
+    name: 'Peepal / Sacred Fig',
+    scientificName: 'Ficus religiosa',
+    category: 'Tree',
+    difficulty: 'Common',
+    reward: 90,
+    keywords: ['peepal', 'ficus religiosa', 'sacred fig', 'bodhi'],
+    description: 'Resilient fig tree with unmistakable heart-shaped leaves ending in a long, slender drip-tip tail.',
+    whereToLook: 'Old masonry walls, street corners, temple courtyards, and community parks.',
+    keyFeatures: ['Heart-shaped leaf with long tail drip tip', 'Prominent webbed veins', 'Smooth pale grey bark']
+  },
+  {
+    id: 'ms-oak',
+    name: 'Oak Tree',
+    scientificName: 'Quercus',
+    category: 'Tree',
+    difficulty: 'Common',
+    reward: 100,
+    keywords: ['oak', 'quercus', 'acorn'],
+    description: 'Majestic hardwood tree supporting huge biodiversity networks, recognizable by lobed leaves and acorns.',
+    whereToLook: 'Deciduous woodlands, nature reserves, and municipal parks.',
+    keyFeatures: ['Rounded or pointed leaf lobes', 'Acorn nuts in wooden caps', 'Deep vertical bark ridges']
+  },
+  {
+    id: 'ms-palm',
+    name: 'Palm Tree',
+    scientificName: 'Arecaceae',
+    category: 'Tree',
+    difficulty: 'Common',
+    reward: 80,
+    keywords: ['palm', 'arecaceae', 'date palm', 'fan palm', 'coconut'],
+    description: 'Columnar evergreen monocot with a distinctive crown of large radiating fan or feather fronds.',
+    whereToLook: 'Subtropical boulevards, public parks, garden borders, and landscaped avenues.',
+    keyFeatures: ['Unbranched columnar trunk', 'Fan or feather fronds', 'Leaf scar rings on bark']
+  },
+  {
+    id: 'ms-fern',
+    name: 'Wild Fern',
+    scientificName: 'Pteridophyta',
+    category: 'Plant',
+    difficulty: 'Common',
+    reward: 70,
+    keywords: ['fern', 'pteridophyta', 'bracken', 'frond', 'maidenhair'],
+    description: 'Ancient non-flowering vascular plant that reproduces through spores nestled beneath delicate divided fronds.',
+    whereToLook: 'Damp shaded forest floors, creek margins, and shaded garden stone walls.',
+    keyFeatures: ['Feathery divided fronds with young fiddleheads', 'Spore clusters under mature leaves', 'No seeds or blossoms']
+  },
+  {
+    id: 'ms-bamboo',
+    name: 'Bamboo',
+    scientificName: 'Bambusoideae',
+    category: 'Plant',
+    difficulty: 'Common',
+    reward: 80,
+    keywords: ['bamboo', 'bambusoideae', 'culm', 'cane'],
+    description: 'Fast-growing giant woody grass featuring hollow jointed stems and graceful linear leaves.',
+    whereToLook: 'Park edges, water features, botanical gardens, and privacy hedges.',
+    keyFeatures: ['Jointed hollow stems with visible nodes', 'Narrow arching leaves', 'Clumping rhizome growth']
+  },
+  {
+    id: 'ms-hibiscus',
+    name: 'Hibiscus / China Rose',
+    scientificName: 'Hibiscus rosa-sinensis',
+    category: 'Flower',
+    difficulty: 'Common',
+    reward: 80,
+    keywords: ['hibiscus', 'china rose', 'gudhal'],
+    description: 'Tropical flowering shrub with large trumpet blossoms and an extended yellow-anthered staminal column.',
+    whereToLook: 'Residential gardens, sunny outdoor planters, and park flowerbeds.',
+    keyFeatures: ['Five large showy petals', 'Prominent protruding pollen column', 'Glossy serrated foliage']
+  },
+  {
+    id: 'ms-dandelion',
+    name: 'Dandelion',
+    scientificName: 'Taraxacum officinale',
+    category: 'Flower',
+    difficulty: 'Very Easy',
+    reward: 60,
+    keywords: ['dandelion', 'taraxacum', 'puffball'],
+    description: 'Everywhere sidewalk wildflower with lion-toothed leaves, bright yellow composite flowers, and spherical seed puffs.',
+    whereToLook: 'Sidewalk cracks, open lawns, park edges, and roadside paths.',
+    keyFeatures: ['Basal rosette of toothed leaves', 'Hollow flower stalks', 'Yellow bloom or feathery seed ball']
+  },
+  {
+    id: 'ms-tulsi',
+    name: 'Tulsi / Holy Basil',
+    scientificName: 'Ocimum tenuiflorum',
+    category: 'Plant',
+    difficulty: 'Common',
+    reward: 75,
+    keywords: ['tulsi', 'basil', 'ocimum', 'holy basil'],
+    description: 'Aromatic sacred herbal plant with intensely fragrant opposite leaves and square stems.',
+    whereToLook: 'Courtyards, kitchen gardens, herbal collections, and balcony planters.',
+    keyFeatures: ['Square stem structure', 'Strong clove and herbal aroma', 'Opposite serrated leaves']
+  },
+  {
+    id: 'ms-aloe',
+    name: 'Aloe Vera',
+    scientificName: 'Aloe barbadensis miller',
+    category: 'Plant',
+    difficulty: 'Common',
+    reward: 70,
+    keywords: ['aloe', 'aloe vera', 'succulent'],
+    description: 'Thick fleshy succulent with spiny margins that stores natural clear moisture gel.',
+    whereToLook: 'Rock gardens, sunny balconies, arid outdoor beds, and planters.',
+    keyFeatures: ['Thick water-storing leaves with soft spikes', 'Translucent gel inside blades', 'Rosette leaf arrangement']
+  },
+  {
+    id: 'ms-eucalyptus',
+    name: 'Eucalyptus / Gum Tree',
+    scientificName: 'Eucalyptus',
+    category: 'Tree',
+    difficulty: 'Medium',
+    reward: 100,
+    keywords: ['eucalyptus', 'gum tree', 'blue gum', 'safeda'],
+    description: 'Aromatic towering tree with colorful peeling ribbon bark and sickle-shaped blue-green leaves.',
+    whereToLook: 'Parkways, highway shelterbelts, plantations, and city botanical gardens.',
+    keyFeatures: ['Aromatic menthol-scented leaves', 'Peeling smooth bark in ribbons', 'Woody capsule gum nuts']
+  },
+  {
+    id: 'ms-maple',
+    name: 'Maple Tree',
+    scientificName: 'Acer',
+    category: 'Tree',
+    difficulty: 'Medium',
+    reward: 90,
+    keywords: ['maple', 'acer', 'samara', 'sycamore'],
+    description: 'Deciduous canopy tree with palmate lobed leaves and spinning helicopter-winged seeds.',
+    whereToLook: 'City avenues, community parks, river paths, and temperate woodlands.',
+    keyFeatures: ['Opposite palmately lobed leaves (3 to 5 lobes)', 'Paired winged helicopter seeds', 'Vibrant autumn foliage']
+  },
+  {
+    id: 'ms-bougainvillea',
+    name: 'Bougainvillea',
+    scientificName: 'Bougainvillea spectabilis',
+    category: 'Flower',
+    difficulty: 'Common',
+    reward: 80,
+    keywords: ['bougainvillea', 'paper flower', 'bract'],
+    description: 'Vigorous ornamental woody vine covered in bright magenta or crimson paper-thin petal-like bracts.',
+    whereToLook: 'Garden fences, sunny walls, pergolas, and outdoor boundary gates.',
+    keyFeatures: ['Paper-thin colorful bracts', 'Tiny white tubular true flowers', 'Curved protective thorns']
+  }
+];
+
+// Helper to check whether a milestone species has been satisfied by a real uploaded photograph
+export function getMilestoneStatus(milestone, userHistory = []) {
+  const match = userHistory.find(item => {
+    const itemName = (item.name || item.identification || '').toLowerCase();
+    const itemNotes = (item.fieldNotes || item.fact || '').toLowerCase();
+    const itemFeatures = Array.isArray(item.features) ? item.features.join(' ').toLowerCase() : '';
+    const itemCategory = (item.category || '').toLowerCase();
+
+    return milestone.keywords.some(kw => 
+      itemName.includes(kw) || itemNotes.includes(kw) || itemFeatures.includes(kw)
+    );
+  });
+
+  return {
+    isSatisfied: !!match,
+    matchedItem: match || null
+  };
+}

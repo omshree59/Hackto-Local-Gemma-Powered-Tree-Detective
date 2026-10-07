@@ -35,8 +35,22 @@ export default function App() {
   // Persistent data state via localStorage
   const [xp, setXp] = useState(() => Number(localStorage.getItem('nq_xp')) || 140);
   const [history, setHistory] = useState(() => {
-    const saved = localStorage.getItem('nq_history');
-    return saved ? JSON.parse(saved) : INITIAL_PLANTS;
+    try {
+      const saved = localStorage.getItem('nq_history');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // If history contains the previous 3 pre-seeded dummy plants, reset to empty []
+        const isOldDummy = Array.isArray(parsed) && parsed.length <= 3 && parsed.every(p => ['plant-1', 'plant-2', 'plant-3'].includes(p.id));
+        if (isOldDummy) {
+          localStorage.setItem('nq_history', JSON.stringify([]));
+          return [];
+        }
+        return parsed;
+      }
+      return [];
+    } catch {
+      return [];
+    }
   });
   const [quests, setQuests] = useState(() => {
     const saved = localStorage.getItem('nq_quests');
@@ -579,6 +593,7 @@ Never claim absolute certainty. Do not use asterisks or hashtags in values. Do n
               level={level}
               completedMissionsCount={completedMissionsCount}
               streak={3}
+              onOpenScanner={() => setCameraModalOpen(true)}
             />
           )}
 
