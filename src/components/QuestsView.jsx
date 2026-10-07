@@ -268,17 +268,30 @@ Respond strictly in JSON matching this schema:
                 <span>{activeMission.duration}</span>
                 <span>•</span>
                 <span>{activeMission.difficulty}</span>
+                {activeMission.completed && (
+                  <>
+                    <span>•</span>
+                    <span className="text-emerald-400 font-bold flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3" /> VERIFIED COMPLETE
+                    </span>
+                  </>
+                )}
               </div>
               <h4 className="text-xl font-bold text-[#f3f1e7] mb-1 leading-snug">{activeMission.title}</h4>
               <p className="text-sm text-[#d8c8a8] max-w-xl font-sans">{activeMission.objective}</p>
+              {activeMission.verificationFeedback && (
+                <p className="text-xs text-emerald-300/90 font-sans mt-2 bg-[#081a11] p-2.5 rounded-xl border border-emerald-500/30">
+                  Field AI Verification: {activeMission.verificationFeedback}
+                </p>
+              )}
             </div>
             
             <button
               onClick={() => onStartQuest(activeMission)}
-              className="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#06100b] text-xs font-black uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer shrink-0"
+              className="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#06100b] text-xs font-black uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer shrink-0 font-mono"
             >
               <Compass className="w-4 h-4" />
-              <span>ENTER FIELD MODE</span>
+              <span>{activeMission.completed ? 'REVISIT FIELD MODE' : 'ENTER FIELD MODE'}</span>
             </button>
           </div>
         </section>
@@ -293,14 +306,16 @@ Respond strictly in JSON matching this schema:
               key={q.id}
               className={clsx(
                 "rounded-2xl p-6 transition-all flex flex-col justify-between group h-full",
-                isActive
+                q.completed
+                  ? "bg-[#081a11]/90 border border-emerald-500/40 shadow-lg"
+                  : isActive
                   ? "bg-[#0b1f16] border border-emerald-500/50 shadow-[0_0_15px_rgba(79,138,82,0.15)]"
                   : "nature-surface-card border border-[#1e3f2b]/40 hover:border-[#4f8a52]/60"
               )}
             >
               <div>
                 <div className="flex items-center justify-between font-mono text-[10px] mb-3">
-                  <span className={clsx("font-bold uppercase tracking-wider", isActive ? "text-emerald-400" : "text-[#4f8a52]")}>
+                  <span className={clsx("font-bold uppercase tracking-wider", q.completed ? "text-emerald-300" : isActive ? "text-emerald-400" : "text-[#4f8a52]")}>
                     {q.category}
                   </span>
                   <div className="flex items-center gap-2 text-[#91b79a]">
@@ -309,6 +324,15 @@ Respond strictly in JSON matching this schema:
                     <span>{q.difficulty}</span>
                   </div>
                 </div>
+
+                {q.proofImage && (
+                  <div className="mb-3 h-32 rounded-xl overflow-hidden border border-emerald-500/40 relative">
+                    <img src={q.proofImage} alt={q.title} className="w-full h-full object-cover" />
+                    <div className="absolute top-2 right-2 bg-[#06100b]/85 backdrop-blur-sm px-2 py-0.5 rounded-md text-[9px] font-mono text-emerald-300 border border-emerald-500/40 flex items-center gap-1">
+                      <CheckCircle className="w-2.5 h-2.5" /> Verified Proof
+                    </div>
+                  </div>
+                )}
 
                 <h4 className="text-base font-bold text-[#f3f1e7] mb-2 leading-snug">
                   {q.title}
@@ -323,10 +347,30 @@ Respond strictly in JSON matching this schema:
                 <span className="font-mono text-xs font-bold text-emerald-300">
                   +{q.reward} XP
                 </span>
-                {isActive ? (
-                  <span className="font-mono text-[10px] font-bold text-emerald-400 flex items-center gap-1">
-                    <Compass className="w-3 h-3" /> ACTIVE
-                  </span>
+                {q.completed ? (
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] font-bold text-emerald-300 bg-[#123a27] px-2.5 py-1 rounded-lg border border-emerald-500/50 flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3 text-emerald-400" /> COMPLETED
+                    </span>
+                    <button
+                      onClick={() => onStartQuest(q)}
+                      className="text-[10px] font-mono text-[#91b79a] hover:text-[#f3f1e7] underline cursor-pointer"
+                    >
+                      Revisit
+                    </button>
+                  </div>
+                ) : isActive ? (
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] font-bold text-emerald-400 flex items-center gap-1">
+                      <Compass className="w-3 h-3 animate-spin" /> ACTIVE
+                    </span>
+                    <button
+                      onClick={() => onStartQuest(q)}
+                      className="text-[10px] font-mono font-bold bg-[#123a27] text-emerald-300 px-2.5 py-1 rounded-lg border border-[#315c3b] hover:bg-[#194e34] transition-colors cursor-pointer"
+                    >
+                      RESUME
+                    </button>
+                  </div>
                 ) : (
                   <button
                     onClick={() => onStartQuest(q)}

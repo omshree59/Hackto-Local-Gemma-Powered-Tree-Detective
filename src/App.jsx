@@ -378,13 +378,28 @@ Never claim absolute certainty. Do not use asterisks or hashtags in values. Do n
     addToast(`Quest Active: ${quest.title}`, 'info');
   };
 
-  const handleCompleteMission = (seconds = 900) => {
+  const handleCompleteMission = (seconds = 900, proofData = null) => {
     const mins = Math.max(1, Math.round(seconds / 60));
     setOutdoorMinutes(prev => prev + mins);
     setCompletedMissionsCount(prev => prev + 1);
-    setXp(prev => prev + (activeMission?.reward || 40));
+    const rewardXp = activeMission?.reward || 40;
+    setXp(prev => prev + rewardXp);
+
+    if (activeMission?.id) {
+      const updatedMission = {
+        ...activeMission,
+        completed: true,
+        progress: '1 / 1 complete',
+        proofImage: proofData?.image || null,
+        verificationFeedback: proofData?.verification?.feedback || null,
+        completedAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      };
+      setActiveMission(updatedMission);
+      setQuests(prev => prev.map(q => q.id === activeMission.id ? updatedMission : q));
+    }
+
     setMissionActiveModalOpen(false);
-    addToast(`Quest Completed! +${activeMission?.reward || 40} XP • +${mins} Outdoor Mins`, 'success');
+    addToast(`Mission Verified & Completed! +${rewardXp} XP • +${mins} Outdoor Mins`, 'success');
   };
 
   const handleToggleSaveTrail = (trailId) => {
@@ -735,6 +750,7 @@ Never claim absolute certainty. Do not use asterisks or hashtags in values. Do n
           mission={activeMission}
           onComplete={handleCompleteMission}
           onClose={() => setMissionActiveModalOpen(false)}
+          ollamaStatus={ollamaStatus}
         />
       )}
 

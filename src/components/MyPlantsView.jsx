@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { Leaf, Plus, Camera, CalendarDays, ArrowRight, Eye } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Leaf, Plus, Camera, CalendarDays, ArrowRight, Eye, X, Check, Image as ImageIcon } from 'lucide-react';
 import clsx from 'clsx';
 
 export default function MyPlantsView({ history, onNavigate, onUpdateHistory }) {
   const [selectedPlant, setSelectedPlant] = useState(null);
+  const [attachedImage, setAttachedImage] = useState(null);
+  const fileInputRef = useRef(null);
 
   // Filter plants that have journal entries or are marked for tracking
   // For now, let's just let the user track any plant from their history.
@@ -35,12 +37,23 @@ export default function MyPlantsView({ history, onNavigate, onUpdateHistory }) {
     setSelectedPlant(newPlant);
   };
 
+  const handleImageSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAttachedImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAddJournalEntry = (e, plant) => {
-    // In a real app we'd open the camera or file picker.
-    // Here we'll simulate adding a new entry after a delay or just adding a text note.
     e.preventDefault();
     const note = e.target.note.value;
     if (!note) return;
+    
+    const photoToSave = attachedImage || plant.image;
     
     const updatedHistory = history.map(p => {
       if (p.id === plant.id) {
@@ -51,7 +64,7 @@ export default function MyPlantsView({ history, onNavigate, onUpdateHistory }) {
             {
               id: Date.now(),
               date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-              image: p.image, // Simulated same image for now
+              image: photoToSave,
               note,
               dayOffset: p.journal.length * 14 // Faked days passed
             }
@@ -63,6 +76,8 @@ export default function MyPlantsView({ history, onNavigate, onUpdateHistory }) {
     onUpdateHistory(updatedHistory);
     const newPlant = updatedHistory.find(p => p.id === plant.id);
     setSelectedPlant(newPlant);
+    setAttachedImage(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
     e.target.reset();
   };
 
@@ -133,12 +148,64 @@ export default function MyPlantsView({ history, onNavigate, onUpdateHistory }) {
             rows={3}
             required
           />
-          <div className="flex items-center justify-between">
-            <button type="button" className="text-xs font-mono font-bold text-[#91b79a] hover:text-emerald-300 flex items-center gap-2 cursor-pointer px-4 py-2 bg-[#0c2619] rounded-lg border border-[#1e3f2b]">
-              <Camera className="w-4 h-4" />
-              <span>Attach New Photo</span>
+          {/* Attached Photo Preview */}
+          {attachedImage && (
+            <div className="mb-4 p-3 rounded-2xl bg-[#091f14] border border-[#315c3b] flex items-center justify-between gap-3 animate-in fade-in duration-200">
+              <div className="flex items-center gap-3 min-w-0">
+                <img 
+                  src={attachedImage} 
+                  alt="Attached preview" 
+                  className="w-14 h-14 rounded-xl object-cover border border-[#4f8a52]/60 shadow-md shrink-0" 
+                />
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-emerald-300">
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Photo Attached</span>
+                  </div>
+                  <p className="text-[11px] text-[#91b79a] truncate font-sans">Ready to log with this growth observation</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setAttachedImage(null);
+                  if (fileInputRef.current) fileInputRef.current.value = '';
+                }}
+                className="p-2 rounded-xl text-[#91b79a] hover:text-red-400 hover:bg-[#0c2417] border border-[#1e3f2b] transition-colors cursor-pointer shrink-0"
+                title="Remove attached photo"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+
+          {/* Hidden File Input */}
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            accept="image/*" 
+            className="hidden" 
+            onChange={handleImageSelect} 
+          />
+
+          <div className="flex items-center justify-between gap-3">
+            <button 
+              type="button" 
+              onClick={() => fileInputRef.current?.click()}
+              className={clsx(
+                "text-xs font-mono font-bold flex items-center gap-2 cursor-pointer px-4 py-2.5 rounded-xl border transition-all",
+                attachedImage 
+                  ? "bg-[#123a27] text-emerald-300 border-[#4f8a52]" 
+                  : "bg-[#0c2619] hover:bg-[#123a27] text-[#91b79a] hover:text-[#f3f1e7] border-[#1e3f2b]"
+              )}
+            >
+              <Camera className="w-4 h-4 text-emerald-400" />
+              <span>{attachedImage ? 'Change Attached Photo' : 'Attach New Photo'}</span>
             </button>
-            <button type="submit" className="bg-[#245336] hover:bg-[#2d6844] active:scale-95 text-[#f3f1e7] font-black px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-lg border border-[#4f8a52]/40 transition-all cursor-pointer">
+            <button 
+              type="submit" 
+              className="bg-[#245336] hover:bg-[#2d6844] active:scale-95 text-[#f3f1e7] font-black px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-lg border border-[#4f8a52]/40 transition-all cursor-pointer font-mono"
+            >
               Save Entry
             </button>
           </div>

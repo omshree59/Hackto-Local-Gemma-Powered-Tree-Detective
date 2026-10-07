@@ -32,10 +32,12 @@ export default function RightContextPanel({
         <div className="space-y-1 font-mono text-[10px] text-[#d8c8a8]/80">
           <div className="flex justify-between">
             <span>PROGRESS</span>
-            <span className="text-emerald-300">Active</span>
+            <span className={activeMission?.completed ? "text-emerald-400 font-bold" : "text-emerald-300"}>
+              {activeMission?.completed ? 'Completed ✓' : 'Active'}
+            </span>
           </div>
           <div className="h-1.5 w-full bg-[#081a11] rounded-full overflow-hidden border border-[#1e3f2b]/50">
-            <div className="h-full bg-[#4f8a52] w-1/2"></div>
+            <div className={`h-full bg-[#4f8a52] transition-all duration-500 ${activeMission?.completed ? 'w-full bg-emerald-400' : 'w-1/2'}`}></div>
           </div>
         </div>
 
@@ -43,7 +45,7 @@ export default function RightContextPanel({
           onClick={() => onStartQuest(activeMission)}
           className="w-full py-2.5 rounded-xl bg-[#123a27] hover:bg-[#194e34] border border-[#315c3b]/60 text-emerald-300 text-[11px] font-mono font-bold uppercase transition-all cursor-pointer"
         >
-          START OUTDOOR MODE
+          {activeMission?.completed ? 'REVISIT OUTDOOR MODE' : 'START OUTDOOR MODE'}
         </button>
       </div>
 
