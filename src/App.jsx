@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Squares from './components/Squares';
+import NatureBackground from './components/NatureBackground';
 import TopNav from './components/TopNav';
 import Sidebar from './components/Sidebar';
 import RightContextPanel from './components/RightContextPanel';
@@ -372,24 +372,13 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
   };
 
   return (
-    <div className="min-h-screen bg-[#060806] text-stone-100 font-sans selection:bg-emerald-500/30 relative flex flex-col overflow-x-hidden">
+    <div className="min-h-screen bg-[#06100b] text-[#f3f1e7] font-sans selection:bg-[#4f8a52]/40 relative flex flex-col overflow-x-hidden">
       
-      {/* Background Technical Grid (ReactBits Squares) */}
-      <div className="fixed inset-0 z-0 opacity-15 pointer-events-none mix-blend-screen">
-        <Squares 
-          direction="diagonal"
-          speed={0.2}
-          squareSize={44}
-          borderColor="#065f46" 
-          hoverFillColor="#047857"
-        />
-      </div>
-
-      {/* Ambient Lighting Cones */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-15%] left-[20%] w-[700px] h-[700px] bg-emerald-950/25 rounded-full blur-[160px]" />
-        <div className="absolute bottom-[-10%] right-[10%] w-[700px] h-[700px] bg-teal-950/20 rounded-full blur-[180px]" />
-      </div>
+      {/* Dynamic Cinematic Nature Background (NO TECHNICAL GRID) */}
+      <NatureBackground 
+        activePage={activePage} 
+        isScanning={isProcessing || scanProcessingOpen} 
+      />
 
       {/* Top Header */}
       <TopNav
@@ -419,14 +408,14 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
 
         {/* Mobile Slide-out Drawer */}
         {mobileMenuOpen && (
-          <div className="fixed inset-0 z-50 md:hidden bg-[#040604]/95 backdrop-blur-2xl flex flex-col p-6 animate-in fade-in">
-            <div className="flex items-center justify-between pb-4 border-b border-stone-800 mb-4">
+          <div className="fixed inset-0 z-50 md:hidden bg-[#05130b]/96 backdrop-blur-2xl flex flex-col p-6 animate-in fade-in select-none">
+            <div className="flex items-center justify-between pb-4 border-b border-[#1e3f2b] mb-4">
               <span className="text-xs font-mono font-bold uppercase text-emerald-400">
                 NATUREQUEST NAVIGATION
               </span>
               <button 
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 text-stone-400 hover:text-white"
+                className="p-2 text-[#91b79a] hover:text-[#f3f1e7]"
               >
                 ✕
               </button>
@@ -451,7 +440,7 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
                     setActivePage(item.id);
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full text-left p-3.5 rounded-2xl bg-stone-900/60 border border-stone-800 font-bold text-sm text-stone-200"
+                  className="w-full text-left p-3.5 rounded-2xl bg-[#081a11]/80 border border-[#1e3f2b] font-bold text-sm text-[#f3f1e7]"
                 >
                   {item.label}
                 </button>
@@ -608,7 +597,7 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
 
       </div>
 
-      {/* Hidden file input for file selection */}
+      {/* Hidden file input */}
       <input 
         type="file" 
         accept="image/jpeg,image/png,image/webp" 

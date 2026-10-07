@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   CheckCircle, AlertTriangle, ArrowRight, BookOpen, 
-  Leaf, Trees, Flower, RefreshCw, Compass, MapPin
+  Leaf, Trees, Flower, RefreshCw, Compass
 } from 'lucide-react';
 
 const CATEGORY_ICONS = {
@@ -25,72 +25,69 @@ export default function FieldReportModal({
   const IconComp = CATEGORY_ICONS[catKey] || Leaf;
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#040604]/90 backdrop-blur-2xl flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-in fade-in duration-300 font-sans">
+    <div className="fixed inset-0 z-50 bg-[#040e08]/92 backdrop-blur-3xl flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-in fade-in duration-300 font-sans select-none">
       
-      <div className="relative w-full max-w-2xl bg-[#080b08] border border-stone-800 rounded-[2.5rem] p-6 sm:p-10 shadow-[0_0_90px_rgba(0,0,0,0.95)] my-auto overflow-hidden">
+      <div className="relative w-full max-w-2xl nature-surface-card rounded-[2.5rem] p-6 sm:p-9 shadow-[0_20px_80px_rgba(0,0,0,0.85)] my-auto overflow-hidden">
         
         {/* Header Eyebrow */}
-        <div className="flex items-center justify-between border-b border-stone-800 pb-4 mb-6 font-mono text-[11px]">
+        <div className="flex items-center justify-between border-b border-[#1e3f2b]/40 pb-4 mb-6 font-mono text-[11px]">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span className="font-bold uppercase tracking-wider text-emerald-400">
-              FIELD IDENTIFICATION
+            <span className="font-bold uppercase tracking-wider text-emerald-300">
+              FIELD IDENTIFICATION REPORT
             </span>
           </div>
 
-          <span className="text-stone-300 bg-stone-900 px-3 py-1 rounded-full border border-stone-800">
+          <span className="text-[#f3f1e7] bg-[#0c2417] px-3 py-1 rounded-full border border-[#315c3b]/60">
             CONFIDENCE: {report.confidence || 'MODERATE'}
           </span>
         </div>
 
-        {/* Specimen Header Row */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 mb-6">
-          <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-stone-950 border border-stone-800 shrink-0 shadow-xl">
-            {imagePreviewUrl ? (
-              <img 
-                src={imagePreviewUrl} 
-                alt="Identified Specimen" 
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-emerald-400 bg-emerald-950/20">
-                <IconComp className="w-10 h-10" />
-              </div>
-            )}
-            <div className="absolute top-1.5 left-1.5 bg-[#080b08]/80 backdrop-blur-md p-1.5 rounded-lg border border-stone-800 text-emerald-400">
-              <IconComp className="w-4 h-4" />
+        {/* Hero Plant Photograph Section (Visual Hero) */}
+        <div className="relative rounded-2xl overflow-hidden aspect-video max-h-[260px] w-full bg-[#07160f] border border-[#1e3f2b] shadow-xl mb-6">
+          {imagePreviewUrl ? (
+            <img 
+              src={imagePreviewUrl} 
+              alt="Identified Specimen" 
+              className="w-full h-full object-cover filter brightness-95"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-emerald-400 bg-[#0a1e14]">
+              <IconComp className="w-12 h-12" />
             </div>
+          )}
+
+          <div className="absolute top-3 left-3 bg-[#06120b]/85 backdrop-blur-md px-3 py-1 rounded-lg border border-[#1e3f2b]/60 flex items-center gap-1.5 text-[10px] font-mono text-[#91b79a]">
+            <IconComp className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="uppercase font-bold">{report.category || 'PLANT'}</span>
           </div>
 
-          <div className="flex-1">
-            <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-emerald-400">
-              LIKELY IDENTIFICATION
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-0.5 leading-tight">
-              {report.name || report.identification || 'Wild Flora Specimen'}
-            </h3>
-            <span className="inline-block mt-1 text-[11px] font-mono text-stone-300 bg-stone-900 px-2 py-0.5 rounded-md border border-stone-800">
-              CATEGORY: {report.category || 'PLANT'}
-            </span>
-          </div>
-
-          <div className="self-start sm:self-center bg-emerald-950/60 border border-emerald-800/80 px-4 py-2 rounded-2xl text-center shrink-0 font-mono">
-            <span className="block text-[10px] text-emerald-400 uppercase">REWARD</span>
-            <span className="text-lg font-black text-white">+{report.xp || 50} XP</span>
+          <div className="absolute bottom-3 right-3 bg-[#06120b]/85 backdrop-blur-md px-3 py-1 rounded-lg border border-[#1e3f2b]/60 font-mono text-xs text-emerald-300 font-bold">
+            +{report.xp || 50} XP DISCOVERY
           </div>
         </div>
 
-        {/* Visible Features */}
+        {/* Identification Heading */}
+        <div className="mb-5">
+          <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-[#91b79a]">
+            LIKELY IDENTIFICATION
+          </span>
+          <h3 className="text-2xl sm:text-3xl font-black text-[#f3f1e7] tracking-tight mt-0.5 leading-tight">
+            {report.name || report.identification || 'Wild Flora Specimen'}
+          </h3>
+        </div>
+
+        {/* Visible Morphological Features */}
         {report.features && report.features.length > 0 && (
           <div className="mb-5">
-            <h4 className="text-[10px] font-mono font-bold uppercase tracking-wider text-stone-400 mb-2">
+            <h4 className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#91b79a] mb-2">
               VISIBLE FEATURES
             </h4>
             <div className="flex flex-wrap gap-2">
               {report.features.map((f, i) => (
                 <span 
                   key={i}
-                  className="text-xs text-stone-300 bg-stone-900/80 border border-stone-800 px-3 py-1 rounded-xl"
+                  className="text-xs text-[#f3f1e7] bg-[#0c2417]/80 border border-[#1e3f2b] px-3 py-1 rounded-xl"
                 >
                   • {f}
                 </span>
@@ -100,22 +97,22 @@ export default function FieldReportModal({
         )}
 
         {/* Field Notes & Where To Look */}
-        <div className="bg-stone-950/70 border border-stone-800/80 rounded-2xl p-5 mb-5 space-y-3 text-xs leading-relaxed">
+        <div className="bg-[#07160f]/80 border border-[#1e3f2b]/50 rounded-2xl p-5 mb-5 space-y-3 text-xs leading-relaxed">
           <div>
             <h4 className="text-[10px] font-mono font-bold uppercase text-emerald-400 mb-1">
               FIELD NOTES
             </h4>
-            <p className="text-stone-200 font-sans">
+            <p className="text-[#d8c8a8] font-sans">
               {report.fieldNotes || report.fact || 'Botanical features analyzed locally using open-weight vision inference.'}
             </p>
           </div>
 
           {report.whereToLook && (
-            <div className="pt-2 border-t border-stone-800/60">
-              <h4 className="text-[10px] font-mono font-bold uppercase text-teal-400 mb-1">
+            <div className="pt-2 border-t border-[#1e3f2b]/40">
+              <h4 className="text-[10px] font-mono font-bold uppercase text-[#91b79a] mb-1">
                 WHERE TO LOOK (HABITAT)
               </h4>
-              <p className="text-stone-300 font-sans">
+              <p className="text-[#d8c8a8]/80 font-sans">
                 {report.whereToLook}
               </p>
             </div>
@@ -124,16 +121,16 @@ export default function FieldReportModal({
 
         {/* Observation Challenge */}
         {(report.observationChallenge || report.nextChallenge) && (
-          <div className="bg-gradient-to-r from-emerald-950/40 via-stone-900/60 to-teal-950/40 border border-emerald-500/30 rounded-2xl p-5 mb-5 flex items-start gap-4">
-            <div className="bg-emerald-500 p-2 rounded-xl text-stone-950 shrink-0 mt-0.5">
-              <Compass className="w-5 h-5" />
+          <div className="bg-gradient-to-r from-[#123a27]/60 to-[#0e2c1d]/60 border border-[#315c3b]/60 rounded-2xl p-5 mb-5 flex items-start gap-4">
+            <div className="bg-[#245336] p-2 rounded-xl text-[#f3f1e7] shrink-0 mt-0.5 border border-[#4f8a52]/40">
+              <Compass className="w-5 h-5 text-emerald-300" />
             </div>
             <div className="flex-1">
               <div className="flex items-center justify-between text-[10px] font-mono font-bold uppercase tracking-wider mb-0.5">
-                <span className="text-emerald-400">OBSERVATION CHALLENGE</span>
-                <span className="text-emerald-300">+50 XP</span>
+                <span className="text-emerald-300">OBSERVATION CHALLENGE</span>
+                <span className="text-[#91b79a]">+50 XP</span>
               </div>
-              <p className="text-sm font-bold text-white leading-snug">
+              <p className="text-sm font-bold text-[#f3f1e7] leading-snug">
                 {report.observationChallenge || report.nextChallenge}
               </p>
             </div>
@@ -141,7 +138,7 @@ export default function FieldReportModal({
         )}
 
         {/* Plant Safety Note */}
-        <div className="flex items-center gap-2 p-3 rounded-xl bg-amber-950/30 border border-amber-900/40 text-[11px] text-amber-300/90 mb-6">
+        <div className="flex items-center gap-2 p-3 rounded-xl bg-amber-950/20 border border-amber-900/40 text-[11px] text-amber-200/90 mb-6 font-sans">
           <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
           <span>
             {report.safetyNote || 'AI identification is an estimate. Do not consume or handle a plant based solely on this result.'}
@@ -149,13 +146,13 @@ export default function FieldReportModal({
         </div>
 
         {/* Action Button Bar */}
-        <div className="flex flex-col sm:flex-row items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-center gap-3 font-mono">
           <button
             onClick={onStartChallenge}
-            className="w-full sm:flex-1 py-3.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-stone-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer"
+            className="w-full sm:flex-1 py-3.5 px-4 rounded-xl bg-[#245336] hover:bg-[#2d6844] active:scale-95 text-[#f3f1e7] font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-black/30 border border-[#4f8a52]/40 cursor-pointer"
           >
             <span>START QUEST</span>
-            <ArrowRight className="w-4 h-4 text-stone-950" />
+            <ArrowRight className="w-4 h-4 text-[#f3f1e7]" />
           </button>
 
           <button
@@ -164,17 +161,17 @@ export default function FieldReportModal({
             className={clsx(
               "w-full sm:flex-1 py-3.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 border transition-all cursor-pointer",
               isSaved
-                ? "bg-stone-900 border-stone-800 text-emerald-400 cursor-default"
-                : "bg-stone-900 hover:bg-stone-800 border-stone-700 text-stone-200"
+                ? "bg-[#0c2417] border-[#1e3f2b] text-emerald-300 cursor-default"
+                : "bg-[#081a11] hover:bg-[#0e2c1d] border-[#1e3f2b] text-[#f3f1e7]"
             )}
           >
-            {isSaved ? <CheckCircle className="w-4 h-4" /> : <BookOpen className="w-4 h-4 text-emerald-400" />}
+            {isSaved ? <CheckCircle className="w-4 h-4 text-emerald-400" /> : <BookOpen className="w-4 h-4 text-emerald-300" />}
             <span>{isSaved ? 'SAVED TO CODEX' : 'SAVE TO CODEX'}</span>
           </button>
 
           <button
             onClick={onScanAnother}
-            className="w-full sm:w-auto py-3.5 px-4 rounded-xl bg-stone-950 hover:bg-stone-900 border border-stone-800 text-stone-400 hover:text-stone-200 text-xs font-mono font-bold uppercase cursor-pointer"
+            className="w-full sm:w-auto py-3.5 px-4 rounded-xl bg-[#06140d] hover:bg-[#0a2015] border border-[#1e3f2b] text-[#91b79a] hover:text-[#f3f1e7] text-xs font-bold uppercase cursor-pointer"
           >
             SCAN ANOTHER
           </button>

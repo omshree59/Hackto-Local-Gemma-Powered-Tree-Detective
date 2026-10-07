@@ -20,17 +20,17 @@ export default function MyProgressView({
   };
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 max-w-5xl mx-auto pb-12">
+    <div className="space-y-10 animate-in fade-in duration-500 max-w-5xl mx-auto pb-12 font-sans">
       
       {/* Header */}
-      <div className="pb-6 border-b border-stone-800">
-        <span className="text-[10px] font-mono font-black uppercase tracking-widest text-emerald-400 block mb-1">
+      <div className="pb-6 border-b border-[#1e3f2b]/60">
+        <span className="text-[10px] font-mono font-black uppercase tracking-widest text-[#4f8a52] block mb-1">
           PERSONAL REFLECTION
         </span>
-        <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+        <h2 className="text-3xl sm:text-4xl font-black text-[#f3f1e7] tracking-tight">
           MY PROGRESS
         </h2>
-        <p className="text-sm text-stone-400 mt-1 font-sans">
+        <p className="text-sm text-[#91b79a] mt-1">
           Simple field metrics reflecting real-world time spent discovering plants outside.
         </p>
       </div>
@@ -38,54 +38,54 @@ export default function MyProgressView({
       {/* Main Bento Metrics */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 font-mono">
         
-        <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-6 backdrop-blur-xl shadow-xl flex flex-col justify-between">
+        <div className="nature-surface-card border border-[#1e3f2b] rounded-3xl p-6 shadow-xl flex flex-col justify-between">
           <div>
-            <span className="text-[10px] text-stone-400 uppercase tracking-wider block mb-2">OUTDOOR MINUTES</span>
+            <span className="text-[10px] text-[#91b79a] uppercase tracking-wider block mb-2">OUTDOOR MINUTES</span>
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl sm:text-5xl font-black text-white">{outdoorMinutes}</span>
-              <span className="text-xs text-emerald-400 font-bold">MIN</span>
+              <span className="text-4xl sm:text-5xl font-black text-[#f3f1e7]">{outdoorMinutes}</span>
+              <span className="text-xs text-[#4f8a52] font-bold">MIN</span>
             </div>
           </div>
-          <p className="text-[11px] text-stone-400 font-sans mt-4">
+          <p className="text-[11px] text-[#91b79a] font-sans mt-4">
             Unplugged trail exploration
           </p>
         </div>
 
-        <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-6 backdrop-blur-xl shadow-xl flex flex-col justify-between">
+        <div className="nature-surface-card border border-[#1e3f2b] rounded-3xl p-6 shadow-xl flex flex-col justify-between">
           <div>
-            <span className="text-[10px] text-stone-400 uppercase tracking-wider block mb-2">PLANTS LOGGED</span>
+            <span className="text-[10px] text-[#91b79a] uppercase tracking-wider block mb-2">PLANTS LOGGED</span>
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl sm:text-5xl font-black text-emerald-400">{history.length}</span>
-              <span className="text-xs text-stone-400 font-bold">SPECIES</span>
+              <span className="text-4xl sm:text-5xl font-black text-[#4f8a52]">{history.length}</span>
+              <span className="text-xs text-[#d8c8a8] font-bold">SPECIES</span>
             </div>
           </div>
-          <p className="text-[11px] text-stone-400 font-sans mt-4">
+          <p className="text-[11px] text-[#91b79a] font-sans mt-4">
             Verified local field entries
           </p>
         </div>
 
-        <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-6 backdrop-blur-xl shadow-xl flex flex-col justify-between">
+        <div className="nature-surface-card border border-[#1e3f2b] rounded-3xl p-6 shadow-xl flex flex-col justify-between">
           <div>
-            <span className="text-[10px] text-stone-400 uppercase tracking-wider block mb-2">QUESTS COMPLETED</span>
+            <span className="text-[10px] text-[#91b79a] uppercase tracking-wider block mb-2">QUESTS COMPLETED</span>
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl sm:text-5xl font-black text-teal-300">{completedMissionsCount}</span>
-              <span className="text-xs text-stone-400 font-bold">MISSIONS</span>
+              <span className="text-4xl sm:text-5xl font-black text-[#d8c8a8]">{completedMissionsCount}</span>
+              <span className="text-xs text-[#91b79a] font-bold">MISSIONS</span>
             </div>
           </div>
-          <p className="text-[11px] text-stone-400 font-sans mt-4">
+          <p className="text-[11px] text-[#91b79a] font-sans mt-4">
             Finished sensory quests
           </p>
         </div>
 
-        <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-6 backdrop-blur-xl shadow-xl flex flex-col justify-between">
+        <div className="nature-surface-card border border-[#1e3f2b] rounded-3xl p-6 shadow-xl flex flex-col justify-between">
           <div>
-            <span className="text-[10px] text-stone-400 uppercase tracking-wider block mb-2">ACTIVE STREAK</span>
+            <span className="text-[10px] text-[#91b79a] uppercase tracking-wider block mb-2">ACTIVE STREAK</span>
             <div className="flex items-baseline gap-2">
               <span className="text-4xl sm:text-5xl font-black text-amber-400">{streak}</span>
               <span className="text-xs text-amber-300 font-bold">DAYS</span>
             </div>
           </div>
-          <p className="text-[11px] text-stone-400 font-sans mt-4">
+          <p className="text-[11px] text-[#91b79a] font-sans mt-4">
             Longest recorded: {longestStreak} days
           </p>
         </div>
@@ -95,24 +95,24 @@ export default function MyProgressView({
       {/* Breakdown: Botanical Families Surveyed */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        <div className="lg:col-span-6 bg-stone-900/50 border border-stone-800 rounded-[2rem] p-7 backdrop-blur-xl space-y-6">
-          <h3 className="text-base font-bold text-white font-mono flex items-center gap-2">
-            <Leaf className="w-4 h-4 text-emerald-400" />
+        <div className="lg:col-span-6 nature-surface-card border border-[#1e3f2b] rounded-[2rem] p-7 space-y-6">
+          <h3 className="text-base font-bold text-[#f3f1e7] font-mono flex items-center gap-2">
+            <Leaf className="w-4 h-4 text-[#4f8a52]" />
             BOTANICAL CATEGORY RATIOS
           </h3>
 
           <div className="space-y-4 font-mono text-xs">
             {[
-              { name: 'Trees & Woody Shrubs', count: categoriesCount.Tree, max: 10, color: 'from-emerald-500 to-teal-400' },
-              { name: 'Wildflowers & Blossoms', count: categoriesCount.Flower, max: 10, color: 'from-purple-500 to-emerald-400' },
-              { name: 'Herbaceous Plants & Ferns', count: categoriesCount.Plant, max: 10, color: 'from-teal-500 to-emerald-400' }
+              { name: 'Trees & Woody Shrubs', count: categoriesCount.Tree, max: 10, color: 'from-[#4f8a52] to-[#91b79a]' },
+              { name: 'Wildflowers & Blossoms', count: categoriesCount.Flower, max: 10, color: 'from-[#91b79a] to-[#d8c8a8]' },
+              { name: 'Herbaceous Plants & Ferns', count: categoriesCount.Plant, max: 10, color: 'from-[#315c3b] to-[#4f8a52]' }
             ].map(cat => (
               <div key={cat.name} className="space-y-1.5">
-                <div className="flex justify-between text-stone-300">
+                <div className="flex justify-between text-[#f3f1e7]">
                   <span>{cat.name}</span>
-                  <span className="text-stone-400">{cat.count} recorded</span>
+                  <span className="text-[#91b79a]">{cat.count} recorded</span>
                 </div>
-                <div className="h-2 w-full bg-stone-950 rounded-full overflow-hidden border border-stone-800">
+                <div className="h-2 w-full bg-[#06140c] rounded-full overflow-hidden border border-[#1e3f2b]">
                   <div 
                     className={`h-full bg-gradient-to-r ${cat.color} transition-all duration-700`}
                     style={{ width: `${Math.min((cat.count / cat.max) * 100, 100)}%` }}
@@ -123,25 +123,25 @@ export default function MyProgressView({
           </div>
         </div>
 
-        <div className="lg:col-span-6 bg-stone-900/50 border border-stone-800 rounded-[2rem] p-7 backdrop-blur-xl flex flex-col justify-between space-y-4">
+        <div className="lg:col-span-6 nature-surface-card border border-[#1e3f2b] rounded-[2rem] p-7 flex flex-col justify-between space-y-4">
           <div>
-            <span className="text-[10px] font-mono font-bold uppercase text-stone-400 block mb-1">
+            <span className="text-[10px] font-mono font-bold uppercase text-[#4f8a52] block mb-1">
               EXPEDITION PHILOSOPHY
             </span>
-            <h3 className="text-lg font-bold text-white leading-snug">
+            <h3 className="text-lg font-bold text-[#f3f1e7] leading-snug">
               "The screen is the tool. The outdoors is the product."
             </h3>
-            <p className="text-xs text-stone-300 font-sans leading-relaxed mt-2">
-              NatureQuest does not track your screen screen time to keep you hooked. Every metric here measures your transition away from digital noise into physical botanical reality.
+            <p className="text-xs text-[#91b79a] font-sans leading-relaxed mt-2">
+              NatureQuest does not track your screen time to keep you hooked. Every metric here measures your transition away from digital noise into physical botanical reality.
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-stone-950/80 border border-stone-800 font-mono text-xs text-stone-400 space-y-1">
-            <div className="flex justify-between text-stone-300">
+          <div className="p-4 rounded-2xl bg-[#06140c]/90 border border-[#1e3f2b] font-mono text-xs space-y-1">
+            <div className="flex justify-between text-[#f3f1e7]">
               <span>CURRENT EXPEDITION TIER:</span>
-              <span className="text-emerald-400 font-bold">Tier {level} Naturalist</span>
+              <span className="text-[#4f8a52] font-bold">Tier {level} Naturalist</span>
             </div>
-            <div className="flex justify-between text-stone-400">
+            <div className="flex justify-between text-[#91b79a]">
               <span>FIELD CODEX ENTRIES:</span>
               <span>{history.length} Records</span>
             </div>

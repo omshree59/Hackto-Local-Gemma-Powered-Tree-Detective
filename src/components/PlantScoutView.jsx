@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   Leaf, Camera, Upload, Zap, Eye, RefreshCw, 
-  ShieldCheck, AlertTriangle, Cpu
+  ShieldCheck, AlertTriangle
 } from 'lucide-react';
 import clsx from 'clsx';
 import { SAMPLE_TEST_PLANTS } from '../data/natureData';
@@ -17,30 +17,30 @@ export default function PlantScoutView({
   errorMsg
 }) {
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 max-w-4xl mx-auto pb-12">
+    <div className="space-y-10 animate-in fade-in duration-500 max-w-4xl mx-auto pb-12 select-none">
       
       {/* Header */}
-      <div className="pb-6 border-b border-stone-800">
-        <span className="text-[10px] font-mono font-black uppercase tracking-widest text-emerald-400 block mb-1">
-          LOCAL VISION ENGINE
+      <div className="pb-6 border-b border-[#1e3f2b]/40">
+        <span className="text-[10px] font-mono font-black uppercase tracking-widest text-[#91b79a] block mb-1">
+          LOCAL BOTANICAL INTELLIGENCE
         </span>
-        <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+        <h2 className="text-3xl sm:text-4xl font-black text-[#f3f1e7] tracking-tight">
           PLANT SCOUT
         </h2>
-        <p className="text-sm text-stone-400 mt-1 font-sans">
+        <p className="text-sm text-[#d8c8a8] mt-1 font-sans">
           "Identify and understand what you discover."
         </p>
       </div>
 
       {/* Main Scanner Container */}
-      <div className="bg-gradient-to-br from-stone-900/60 to-[#070a07] border border-stone-800/90 rounded-[2.5rem] p-7 sm:p-10 shadow-2xl space-y-6">
+      <div className="nature-surface-card rounded-[2.5rem] p-7 sm:p-10 space-y-6">
         
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-mono text-xs pb-4 border-b border-stone-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-mono text-xs pb-4 border-b border-[#1e3f2b]/40">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="text-white font-bold">MULTIMODAL TENSOR INGESTION</span>
+            <span className="text-[#f3f1e7] font-bold">MULTIMODAL TENSOR INGESTION</span>
           </div>
-          <span className="text-stone-400 text-[11px]">OLLAMA • GEMMA 3 (4B)</span>
+          <span className="text-[#91b79a] text-[11px]">OLLAMA • GEMMA 3 (4B)</span>
         </div>
 
         {/* Dropzone & Preview Box */}
@@ -54,13 +54,13 @@ export default function PlantScoutView({
           className={clsx(
             "relative rounded-3xl border-2 border-dashed p-8 sm:p-14 text-center flex flex-col items-center justify-center transition-all min-h-[340px]",
             selectedFilePreview 
-              ? "border-emerald-500/50 bg-stone-950/80" 
-              : "border-stone-800 bg-stone-950/40 hover:border-emerald-500/40"
+              ? "border-[#4f8a52]/60 bg-[#081a11]/90" 
+              : "border-[#1e3f2b]/60 bg-[#07160f]/60 hover:border-[#4f8a52]/50 hover:bg-[#091d14]/70"
           )}
         >
           {selectedFilePreview ? (
             <div className="w-full flex flex-col items-center gap-5">
-              <div className="relative rounded-2xl overflow-hidden border border-stone-700 shadow-2xl max-h-[300px] max-w-md">
+              <div className="relative rounded-2xl overflow-hidden border border-[#315c3b] shadow-2xl max-h-[300px] max-w-md">
                 <img 
                   src={selectedFilePreview} 
                   alt="Field capture preview" 
@@ -68,11 +68,11 @@ export default function PlantScoutView({
                 />
               </div>
 
-              <div className="flex items-center gap-3 font-mono text-xs text-stone-300">
-                <span>Loaded: <strong>{selectedFileRaw?.name || 'Camera Capture'}</strong></span>
+              <div className="flex items-center gap-3 font-mono text-xs text-[#d8c8a8]">
+                <span>Loaded: <strong>{selectedFileRaw?.name || 'Camera Snapshot'}</strong></span>
                 <button
                   onClick={() => onSelectFile(null)}
-                  className="text-stone-400 hover:text-rose-400 underline cursor-pointer"
+                  className="text-[#91b79a] hover:text-rose-400 underline cursor-pointer"
                 >
                   Clear Photo
                 </button>
@@ -81,16 +81,16 @@ export default function PlantScoutView({
               <button
                 onClick={onTriggerAnalyze}
                 disabled={isProcessing}
-                className="bg-emerald-500 hover:bg-emerald-400 active:scale-95 disabled:opacity-40 text-stone-950 font-black px-8 py-4 rounded-2xl text-xs uppercase tracking-wider flex items-center gap-2.5 shadow-xl shadow-emerald-500/25 transition-all cursor-pointer mt-2"
+                className="bg-[#245336] hover:bg-[#2d6844] active:scale-95 disabled:opacity-40 text-[#f3f1e7] font-black px-8 py-4 rounded-2xl text-xs uppercase tracking-wider flex items-center gap-2.5 shadow-xl shadow-black/40 border border-[#4f8a52]/40 transition-all cursor-pointer mt-2"
               >
                 {isProcessing ? (
                   <>
-                    <RefreshCw className="w-4 h-4 animate-spin text-stone-950" />
+                    <RefreshCw className="w-4 h-4 animate-spin text-emerald-300" />
                     <span>ANALYZING LOCALLY...</span>
                   </>
                 ) : (
                   <>
-                    <Zap className="w-4 h-4 text-stone-950" />
+                    <Zap className="w-4 h-4 text-emerald-300" />
                     <span>ANALYZE LOCALLY</span>
                   </>
                 )}
@@ -98,15 +98,15 @@ export default function PlantScoutView({
             </div>
           ) : (
             <div className="flex flex-col items-center gap-4 max-w-md">
-              <div className="w-16 h-16 rounded-3xl bg-stone-900 border border-stone-800 text-emerald-400 flex items-center justify-center shadow-inner">
+              <div className="w-16 h-16 rounded-3xl bg-[#0a2015] border border-[#1e3f2b] text-emerald-400 flex items-center justify-center shadow-inner">
                 <Leaf className="w-8 h-8" />
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-white mb-1">
+                <h3 className="text-xl font-bold text-[#f3f1e7] mb-1">
                   Ready for outdoor plant analysis
                 </h3>
-                <p className="text-xs text-stone-400 leading-relaxed font-sans">
+                <p className="text-xs text-[#d8c8a8]/80 leading-relaxed font-sans">
                   Photograph foliage, blossoms, or tree bark. Drag and drop file here, open device camera, or browse local photos.
                 </p>
               </div>
@@ -114,14 +114,14 @@ export default function PlantScoutView({
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                 <button
                   onClick={onOpenScanner}
-                  className="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-stone-950 text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer"
+                  className="px-6 py-3 rounded-xl bg-[#245336] hover:bg-[#2d6844] text-[#f3f1e7] text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-lg border border-[#4f8a52]/40 cursor-pointer"
                 >
-                  <Camera className="w-4 h-4 text-stone-950" />
+                  <Camera className="w-4 h-4 text-emerald-300" />
                   <span>OPEN CAMERA</span>
                 </button>
 
-                <label className="px-6 py-3 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer transition-colors">
-                  <Upload className="w-4 h-4 text-emerald-400" />
+                <label className="px-6 py-3 rounded-xl bg-[#0b1f16] hover:bg-[#123a27] border border-[#315c3b]/60 text-[#f3f1e7] text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer transition-colors">
+                  <Upload className="w-4 h-4 text-[#91b79a]" />
                   <span>CHOOSE LOCAL IMAGE</span>
                   <input 
                     type="file" 
@@ -135,7 +135,7 @@ export default function PlantScoutView({
                 </label>
               </div>
 
-              <p className="text-[10px] font-mono text-stone-400 mt-2">
+              <p className="text-[10px] font-mono text-[#91b79a]/70 mt-2">
                 ACCEPTED FORMATS: JPG, PNG, WEBP • ZERO EXTERNAL CLOUD TRANSMISSION
               </p>
             </div>
@@ -149,13 +149,13 @@ export default function PlantScoutView({
         )}
 
         {/* Desktop Trial Specimen Quick Tests */}
-        <div className="pt-6 border-t border-stone-800/80">
+        <div className="pt-6 border-t border-[#1e3f2b]/40">
           <div className="flex items-center justify-between mb-3 text-xs font-mono">
-            <span className="text-stone-300 font-bold uppercase flex items-center gap-1.5">
-              <Eye className="w-3.5 h-3.5 text-teal-400" />
+            <span className="text-[#f3f1e7] font-bold uppercase flex items-center gap-1.5">
+              <Eye className="w-3.5 h-3.5 text-emerald-400" />
               DESKTOP VERIFICATION SAMPLES
             </span>
-            <span className="text-stone-400 text-[10px]">CLICK TO RUN GEMMA 3 LOCALLY</span>
+            <span className="text-[#91b79a]/70 text-[10px]">CLICK TO RUN GEMMA 3 LOCALLY</span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -163,13 +163,13 @@ export default function PlantScoutView({
               <button
                 key={sample.id}
                 onClick={() => onTriggerSampleTest(sample)}
-                className="p-3.5 rounded-2xl bg-stone-950/70 hover:bg-stone-900 border border-stone-800 hover:border-emerald-500/50 text-left transition-all cursor-pointer group"
+                className="p-3.5 rounded-2xl bg-[#081a11]/75 hover:bg-[#0e2c1d] border border-[#1e3f2b]/50 hover:border-[#4f8a52]/60 text-left transition-all cursor-pointer group"
               >
-                <span className="text-[10px] font-mono text-emerald-400 block">{sample.category}</span>
-                <h5 className="text-xs font-bold text-stone-200 group-hover:text-white truncate mt-0.5">
+                <span className="text-[10px] font-mono text-emerald-300 block">{sample.category}</span>
+                <h5 className="text-xs font-bold text-[#f3f1e7] group-hover:text-emerald-200 truncate mt-0.5">
                   {sample.name}
                 </h5>
-                <span className="text-[10px] font-mono text-stone-400 mt-1 block">+{sample.xp} XP</span>
+                <span className="text-[10px] font-mono text-[#d8c8a8]/70 mt-1 block">+{sample.xp} XP</span>
               </button>
             ))}
           </div>

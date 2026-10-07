@@ -14,21 +14,21 @@ export default function NatureGuideView() {
   );
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 max-w-5xl mx-auto pb-12">
+    <div className="space-y-10 animate-in fade-in duration-500 max-w-5xl mx-auto pb-12 font-sans">
       
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-stone-800">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#1e3f2b]/60">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span className="text-[10px] font-mono font-black uppercase tracking-widest text-emerald-400">
+            <span className="w-2 h-2 rounded-full bg-[#4f8a52]"></span>
+            <span className="text-[10px] font-mono font-black uppercase tracking-widest text-[#4f8a52]">
               BOTANICAL KNOWLEDGE BASE
             </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mt-1">
+          <h2 className="text-3xl sm:text-4xl font-black text-[#f3f1e7] tracking-tight mt-1">
             NATURE GUIDE
           </h2>
-          <p className="text-sm text-stone-400 mt-1 font-sans">
+          <p className="text-sm text-[#91b79a] mt-1 font-sans">
             Offline educational primers on leaf morphology, bark fissures, and field observation ethics.
           </p>
         </div>
@@ -42,8 +42,8 @@ export default function NatureGuideView() {
               className={clsx(
                 "px-3.5 py-1.5 rounded-xl uppercase font-bold transition-all cursor-pointer",
                 selectedCategory === cat
-                  ? "bg-emerald-500 text-stone-950 shadow-md"
-                  : "bg-stone-900 text-stone-400 hover:text-stone-200 border border-stone-800"
+                  ? "bg-[#4f8a52] text-[#f3f1e7] shadow-lg shadow-[#4f8a52]/20 border border-[#4f8a52]"
+                  : "nature-surface-subtle text-[#91b79a] hover:text-[#f3f1e7] border border-[#1e3f2b]/60"
               )}
             >
               {cat}
@@ -58,28 +58,28 @@ export default function NatureGuideView() {
           <div
             key={article.id}
             onClick={() => setActiveArticle(article)}
-            className="bg-stone-900/60 border border-stone-800 hover:border-emerald-500/50 rounded-3xl p-7 shadow-xl backdrop-blur-xl flex flex-col justify-between cursor-pointer group transition-all"
+            className="nature-surface-card border border-[#1e3f2b]/80 hover:border-[#4f8a52]/60 rounded-3xl p-7 shadow-xl flex flex-col justify-between cursor-pointer group transition-all"
           >
             <div>
               <div className="flex items-center justify-between text-[10px] font-mono mb-3">
-                <span className="text-emerald-400 font-bold uppercase tracking-wider bg-emerald-950/80 px-2.5 py-0.5 rounded-md border border-emerald-800/60">
+                <span className="text-[#4f8a52] font-bold uppercase tracking-wider bg-[#0c2619] px-2.5 py-0.5 rounded-md border border-[#1e3f2b]">
                   {article.category}
                 </span>
-                <span className="text-stone-400 flex items-center gap-1">
+                <span className="text-[#91b79a] flex items-center gap-1">
                   <Clock className="w-3 h-3" /> {article.readTime}
                 </span>
               </div>
 
-              <h3 className="text-xl font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug mb-3">
+              <h3 className="text-xl font-bold text-[#f3f1e7] group-hover:text-[#91b79a] transition-colors leading-snug mb-3">
                 {article.title}
               </h3>
 
-              <p className="text-xs text-stone-300 font-sans leading-relaxed">
+              <p className="text-xs text-[#91b79a] font-sans leading-relaxed">
                 {article.summary}
               </p>
             </div>
 
-            <div className="pt-5 border-t border-stone-800/80 mt-6 flex items-center justify-between text-xs font-mono text-emerald-400 font-bold">
+            <div className="pt-5 border-t border-[#1e3f2b]/60 mt-6 flex items-center justify-between text-xs font-mono text-[#4f8a52] font-bold">
               <span>Read Guide Primer</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
@@ -89,30 +89,30 @@ export default function NatureGuideView() {
 
       {/* Article Reader Modal */}
       {activeArticle && (
-        <div className="fixed inset-0 z-50 bg-[#040604]/90 backdrop-blur-2xl flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-[#080b08] border border-stone-800 w-full max-w-2xl rounded-3xl p-6 sm:p-10 shadow-2xl relative my-auto space-y-6">
-            <div className="flex items-start justify-between border-b border-stone-800 pb-4">
+        <div className="fixed inset-0 z-50 bg-[#040c07]/90 backdrop-blur-2xl flex items-center justify-center p-4 overflow-y-auto">
+          <div className="nature-surface-card border border-[#2a4d34] w-full max-w-2xl rounded-3xl p-6 sm:p-10 shadow-2xl relative my-auto space-y-6">
+            <div className="flex items-start justify-between border-b border-[#1e3f2b] pb-4">
               <div>
-                <span className="text-[10px] font-mono text-emerald-400 uppercase font-bold block mb-1">
+                <span className="text-[10px] font-mono text-[#4f8a52] uppercase font-bold block mb-1">
                   {activeArticle.category} • {activeArticle.readTime} READ
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-black text-white leading-tight">
+                <h3 className="text-2xl sm:text-3xl font-black text-[#f3f1e7] leading-tight">
                   {activeArticle.title}
                 </h3>
               </div>
               <button 
                 onClick={() => setActiveArticle(null)}
-                className="p-2 rounded-xl text-stone-400 hover:text-white bg-stone-900 border border-stone-800"
+                className="p-2 rounded-xl text-[#91b79a] hover:text-white bg-[#0a1f14] border border-[#1e3f2b] cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="prose prose-invert prose-emerald text-xs sm:text-sm text-stone-300 leading-relaxed space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+            <div className="text-xs sm:text-sm text-[#f3f1e7]/90 leading-relaxed space-y-4 max-h-[60vh] overflow-y-auto pr-2">
               {activeArticle.content.split('\n\n').map((paragraph, idx) => {
                 if (paragraph.startsWith('### ')) {
                   return (
-                    <h4 key={idx} className="text-base font-bold text-emerald-300 pt-2 font-mono">
+                    <h4 key={idx} className="text-base font-bold text-[#4f8a52] pt-2 font-mono">
                       {paragraph.replace('### ', '')}
                     </h4>
                   );
@@ -125,10 +125,10 @@ export default function NatureGuideView() {
               })}
             </div>
 
-            <div className="pt-4 border-t border-stone-800 flex justify-end">
+            <div className="pt-4 border-t border-[#1e3f2b] flex justify-end">
               <button
                 onClick={() => setActiveArticle(null)}
-                className="px-6 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-stone-200 text-xs font-mono font-bold uppercase"
+                className="px-6 py-2.5 rounded-xl bg-[#4f8a52] hover:bg-[#315c3b] text-[#f3f1e7] text-xs font-mono font-bold uppercase transition-colors cursor-pointer"
               >
                 Close Primer
               </button>

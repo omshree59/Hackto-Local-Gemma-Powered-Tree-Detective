@@ -18,41 +18,41 @@ export default function AchievementsView({
   streak = 3
 }) {
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 max-w-5xl mx-auto pb-12">
+    <div className="space-y-10 animate-in fade-in duration-500 max-w-5xl mx-auto pb-12 font-sans">
       
       {/* Header */}
-      <div className="pb-6 border-b border-stone-800">
-        <span className="text-[10px] font-mono font-black uppercase tracking-widest text-emerald-400 block mb-1">
+      <div className="pb-6 border-b border-[#1e3f2b]/60">
+        <span className="text-[10px] font-mono font-black uppercase tracking-widest text-[#4f8a52] block mb-1">
           FIELD PROGRESSION
         </span>
-        <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+        <h2 className="text-3xl sm:text-4xl font-black text-[#f3f1e7] tracking-tight">
           FIELD ACHIEVEMENTS
         </h2>
-        <p className="text-sm text-stone-400 mt-1 font-sans">
+        <p className="text-sm text-[#91b79a] mt-1 font-sans">
           Milestones unlocked through real-world botanical curiosity and outdoor habits.
         </p>
       </div>
 
       {/* Top Progression Stats Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 font-mono text-center">
-        <div className="p-4 rounded-2xl bg-stone-900/60 border border-stone-800">
-          <span className="text-[10px] text-stone-400 uppercase block mb-1">RANK TIER</span>
-          <span className="text-xl font-black text-white">Tier {level}</span>
+        <div className="p-4 rounded-2xl nature-surface-card border border-[#1e3f2b]">
+          <span className="text-[10px] text-[#91b79a] uppercase block mb-1">RANK TIER</span>
+          <span className="text-xl font-black text-[#f3f1e7]">Tier {level}</span>
         </div>
-        <div className="p-4 rounded-2xl bg-stone-900/60 border border-stone-800">
-          <span className="text-[10px] text-stone-400 uppercase block mb-1">TOTAL XP</span>
-          <span className="text-xl font-black text-emerald-400">{xp}</span>
+        <div className="p-4 rounded-2xl nature-surface-card border border-[#1e3f2b]">
+          <span className="text-[10px] text-[#91b79a] uppercase block mb-1">TOTAL XP</span>
+          <span className="text-xl font-black text-[#4f8a52]">{xp}</span>
         </div>
-        <div className="p-4 rounded-2xl bg-stone-900/60 border border-stone-800">
-          <span className="text-[10px] text-stone-400 uppercase block mb-1">PLANTS DISCOVERED</span>
-          <span className="text-xl font-black text-teal-300">{history.length}</span>
+        <div className="p-4 rounded-2xl nature-surface-card border border-[#1e3f2b]">
+          <span className="text-[10px] text-[#91b79a] uppercase block mb-1">PLANTS DISCOVERED</span>
+          <span className="text-xl font-black text-[#d8c8a8]">{history.length}</span>
         </div>
-        <div className="p-4 rounded-2xl bg-stone-900/60 border border-stone-800">
-          <span className="text-[10px] text-stone-400 uppercase block mb-1">MISSIONS DONE</span>
-          <span className="text-xl font-black text-white">{completedMissionsCount}</span>
+        <div className="p-4 rounded-2xl nature-surface-card border border-[#1e3f2b]">
+          <span className="text-[10px] text-[#91b79a] uppercase block mb-1">MISSIONS DONE</span>
+          <span className="text-xl font-black text-[#f3f1e7]">{completedMissionsCount}</span>
         </div>
-        <div className="p-4 rounded-2xl bg-stone-900/60 border border-stone-800 col-span-2 sm:col-span-1">
-          <span className="text-[10px] text-stone-400 uppercase block mb-1">STREAK</span>
+        <div className="p-4 rounded-2xl nature-surface-card border border-[#1e3f2b] col-span-2 sm:col-span-1">
+          <span className="text-[10px] text-[#91b79a] uppercase block mb-1">STREAK</span>
           <span className="text-xl font-black text-amber-400">{streak} Days</span>
         </div>
       </div>
@@ -70,10 +70,10 @@ export default function AchievementsView({
             <div
               key={ach.id}
               className={clsx(
-                "p-6 rounded-3xl border transition-all flex flex-col justify-between backdrop-blur-xl relative overflow-hidden group",
+                "p-6 rounded-3xl border transition-all flex flex-col justify-between relative overflow-hidden group",
                 unlocked
-                  ? "bg-stone-900/70 border-emerald-500/50 shadow-xl shadow-emerald-950/20"
-                  : "bg-stone-900/30 border-stone-800/80 opacity-60 hover:opacity-80"
+                  ? "nature-surface-card border-[#4f8a52]/60 shadow-xl shadow-[#0c2619]/40"
+                  : "nature-surface-subtle border-[#1e3f2b]/50 opacity-70 hover:opacity-90"
               )}
             >
               <div>
@@ -81,42 +81,42 @@ export default function AchievementsView({
                   <div className={clsx(
                     "p-3 rounded-2xl border transition-colors",
                     unlocked 
-                      ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40" 
-                      : "bg-stone-950 text-stone-600 border-stone-800"
+                      ? "bg-[#0c2619] text-[#4f8a52] border-[#4f8a52]/40" 
+                      : "bg-[#06140c] text-[#91b79a]/50 border-[#1e3f2b]"
                   )}>
                     <IconComp className="w-6 h-6" />
                   </div>
 
                   {unlocked ? (
-                    <span className="flex items-center gap-1 text-[10px] font-mono font-bold uppercase text-emerald-400 bg-emerald-950/80 px-2.5 py-1 rounded-full border border-emerald-800/80">
+                    <span className="flex items-center gap-1 text-[10px] font-mono font-bold uppercase text-[#4f8a52] bg-[#0c2619] px-2.5 py-1 rounded-full border border-[#4f8a52]">
                       <CheckCircle className="w-3 h-3" /> UNLOCKED
                     </span>
                   ) : (
-                    <span className="text-[10px] font-mono text-stone-300 bg-stone-950 px-2.5 py-1 rounded-full border border-stone-800">
+                    <span className="text-[10px] font-mono text-[#91b79a] bg-[#06140c] px-2.5 py-1 rounded-full border border-[#1e3f2b]">
                       LOCKED
                     </span>
                   )}
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-1">
+                <h3 className="text-lg font-bold text-[#f3f1e7] mb-1">
                   {ach.title}
                 </h3>
-                <p className="text-xs text-stone-400 font-sans leading-relaxed mb-4">
+                <p className="text-xs text-[#91b79a] font-sans leading-relaxed mb-4">
                   {ach.description}
                 </p>
               </div>
 
               {/* Progress Bar */}
               <div className="space-y-1.5 font-mono text-[10px]">
-                <div className="flex justify-between text-stone-400">
+                <div className="flex justify-between text-[#91b79a]">
                   <span>PROGRESS</span>
-                  <span className={unlocked ? "text-emerald-400 font-bold" : "text-stone-300"}>
+                  <span className={unlocked ? "text-[#4f8a52] font-bold" : "text-[#d8c8a8]"}>
                     {currentProgress} / {target}
                   </span>
                 </div>
-                <div className="h-1.5 w-full bg-stone-950 rounded-full overflow-hidden border border-stone-800">
+                <div className="h-1.5 w-full bg-[#06140c] rounded-full overflow-hidden border border-[#1e3f2b]">
                   <div 
-                    className="h-full bg-emerald-500 transition-all duration-700" 
+                    className="h-full bg-[#4f8a52] transition-all duration-700" 
                     style={{ width: `${pct}%` }}
                   />
                 </div>

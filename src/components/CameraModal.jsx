@@ -10,7 +10,7 @@ export default function CameraModal({
   const [capturedImage, setCapturedImage] = useState(null);
   const [cameraError, setCameraError] = useState('');
   const [isInitializing, setIsInitializing] = useState(true);
-  const [facingMode, setFacingMode] = useState('environment'); // 'environment' | 'user'
+  const [facingMode, setFacingMode] = useState('environment');
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -89,19 +89,19 @@ export default function CameraModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#030503]/95 backdrop-blur-3xl flex flex-col items-center justify-between p-4 sm:p-8 animate-in fade-in duration-300 select-none">
+    <div className="fixed inset-0 z-50 bg-[#040e08]/95 backdrop-blur-3xl flex flex-col items-center justify-between p-4 sm:p-8 animate-in fade-in duration-300 select-none">
       
       {/* Top Header */}
       <div className="w-full max-w-2xl flex items-center justify-between font-mono text-xs">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-          <span className="text-white font-bold uppercase tracking-wider">FIELD CAMERA</span>
-          <span className="text-stone-500">• OPTICAL SENSOR</span>
+          <span className="text-[#f3f1e7] font-bold uppercase tracking-wider">FIELD CAMERA</span>
+          <span className="text-[#91b79a]">• OPTICAL SENSOR</span>
         </div>
 
         <button
           onClick={onClose}
-          className="p-2 rounded-xl text-stone-400 hover:text-white bg-stone-900/60 border border-stone-800 transition-colors cursor-pointer"
+          className="p-2 rounded-xl text-[#91b79a] hover:text-[#f3f1e7] bg-[#0c2417] border border-[#1e3f2b] transition-colors cursor-pointer"
           title="Cancel"
         >
           <X className="w-5 h-5" />
@@ -109,24 +109,24 @@ export default function CameraModal({
       </div>
 
       {/* Main Viewfinder Frame */}
-      <div className="relative w-full max-w-2xl flex-1 max-h-[580px] my-4 rounded-3xl overflow-hidden bg-stone-950 border border-stone-800 shadow-2xl flex items-center justify-center">
+      <div className="relative w-full max-w-2xl flex-1 max-h-[580px] my-4 rounded-3xl overflow-hidden bg-[#07160f] border border-[#1e3f2b] shadow-2xl flex items-center justify-center">
         
-        {/* Optical Focus Corners */}
-        <div className="absolute top-6 left-6 w-8 h-8 border-t-2 border-l-2 border-emerald-400 z-20 pointer-events-none"></div>
-        <div className="absolute top-6 right-6 w-8 h-8 border-t-2 border-r-2 border-emerald-400 z-20 pointer-events-none"></div>
-        <div className="absolute bottom-6 left-6 w-8 h-8 border-b-2 border-l-2 border-emerald-400 z-20 pointer-events-none"></div>
-        <div className="absolute bottom-6 right-6 w-8 h-8 border-b-2 border-r-2 border-emerald-400 z-20 pointer-events-none"></div>
+        {/* Optical Focus Corners (Subtle Leaf Green) */}
+        <div className="absolute top-6 left-6 w-8 h-8 border-t-2 border-l-2 border-[#4f8a52] z-20 pointer-events-none"></div>
+        <div className="absolute top-6 right-6 w-8 h-8 border-t-2 border-r-2 border-[#4f8a52] z-20 pointer-events-none"></div>
+        <div className="absolute bottom-6 left-6 w-8 h-8 border-b-2 border-l-2 border-[#4f8a52] z-20 pointer-events-none"></div>
+        <div className="absolute bottom-6 right-6 w-8 h-8 border-b-2 border-r-2 border-[#4f8a52] z-20 pointer-events-none"></div>
 
         {/* Scan Reticle Targeting Center */}
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-20">
-          <div className="w-24 h-24 border border-emerald-500/30 rounded-full flex items-center justify-center">
-            <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+          <div className="w-24 h-24 border border-[#4f8a52]/40 rounded-full flex items-center justify-center">
+            <div className="w-2 h-2 bg-[#4f8a52] rounded-full"></div>
           </div>
         </div>
 
         {/* Instruction Eyebrow */}
         <div className="absolute top-4 inset-x-0 flex justify-center z-20 pointer-events-none">
-          <span className="bg-[#080b08]/85 backdrop-blur-md px-4 py-1.5 rounded-full border border-stone-800 text-xs font-mono text-stone-200">
+          <span className="bg-[#06120b]/85 backdrop-blur-md px-4 py-1.5 rounded-full border border-[#1e3f2b]/60 text-xs font-mono text-[#f3f1e7]">
             Frame the plant clearly.
           </span>
         </div>
@@ -140,25 +140,25 @@ export default function CameraModal({
           />
         ) : cameraError ? (
           <div className="p-8 text-center max-w-md space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-950/40 border border-amber-800 text-amber-400 flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 rounded-2xl bg-amber-950/40 border border-amber-800 text-amber-300 flex items-center justify-center mx-auto">
               <AlertTriangle className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="text-base font-bold text-white mb-1">Camera Sensor Unavailable</h4>
-              <p className="text-xs text-stone-400 leading-relaxed font-mono">
+              <h4 className="text-base font-bold text-[#f3f1e7] mb-1">Camera Sensor Unavailable</h4>
+              <p className="text-xs text-[#d8c8a8] leading-relaxed font-mono">
                 {cameraError}
               </p>
             </div>
             <button
               onClick={onFallbackUpload}
-              className="bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-black px-6 py-3 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 mx-auto cursor-pointer"
+              className="bg-[#245336] hover:bg-[#2d6844] text-[#f3f1e7] font-black px-6 py-3 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 mx-auto cursor-pointer border border-[#4f8a52]/40"
             >
-              <Upload className="w-4 h-4 text-stone-950" />
+              <Upload className="w-4 h-4 text-emerald-300" />
               <span>Choose Photo From Drive</span>
             </button>
           </div>
         ) : isInitializing ? (
-          <div className="flex flex-col items-center gap-3 text-stone-400 font-mono text-xs">
+          <div className="flex flex-col items-center gap-3 text-[#91b79a] font-mono text-xs">
             <RefreshCw className="w-6 h-6 animate-spin text-emerald-400" />
             <span>ACTIVATING OPTICAL LENS...</span>
           </div>
@@ -179,7 +179,7 @@ export default function CameraModal({
       <div className="w-full max-w-2xl flex items-center justify-between px-6">
         <button
           onClick={onClose}
-          className="text-xs font-mono font-bold text-stone-400 hover:text-white px-4 py-2 cursor-pointer"
+          className="text-xs font-mono font-bold text-[#91b79a] hover:text-[#f3f1e7] px-4 py-2 cursor-pointer"
         >
           CANCEL
         </button>
@@ -188,15 +188,15 @@ export default function CameraModal({
           <div className="flex items-center gap-4">
             <button
               onClick={retakeSnapshot}
-              className="px-5 py-3 rounded-xl bg-stone-900 border border-stone-800 text-stone-300 hover:text-white text-xs font-mono font-bold uppercase transition-colors cursor-pointer"
+              className="px-5 py-3 rounded-xl bg-[#0c2417] border border-[#1e3f2b] text-[#f3f1e7] text-xs font-mono font-bold uppercase transition-colors cursor-pointer"
             >
               RETAKE
             </button>
             <button
               onClick={confirmUsePhoto}
-              className="px-8 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-stone-950 text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-emerald-500/25 transition-all cursor-pointer"
+              className="px-8 py-3.5 rounded-2xl bg-[#245336] hover:bg-[#2d6844] text-[#f3f1e7] text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-black/40 border border-[#4f8a52]/40 transition-all cursor-pointer"
             >
-              <Check className="w-4 h-4 text-stone-950" />
+              <Check className="w-4 h-4 text-emerald-300" />
               <span>ANALYZE PLANT</span>
             </button>
           </div>
@@ -205,7 +205,7 @@ export default function CameraModal({
             <button
               onClick={toggleCameraFacing}
               disabled={!!cameraError || isInitializing}
-              className="p-3 rounded-full bg-stone-900 text-stone-400 hover:text-white border border-stone-800 transition-colors cursor-pointer disabled:opacity-30"
+              className="p-3 rounded-full bg-[#0c2417] text-[#91b79a] hover:text-[#f3f1e7] border border-[#1e3f2b] transition-colors cursor-pointer disabled:opacity-30"
               title="Switch Camera Facing (Front / Back)"
             >
               <RotateCcw className="w-5 h-5" />
@@ -214,15 +214,15 @@ export default function CameraModal({
             <button
               onClick={takeSnapshot}
               disabled={!!cameraError || isInitializing}
-              className="w-20 h-20 rounded-full border-4 border-emerald-400/80 bg-stone-950 flex items-center justify-center shadow-2xl active:scale-95 transition-transform disabled:opacity-40 cursor-pointer"
+              className="w-20 h-20 rounded-full border-4 border-[#4f8a52]/80 bg-[#07160f] flex items-center justify-center shadow-2xl active:scale-95 transition-transform disabled:opacity-40 cursor-pointer"
               title="Capture Photo"
             >
-              <div className="w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-400"></div>
+              <div className="w-14 h-14 rounded-full bg-[#245336] hover:bg-[#2d6844]"></div>
             </button>
 
             <button
               onClick={onFallbackUpload}
-              className="p-3 rounded-full bg-stone-900 text-stone-400 hover:text-white border border-stone-800 transition-colors cursor-pointer"
+              className="p-3 rounded-full bg-[#0c2417] text-[#91b79a] hover:text-[#f3f1e7] border border-[#1e3f2b] transition-colors cursor-pointer"
               title="Upload from device"
             >
               <Upload className="w-5 h-5" />
