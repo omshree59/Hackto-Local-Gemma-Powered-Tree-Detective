@@ -115,16 +115,55 @@ export const INITIAL_QUESTS = [
     completed: false
   },
   {
-    id: 'q-bark-fissures',
-    title: 'Canopy Bark Detective',
+    id: 'q-veins',
+    title: 'Leaf With Unusual Veins',
+    category: 'PHOTOGRAPHY',
+    duration: '20 min',
+    difficulty: 'Medium',
+    reward: 60,
+    equipment: 'Camera',
+    objective: 'Find and photograph a leaf with a highly unusual or distinct vein pattern.',
+    hint: 'Hold the leaf up to the light to photograph the vascular structure.',
+    progress: '0 / 1 photographed',
+    completed: false
+  },
+  {
+    id: 'q-three-shades',
+    title: 'Three Green Shades',
     category: 'PHOTOGRAPHY',
     duration: '25 min',
-    difficulty: 'Medium',
-    reward: 70,
-    equipment: 'Camera lens',
-    objective: 'Photograph the close-up macro texture of deep tree bark showing lichen or moss colonization.',
-    hint: 'North-facing tree trunks typically host denser moss colonies due to prolonged moisture retention.',
+    difficulty: 'Easy',
+    reward: 50,
+    equipment: 'Camera',
+    objective: 'Capture three photos of entirely different shades of green in nature.',
+    hint: 'Look for new spring growth vs. old mature foliage.',
+    progress: '0 / 3 photographed',
+    completed: false
+  },
+  {
+    id: 'q-rough-bark',
+    title: 'Rough Bark',
+    category: 'PHOTOGRAPHY',
+    duration: '15 min',
+    difficulty: 'Easy',
+    reward: 40,
+    equipment: 'Camera',
+    objective: 'Photograph the closest, most detailed macro shot of rough tree bark you can find.',
+    hint: 'Look for deep fissures and ridges in mature trees.',
     progress: '0 / 1 photographed',
+    completed: false
+  },
+  {
+    id: 'q-smallest-leaf',
+    title: 'Smallest Leaf You Can Find',
+    category: 'DISCOVERY',
+    duration: '20 min',
+    difficulty: 'Adventure',
+    reward: 80,
+    equipment: 'Patience',
+    objective: 'Find and log the absolute smallest distinct leaf you can locate outdoors.',
+    hint: 'Look closely at mosses, tiny groundcovers, and emerging sprouts.',
+    progress: '0 / 1 found',
     completed: false
   }
 ];

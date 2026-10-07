@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Settings, Trash2, Download, RefreshCw, 
-  ShieldCheck, Eye, EyeOff, CheckCircle
+  ShieldCheck, Eye, EyeOff, CheckCircle, Database
 } from 'lucide-react';
 
 export default function SettingsView({
@@ -11,10 +11,11 @@ export default function SettingsView({
 }) {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [highContrast, setHighContrast] = useState(false);
+  const [confirmClear, setConfirmClear] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 max-w-4xl mx-auto pb-12 font-sans">
+    <div className="space-y-10 animate-in fade-in duration-500 max-w-4xl mx-auto pb-12 font-sans select-none">
       
       {/* Header */}
       <div className="pb-6 border-b border-[#1e3f2b]/60">
@@ -22,7 +23,7 @@ export default function SettingsView({
           SYSTEM PREFERENCES
         </span>
         <h2 className="text-3xl sm:text-4xl font-black text-[#f3f1e7] tracking-tight">
-          SETTINGS
+          Settings & Privacy Center
         </h2>
         <p className="text-sm text-[#91b79a] mt-1">
           Configure offline data storage, visual density, and privacy controls.
@@ -31,18 +32,124 @@ export default function SettingsView({
 
       <div className="space-y-6">
         
+        {/* Privacy Center */}
+        <section className="nature-surface-card border border-[#4f8a52]/50 rounded-3xl p-6 sm:p-8 space-y-6 relative overflow-hidden shadow-2xl">
+          <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+            <ShieldCheck className="w-48 h-48 text-emerald-400" />
+          </div>
+
+          <div className="relative z-10">
+            <h3 className="text-lg font-black text-[#f3f1e7] font-sans flex items-center gap-2 mb-2">
+              YOUR DATA STAYS LOCAL
+            </h3>
+            <p className="text-sm text-[#91b79a] font-sans max-w-xl mb-6">
+              NatureQuest is designed to protect your privacy and ensure offline availability. All data and processing happens on this device.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-sm mb-6">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-[#081a11]/80 border border-[#1e3f2b]">
+                <span className="text-[#91b79a]">Photos</span>
+                <span className="text-emerald-400 font-bold flex items-center gap-1.5"><Database className="w-3.5 h-3.5" /> Local</span>
+              </div>
+              <div className="flex items-center justify-between p-4 rounded-xl bg-[#081a11]/80 border border-[#1e3f2b]">
+                <span className="text-[#91b79a]">Field Codex</span>
+                <span className="text-emerald-400 font-bold flex items-center gap-1.5"><Database className="w-3.5 h-3.5" /> Local</span>
+              </div>
+              <div className="flex items-center justify-between p-4 rounded-xl bg-[#081a11]/80 border border-[#1e3f2b]">
+                <span className="text-[#91b79a]">Progress</span>
+                <span className="text-emerald-400 font-bold flex items-center gap-1.5"><Database className="w-3.5 h-3.5" /> Local</span>
+              </div>
+              <div className="flex items-center justify-between p-4 rounded-xl bg-[#081a11]/80 border border-[#1e3f2b]">
+                <span className="text-[#91b79a]">AI Processing</span>
+                <span className="text-emerald-400 font-bold flex items-center gap-1.5"><Database className="w-3.5 h-3.5" /> Local</span>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-[#0c2619]/50 border border-[#1e3f2b]/60 space-y-3 font-mono text-sm mb-8">
+              <div className="flex items-center justify-between">
+                <span className="text-[#d8c8a8]">Cloud uploads:</span>
+                <span className="text-[#f3f1e7] font-bold">None</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[#d8c8a8]">External AI:</span>
+                <span className="text-[#f3f1e7] font-bold">None</span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-[#1e3f2b]/50">
+              {confirmClear ? (
+                <div className="flex items-center gap-3 w-full sm:w-auto p-2 bg-[#123a27] rounded-xl border border-[#4f8a52]">
+                  <span className="text-xs font-mono text-[#f3f1e7] pl-2 font-bold uppercase">Are you sure?</span>
+                  <button
+                    onClick={() => {
+                      onClearCodex();
+                      setConfirmClear(false);
+                    }}
+                    className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-mono text-xs font-bold uppercase cursor-pointer"
+                  >
+                    Yes, Clear
+                  </button>
+                  <button
+                    onClick={() => setConfirmClear(false)}
+                    className="px-4 py-2 rounded-lg bg-[#081a11] hover:bg-[#0c2619] text-[#91b79a] font-mono text-xs cursor-pointer border border-[#1e3f2b]"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setConfirmClear(true)}
+                  className="px-5 py-3 rounded-xl bg-[#0c2619] hover:bg-[#123a27] border border-[#1e3f2b] hover:border-amber-600/50 text-[#91b79a] hover:text-amber-400 text-xs font-mono font-bold uppercase flex items-center gap-2 transition-all cursor-pointer"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>CLEAR LOCAL DATA</span>
+                </button>
+              )}
+
+              {confirmReset ? (
+                <div className="flex items-center gap-3 w-full sm:w-auto p-2 bg-rose-950/40 rounded-xl border border-rose-900/60">
+                  <span className="text-xs font-mono text-rose-300 pl-2 font-bold uppercase">Reset entire app?</span>
+                  <button
+                    onClick={() => {
+                      onResetProgress();
+                      setConfirmReset(false);
+                    }}
+                    className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-mono text-xs font-bold uppercase cursor-pointer"
+                  >
+                    Yes, Reset
+                  </button>
+                  <button
+                    onClick={() => setConfirmReset(false)}
+                    className="px-4 py-2 rounded-lg bg-[#081a11] hover:bg-[#0c2619] text-[#91b79a] font-mono text-xs cursor-pointer border border-[#1e3f2b]"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setConfirmReset(true)}
+                  className="px-5 py-3 rounded-xl bg-[#0c2619] hover:bg-rose-950/40 border border-[#1e3f2b] hover:border-rose-900/60 text-[#91b79a] hover:text-rose-400 text-xs font-mono font-bold uppercase flex items-center gap-2 transition-all cursor-pointer"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  <span>RESET APPLICATION</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </section>
+        
         {/* Appearance & Motion Section */}
         <section className="nature-surface-card border border-[#1e3f2b] rounded-3xl p-6 sm:p-8 space-y-5">
           <h3 className="text-base font-bold text-[#f3f1e7] font-mono flex items-center gap-2">
             <Eye className="w-4 h-4 text-[#4f8a52]" />
-            APPEARANCE & MOTION
+            APPEARANCE & ACCESSIBILITY
           </h3>
 
           <div className="space-y-4 text-xs font-mono">
             <div className="flex items-center justify-between p-3.5 rounded-2xl bg-[#07170e] border border-[#1e3f2b]">
               <div>
                 <span className="text-[#f3f1e7] font-bold block">Reduced Motion</span>
-                <span className="text-[#91b79a] text-[11px] font-sans">Disable background laser scanner & particle animations</span>
+                <span className="text-[#91b79a] text-[11px] font-sans">Minimize background transitions and scanner animations</span>
               </div>
               <button
                 onClick={() => setReducedMotion(prev => !prev)}
@@ -65,73 +172,6 @@ export default function SettingsView({
               </button>
             </div>
           </div>
-        </section>
-
-        {/* Local Storage & Data Management */}
-        <section className="nature-surface-card border border-[#1e3f2b] rounded-3xl p-6 sm:p-8 space-y-5">
-          <h3 className="text-base font-bold text-[#f3f1e7] font-mono flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-[#4f8a52]" />
-            LOCAL DATA & STORAGE
-          </h3>
-
-          <p className="text-xs text-[#91b79a] font-sans leading-relaxed">
-            All discoveries, XP scores, and active quests are stored strictly in your browser's persistent WebStorage. No cloud backups or remote synchronizations occur.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <button
-              onClick={onExportBackup}
-              className="px-5 py-3 rounded-xl nature-surface-subtle hover:bg-[#123a27]/80 border border-[#1e3f2b] text-[#d8c8a8] text-xs font-mono font-bold uppercase flex items-center gap-2 transition-colors cursor-pointer"
-            >
-              <Download className="w-4 h-4 text-[#4f8a52]" />
-              <span>EXPORT CODEX BACKUP (JSON)</span>
-            </button>
-
-            <button
-              onClick={onClearCodex}
-              className="px-5 py-3 rounded-xl nature-surface-subtle hover:bg-[#123a27]/80 border border-[#1e3f2b] text-[#91b79a] text-xs font-mono font-bold uppercase flex items-center gap-2 transition-colors cursor-pointer"
-            >
-              <Trash2 className="w-4 h-4 text-amber-400" />
-              <span>CLEAR FIELD CODEX</span>
-            </button>
-          </div>
-        </section>
-
-        {/* Danger Zone: Reset Everything */}
-        <section className="bg-rose-950/20 border border-rose-900/40 rounded-3xl p-6 sm:p-8 space-y-4">
-          <h3 className="text-base font-bold text-rose-300 font-mono">
-            RESET EXPEDITION DATA
-          </h3>
-          <p className="text-xs text-[#91b79a] font-sans leading-relaxed">
-            Reset all XP, level ranks, quest completions, and stored discoveries back to initial defaults. This action cannot be undone.
-          </p>
-
-          {confirmReset ? (
-            <div className="flex items-center gap-3 pt-2">
-              <button
-                onClick={() => {
-                  onResetProgress();
-                  setConfirmReset(false);
-                }}
-                className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-mono text-xs font-bold uppercase cursor-pointer"
-              >
-                CONFIRM RESET
-              </button>
-              <button
-                onClick={() => setConfirmReset(false)}
-                className="px-4 py-2.5 rounded-xl nature-surface-subtle text-[#91b79a] font-mono text-xs cursor-pointer border border-[#1e3f2b]"
-              >
-                CANCEL
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setConfirmReset(true)}
-              className="px-5 py-2.5 rounded-xl bg-rose-950/60 hover:bg-rose-900/60 border border-rose-900/60 text-rose-300 font-mono text-xs font-bold uppercase transition-colors cursor-pointer"
-            >
-              RESET ALL PROGRESS
-            </button>
-          )}
         </section>
 
       </div>

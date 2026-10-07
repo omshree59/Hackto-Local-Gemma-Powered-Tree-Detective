@@ -1,8 +1,10 @@
 import React from 'react';
 import { 
   Activity, Clock, Leaf, Target, Award, 
-  BookOpen, Footprints, Flame, CheckCircle
+  BookOpen, Footprints, Flame, CheckCircle, 
+  Map
 } from 'lucide-react';
+import clsx from 'clsx';
 
 export default function MyProgressView({
   history,
@@ -10,6 +12,7 @@ export default function MyProgressView({
   level,
   outdoorMinutes = 45,
   completedMissionsCount = 4,
+  trailsCompleted = 0,
   streak = 3,
   longestStreak = 5
 }) {
@@ -19,8 +22,15 @@ export default function MyProgressView({
     Plant: history.filter(h => !['tree', 'flower'].includes((h.category || '').toLowerCase())).length
   };
 
+  const totalDiscovered = history.length;
+  
+  // Fake calculation for Biodiversity score based on discoveries
+  const uniqueCount = Math.min(totalDiscovered * 4, 100);
+  const biodiversityScore = Math.min(Math.floor((categoriesCount.Tree * 15 + categoriesCount.Flower * 10 + categoriesCount.Plant * 5) * 1.2), 100);
+  const categoriesExplored = [categoriesCount.Tree > 0, categoriesCount.Flower > 0, categoriesCount.Plant > 0, history.some(h => (h.category || '').toLowerCase().includes('leaf'))].filter(Boolean).length;
+
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 max-w-5xl mx-auto pb-12 font-sans">
+    <div className="space-y-10 animate-in fade-in duration-500 max-w-5xl mx-auto pb-12 font-sans select-none">
       
       {/* Header */}
       <div className="pb-6 border-b border-[#1e3f2b]/60">
@@ -28,127 +38,139 @@ export default function MyProgressView({
           PERSONAL REFLECTION
         </span>
         <h2 className="text-3xl sm:text-4xl font-black text-[#f3f1e7] tracking-tight">
-          MY PROGRESS
+          My Progress
         </h2>
-        <p className="text-sm text-[#91b79a] mt-1">
-          Simple field metrics reflecting real-world time spent discovering plants outside.
+        <p className="text-sm text-[#91b79a] mt-1 max-w-2xl">
+          Simple field metrics reflecting real-world time spent discovering plants outside. The goal is to spend less time on the screen and more time exploring.
         </p>
       </div>
 
-      {/* Main Bento Metrics */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 font-mono">
-        
-        <div className="nature-surface-card border border-[#1e3f2b] rounded-3xl p-6 shadow-xl flex flex-col justify-between">
-          <div>
-            <span className="text-[10px] text-[#91b79a] uppercase tracking-wider block mb-2">OUTDOOR MINUTES</span>
-            <div className="flex items-baseline gap-2">
-              <span className="text-4xl sm:text-5xl font-black text-[#f3f1e7]">{outdoorMinutes}</span>
-              <span className="text-xs text-[#4f8a52] font-bold">MIN</span>
-            </div>
-          </div>
-          <p className="text-[11px] text-[#91b79a] font-sans mt-4">
-            Unplugged trail exploration
-          </p>
+      {/* ============================================================== */}
+      {/* FIELD PASSPORT */}
+      {/* ============================================================== */}
+      <section className="nature-surface-card border border-[#4f8a52]/30 rounded-[2.5rem] p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+        {/* Subtle background decoration */}
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-10 pointer-events-none">
+          <Award className="w-96 h-96 text-emerald-400" />
         </div>
 
-        <div className="nature-surface-card border border-[#1e3f2b] rounded-3xl p-6 shadow-xl flex flex-col justify-between">
-          <div>
-            <span className="text-[10px] text-[#91b79a] uppercase tracking-wider block mb-2">PLANTS LOGGED</span>
-            <div className="flex items-baseline gap-2">
-              <span className="text-4xl sm:text-5xl font-black text-[#4f8a52]">{history.length}</span>
-              <span className="text-xs text-[#d8c8a8] font-bold">SPECIES</span>
+        <div className="relative z-10">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-10">
+            <div>
+              <span className="text-[10px] font-mono font-black uppercase tracking-widest text-[#91b79a] block mb-2">
+                OFFICIAL RECORD
+              </span>
+              <h3 className="text-4xl font-black text-[#f3f1e7] flex items-center gap-3">
+                Field Passport
+              </h3>
+            </div>
+            <div className="text-right">
+              <div className="text-xs font-mono text-[#91b79a] uppercase mb-1">Rank</div>
+              <div className="text-2xl font-black text-emerald-400">Tier {level} Naturalist</div>
+              <div className="text-sm font-mono text-[#f3f1e7] mt-1">{xp} XP Total</div>
             </div>
           </div>
-          <p className="text-[11px] text-[#91b79a] font-sans mt-4">
-            Verified local field entries
-          </p>
-        </div>
 
-        <div className="nature-surface-card border border-[#1e3f2b] rounded-3xl p-6 shadow-xl flex flex-col justify-between">
-          <div>
-            <span className="text-[10px] text-[#91b79a] uppercase tracking-wider block mb-2">QUESTS COMPLETED</span>
-            <div className="flex items-baseline gap-2">
-              <span className="text-4xl sm:text-5xl font-black text-[#d8c8a8]">{completedMissionsCount}</span>
-              <span className="text-xs text-[#91b79a] font-bold">MISSIONS</span>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 font-mono text-sm border-t border-[#1e3f2b]/50 pt-8 mb-8">
+            <div>
+              <div className="text-[10px] text-[#91b79a] mb-1">PLANTS</div>
+              <div className="text-2xl font-black text-[#f3f1e7]">{totalDiscovered}</div>
+            </div>
+            <div>
+              <div className="text-[10px] text-[#91b79a] mb-1">QUESTS</div>
+              <div className="text-2xl font-black text-[#f3f1e7]">{completedMissionsCount}</div>
+            </div>
+            <div>
+              <div className="text-[10px] text-[#91b79a] mb-1">TRAILS</div>
+              <div className="text-2xl font-black text-[#f3f1e7]">{trailsCompleted}</div>
+            </div>
+            <div>
+              <div className="text-[10px] text-[#91b79a] mb-1">MINUTES OUT</div>
+              <div className="text-2xl font-black text-[#f3f1e7]">{outdoorMinutes}</div>
+            </div>
+            <div>
+              <div className="text-[10px] text-[#91b79a] mb-1">STREAK</div>
+              <div className="text-2xl font-black text-amber-400">{streak}</div>
+            </div>
+            <div>
+              <div className="text-[10px] text-[#91b79a] mb-1">MAX STREAK</div>
+              <div className="text-2xl font-black text-[#f3f1e7]">{longestStreak}</div>
             </div>
           </div>
-          <p className="text-[11px] text-[#91b79a] font-sans mt-4">
-            Finished sensory quests
-          </p>
-        </div>
 
-        <div className="nature-surface-card border border-[#1e3f2b] rounded-3xl p-6 shadow-xl flex flex-col justify-between">
-          <div>
-            <span className="text-[10px] text-[#91b79a] uppercase tracking-wider block mb-2">ACTIVE STREAK</span>
-            <div className="flex items-baseline gap-2">
-              <span className="text-4xl sm:text-5xl font-black text-amber-400">{streak}</span>
-              <span className="text-xs text-amber-300 font-bold">DAYS</span>
-            </div>
-          </div>
-          <p className="text-[11px] text-[#91b79a] font-sans mt-4">
-            Longest recorded: {longestStreak} days
-          </p>
-        </div>
-
-      </div>
-
-      {/* Breakdown: Botanical Families Surveyed */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        <div className="lg:col-span-6 nature-surface-card border border-[#1e3f2b] rounded-[2rem] p-7 space-y-6">
-          <h3 className="text-base font-bold text-[#f3f1e7] font-mono flex items-center gap-2">
-            <Leaf className="w-4 h-4 text-[#4f8a52]" />
-            BOTANICAL CATEGORY RATIOS
-          </h3>
-
-          <div className="space-y-4 font-mono text-xs">
-            {[
-              { name: 'Trees & Woody Shrubs', count: categoriesCount.Tree, max: 10, color: 'from-[#4f8a52] to-[#91b79a]' },
-              { name: 'Wildflowers & Blossoms', count: categoriesCount.Flower, max: 10, color: 'from-[#91b79a] to-[#d8c8a8]' },
-              { name: 'Herbaceous Plants & Ferns', count: categoriesCount.Plant, max: 10, color: 'from-[#315c3b] to-[#4f8a52]' }
-            ].map(cat => (
-              <div key={cat.name} className="space-y-1.5">
-                <div className="flex justify-between text-[#f3f1e7]">
-                  <span>{cat.name}</span>
-                  <span className="text-[#91b79a]">{cat.count} recorded</span>
-                </div>
-                <div className="h-2 w-full bg-[#06140c] rounded-full overflow-hidden border border-[#1e3f2b]">
-                  <div 
-                    className={`h-full bg-gradient-to-r ${cat.color} transition-all duration-700`}
-                    style={{ width: `${Math.min((cat.count / cat.max) * 100, 100)}%` }}
-                  />
-                </div>
+          <div className="border-t border-[#1e3f2b]/50 pt-6">
+            <span className="text-[10px] text-[#91b79a] uppercase tracking-widest block mb-4">DISCOVERY STAMPS</span>
+            <div className="flex flex-wrap gap-4">
+              <div className={clsx("w-20 h-20 rounded-full border-4 flex items-center justify-center font-black uppercase text-xs rotate-[-5deg]", categoriesCount.Tree > 0 ? "border-emerald-600/60 text-emerald-500/80" : "border-[#1e3f2b]/40 text-[#1e3f2b]/40")}>
+                TREE
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="lg:col-span-6 nature-surface-card border border-[#1e3f2b] rounded-[2rem] p-7 flex flex-col justify-between space-y-4">
-          <div>
-            <span className="text-[10px] font-mono font-bold uppercase text-[#4f8a52] block mb-1">
-              EXPEDITION PHILOSOPHY
-            </span>
-            <h3 className="text-lg font-bold text-[#f3f1e7] leading-snug">
-              "The screen is the tool. The outdoors is the product."
-            </h3>
-            <p className="text-xs text-[#91b79a] font-sans leading-relaxed mt-2">
-              NatureQuest does not track your screen time to keep you hooked. Every metric here measures your transition away from digital noise into physical botanical reality.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-[#06140c]/90 border border-[#1e3f2b] font-mono text-xs space-y-1">
-            <div className="flex justify-between text-[#f3f1e7]">
-              <span>CURRENT EXPEDITION TIER:</span>
-              <span className="text-[#4f8a52] font-bold">Tier {level} Naturalist</span>
-            </div>
-            <div className="flex justify-between text-[#91b79a]">
-              <span>FIELD CODEX ENTRIES:</span>
-              <span>{history.length} Records</span>
+              <div className={clsx("w-20 h-20 rounded-full border-4 flex items-center justify-center font-black uppercase text-xs rotate-[12deg]", categoriesCount.Flower > 0 ? "border-rose-600/60 text-rose-500/80" : "border-[#1e3f2b]/40 text-[#1e3f2b]/40")}>
+                FLOWER
+              </div>
+              <div className={clsx("w-20 h-20 rounded-full border-4 flex items-center justify-center font-black uppercase text-xs rotate-[4deg]", history.length > 0 ? "border-amber-600/60 text-amber-500/80" : "border-[#1e3f2b]/40 text-[#1e3f2b]/40")}>
+                LEAF
+              </div>
+              <div className={clsx("w-20 h-20 rounded-full border-4 flex items-center justify-center font-black uppercase text-xs rotate-[-15deg]", categoriesCount.Plant > 0 ? "border-indigo-600/60 text-indigo-500/80" : "border-[#1e3f2b]/40 text-[#1e3f2b]/40")}>
+                PLANT
+              </div>
             </div>
           </div>
         </div>
+      </section>
 
-      </div>
+      {/* ============================================================== */}
+      {/* BIODIVERSITY PROFILE */}
+      {/* ============================================================== */}
+      <section className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <div className="md:col-span-7 nature-surface-card rounded-[2rem] p-8 border border-[#1e3f2b]/60">
+          <span className="text-[10px] font-mono font-black uppercase tracking-widest text-[#91b79a] block mb-6">
+            YOUR EXPLORATION PROFILE
+          </span>
+          
+          <div className="space-y-6 font-mono text-xs">
+            <div className="flex justify-between items-end border-b border-[#1e3f2b]/50 pb-2">
+              <span className="text-[#f3f1e7] text-base">Trees</span>
+              <span className="text-emerald-400 text-xl font-black">{categoriesCount.Tree}</span>
+            </div>
+            <div className="flex justify-between items-end border-b border-[#1e3f2b]/50 pb-2">
+              <span className="text-[#f3f1e7] text-base">Flowers</span>
+              <span className="text-emerald-400 text-xl font-black">{categoriesCount.Flower}</span>
+            </div>
+            <div className="flex justify-between items-end border-b border-[#1e3f2b]/50 pb-2">
+              <span className="text-[#f3f1e7] text-base">Other plants</span>
+              <span className="text-emerald-400 text-xl font-black">{categoriesCount.Plant}</span>
+            </div>
+          </div>
+
+          <div className="mt-8 pt-6 border-t border-[#1e3f2b]/40 flex items-center justify-between font-mono text-sm">
+            <div className="text-[#91b79a]">Categories explored:</div>
+            <div className="text-[#f3f1e7] font-bold">{categoriesExplored} / 8</div>
+          </div>
+        </div>
+
+        <div className="md:col-span-5 nature-surface-card rounded-[2rem] p-8 border border-[#1e3f2b]/60 flex flex-col justify-center items-center text-center">
+          <div className="w-32 h-32 rounded-full border-8 border-[#0c2619] flex items-center justify-center mb-6 relative">
+            <svg className="absolute inset-0 w-full h-full -rotate-90">
+              <circle cx="60" cy="60" r="56" fill="none" stroke="#1e3f2b" strokeWidth="8" />
+              <circle 
+                cx="60" cy="60" r="56" fill="none" stroke="#4f8a52" strokeWidth="8" 
+                strokeDasharray="351.8" 
+                strokeDashoffset={351.8 - (351.8 * biodiversityScore) / 100}
+                strokeLinecap="round"
+                className="transition-all duration-1000"
+              />
+            </svg>
+            <span className="text-4xl font-black text-[#f3f1e7]">{biodiversityScore}</span>
+          </div>
+          <h4 className="text-lg font-bold text-[#f3f1e7] mb-1">Biodiversity</h4>
+          <span className="text-[10px] font-sans text-[#91b79a] uppercase tracking-wider">
+            Personal exploration score
+          </span>
+          <p className="text-[10px] text-[#91b79a]/60 mt-4 max-w-[200px] leading-tight">
+            *This is a personal metric to encourage exploration, not a scientific measurement of the local ecosystem.
+          </p>
+        </div>
+      </section>
 
     </div>
   );

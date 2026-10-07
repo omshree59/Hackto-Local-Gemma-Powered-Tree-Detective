@@ -21,7 +21,8 @@ export const NAV_GROUPS = [
     items: [
       { id: 'codex', label: 'Field Codex', subtitle: 'Personal plant journal', icon: BookOpen, badge: 'history' },
       { id: 'achievements', label: 'Achievements', subtitle: 'Badges & milestones', icon: Award },
-      { id: 'progress', label: 'My Progress', subtitle: 'Time outdoors & logs', icon: Activity }
+      { id: 'progress', label: 'My Progress', subtitle: 'Time outdoors & logs', icon: Activity },
+      { id: 'my-plants', label: 'My Plants', subtitle: 'Growth timeline', icon: Leaf }
     ]
   },
   {
@@ -59,7 +60,7 @@ export default function Sidebar({
   return (
     <aside 
       className={clsx(
-        "hidden md:flex flex-col sticky top-18 h-[calc(100vh-4.5rem)] border-r border-[#1e3f2b]/40 bg-[#06150e]/92 backdrop-blur-2xl transition-all duration-300 z-30 shrink-0 select-none shadow-2xl",
+        "hidden md:flex flex-col h-full border-r border-[#1e3f2b]/40 bg-[#06150e]/92 backdrop-blur-2xl transition-all duration-300 z-30 shrink-0 select-none shadow-2xl",
         collapsed ? "w-20" : "w-64 lg:w-72"
       )}
     >

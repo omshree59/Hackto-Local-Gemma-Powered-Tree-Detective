@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Target, Compass, Clock, Award, CheckCircle, 
-  ArrowRight, Plus, Sparkles, RefreshCw
+  ArrowRight, Plus, Sparkles, RefreshCw, Wand2, Zap
 } from 'lucide-react';
 import clsx from 'clsx';
 import { INITIAL_QUESTS } from '../data/natureData';
@@ -16,46 +16,64 @@ export default function QuestsView({
   ollamaStatus
 }) {
   const [selectedFilter, setSelectedFilter] = useState('ALL');
-  const [customModalOpen, setCustomModalOpen] = useState(false);
+  const [aiModalOpen, setAiModalOpen] = useState(false);
   const [isGeneratingAiQuest, setIsGeneratingAiQuest] = useState(false);
 
-  // Form state
-  const [customTitle, setCustomTitle] = useState('');
-  const [customCategory, setCustomCategory] = useState('PLANTS');
-  const [customDuration, setCustomDuration] = useState('20 min');
-  const [customDifficulty, setCustomDifficulty] = useState('Easy');
-  const [customReward, setCustomReward] = useState(50);
-  const [customObjective, setCustomObjective] = useState('');
-  const [customHint, setCustomHint] = useState('');
+  // AI Generator Inputs
+  const [aiTime, setAiTime] = useState('15 min');
+  const [aiDifficulty, setAiDifficulty] = useState('Easy');
+  const [aiInterest, setAiInterest] = useState('Plants');
 
   const filtered = quests.filter(q => 
     selectedFilter === 'ALL' ? true : q.category.toUpperCase() === selectedFilter
   );
 
-  const handleGenerateLocalQuest = async () => {
+  const generateWithAi = async (isSurprise = false) => {
     setIsGeneratingAiQuest(true);
 
     try {
-      const prompt = `You are an offline nature exploration master. Generate ONE concise plant exploration quest for an outdoor walker.
+      let prompt;
+      if (isSurprise) {
+        prompt = `You are an offline nature exploration master. Generate ONE SURPRISE plant exploration quest. Make it creative but safe.
 Respond strictly in JSON matching this schema:
 {
-  "title": "Short catchy title",
-  "category": "PLANTS",
-  "duration": "20 min",
-  "difficulty": "Easy",
-  "reward": 60,
+  "title": "Creative surprise title",
+  "category": "DISCOVERY",
+  "duration": "30 min",
+  "difficulty": "Medium",
+  "reward": 100,
   "objective": "A 1-sentence actionable plant discovery challenge",
-  "hint": "1 short tip where to look"
+  "hint": "1 short tip where to look",
+  "safetyNote": "Be careful outdoors."
 }`;
+      } else {
+        prompt = `You are an offline nature exploration master. Generate ONE outdoor exploration quest.
+Parameters:
+Time: ${aiTime}
+Difficulty: ${aiDifficulty}
+Interest/Category: ${aiInterest}
+
+Respond strictly in JSON matching this schema:
+{
+  "title": "Short catchy title matching parameters",
+  "category": "${aiInterest.toUpperCase()}",
+  "duration": "${aiTime}",
+  "difficulty": "${aiDifficulty}",
+  "reward": 80,
+  "objective": "A 1-sentence actionable plant/outdoor discovery challenge matching parameters",
+  "hint": "1 short tip where to look",
+  "safetyNote": "Safety tip."
+}`;
+      }
 
       let questData = null;
 
-      if (ollamaStatus.connected) {
+      if (ollamaStatus?.connected) {
         const res = await fetch('/api/ollama/api/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            model: 'gemma3:4b',
+            model: ollamaStatus.modelName || 'gemma3:4b',
             prompt,
             stream: false,
             format: 'json'
@@ -68,14 +86,16 @@ Respond strictly in JSON matching this schema:
       }
 
       if (!questData) {
+        // Fallback if Ollama fails/disconnected
         questData = {
-          title: 'The Vein Network Survey',
-          category: 'OBSERVATION',
-          duration: '15 min',
-          difficulty: 'Easy',
-          reward: 55,
-          objective: 'Find a fallen leaf and trace its primary and secondary branching veins with your eyes.',
-          hint: 'Hold the leaf up against the sunlight to reveal translucent vascular bundles.'
+          title: isSurprise ? 'The 30-Minute Leaf Detective' : `${aiInterest} Expedition`,
+          category: isSurprise ? 'DISCOVERY' : aiInterest.toUpperCase(),
+          duration: isSurprise ? '30 min' : aiTime,
+          difficulty: isSurprise ? 'Medium' : aiDifficulty,
+          reward: isSurprise ? 100 : 80,
+          objective: isSurprise ? 'Find 3 different leaf shapes and one leaf larger than your hand.' : `Explore your local area focusing on ${aiInterest.toLowerCase()}.`,
+          hint: 'Look closely at the groundcover and low-hanging branches.',
+          safetyNote: 'Watch your step on uneven terrain.'
         };
       }
 
@@ -94,6 +114,9 @@ Respond strictly in JSON matching this schema:
       };
 
       onCreateCustomQuest(generated);
+      if (!isSurprise) {
+        setAiModalOpen(false);
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -101,79 +124,124 @@ Respond strictly in JSON matching this schema:
     }
   };
 
-  const handleCustomSubmit = (e) => {
-    e.preventDefault();
-    if (!customTitle.trim() || !customObjective.trim()) return;
-
-    const newQ = {
-      id: `custom-${Date.now()}`,
-      title: customTitle.trim(),
-      category: customCategory,
-      duration: customDuration,
-      difficulty: customDifficulty,
-      reward: Number(customReward) || 50,
-      equipment: 'Sensible shoes',
-      objective: customObjective.trim(),
-      hint: customHint.trim() || 'Outdoor plant observation challenge.',
-      progress: '0 / 1 complete',
-      completed: false
-    };
-
-    onCreateCustomQuest(newQ);
-    setCustomModalOpen(false);
-    setCustomTitle('');
-    setCustomObjective('');
-    setCustomHint('');
-  };
-
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 max-w-5xl mx-auto pb-12 font-sans select-none">
+    <div className="space-y-10 animate-in fade-in duration-500 max-w-5xl mx-auto pb-12 font-sans select-none relative">
       
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#1e3f2b]/40">
         <div>
           <span className="text-[10px] font-mono font-black uppercase tracking-widest text-[#91b79a] block mb-1">
-            FIELD MISSIONS
+            OUTDOOR MISSIONS
           </span>
           <h2 className="text-3xl sm:text-4xl font-black text-[#f3f1e7] tracking-tight">
-            QUESTS
+            Quests
           </h2>
           <p className="text-sm text-[#d8c8a8] mt-1">
-            "Small missions that get you outside."
+            Small missions that get you outside.
           </p>
         </div>
 
         <div className="flex items-center gap-3 self-start md:self-auto font-mono">
           <button
-            onClick={handleGenerateLocalQuest}
+            onClick={() => generateWithAi(true)}
             disabled={isGeneratingAiQuest}
-            className="px-4 py-2.5 rounded-xl bg-[#123a27] hover:bg-[#1b5237] border border-[#315c3b]/60 text-emerald-300 text-xs font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer transition-all"
+            className="px-4 py-2.5 rounded-xl bg-[#0b1f16] hover:bg-[#123a27] border border-[#315c3b]/60 text-emerald-300 text-[11px] font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer transition-all"
           >
-            {isGeneratingAiQuest ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-            <span>{isGeneratingAiQuest ? 'SYNTHESIZING...' : 'GENERATE AI QUEST'}</span>
+            {isGeneratingAiQuest ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
+            <span>SURPRISE ME</span>
           </button>
 
           <button
-            onClick={() => setCustomModalOpen(true)}
-            className="px-4 py-2.5 rounded-xl bg-[#091f13] hover:bg-[#123a27] border border-[#1e3f2b] text-[#f3f1e7] text-xs font-bold uppercase flex items-center gap-1.5 cursor-pointer"
+            onClick={() => setAiModalOpen(true)}
+            className="px-5 py-2.5 rounded-xl bg-[#245336] hover:bg-[#2d6844] active:scale-95 text-[#f3f1e7] text-[11px] font-black uppercase tracking-wider flex items-center gap-2 shadow-lg border border-[#4f8a52]/40 transition-all cursor-pointer"
           >
-            <Plus className="w-4 h-4 text-emerald-400" />
-            <span>CREATE QUEST</span>
+            <Wand2 className="w-4 h-4 text-emerald-300" />
+            <span>CREATE FIELD MISSION</span>
           </button>
         </div>
       </div>
 
-      {/* Filter Category Pills */}
-      <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
+      {/* AI Quest Generator Modal */}
+      {aiModalOpen && (
+        <div className="fixed inset-0 z-50 bg-[#040e08]/92 backdrop-blur-3xl flex items-center justify-center p-4">
+          <div className="nature-surface-card rounded-[2.5rem] w-full max-w-lg p-8 border border-[#4f8a52]/40 shadow-2xl relative">
+            <h3 className="text-2xl font-black text-[#f3f1e7] mb-2 flex items-center gap-2">
+              <Sparkles className="w-6 h-6 text-emerald-400" />
+              Generate Mission
+            </h3>
+            <p className="text-[#91b79a] text-sm mb-6 font-sans">
+              Local AI will create a personalized outdoor exploration quest based on your preferences.
+            </p>
+
+            <div className="space-y-5 font-mono text-xs">
+              <div>
+                <label className="text-emerald-400 font-bold block mb-2">TIME AVAILABLE</label>
+                <div className="flex gap-2">
+                  {['15 min', '30 min', '45 min', '60 min'].map(t => (
+                    <button 
+                      key={t} onClick={() => setAiTime(t)}
+                      className={clsx("px-3 py-2 rounded-lg border transition-colors cursor-pointer", aiTime === t ? "bg-[#123a27] border-[#4f8a52] text-[#f3f1e7]" : "bg-[#081a11] border-[#1e3f2b] text-[#91b79a]")}
+                    >{t}</button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-emerald-400 font-bold block mb-2">DIFFICULTY</label>
+                <div className="flex gap-2">
+                  {['Easy', 'Medium', 'Adventure'].map(d => (
+                    <button 
+                      key={d} onClick={() => setAiDifficulty(d)}
+                      className={clsx("px-3 py-2 rounded-lg border transition-colors cursor-pointer", aiDifficulty === d ? "bg-[#123a27] border-[#4f8a52] text-[#f3f1e7]" : "bg-[#081a11] border-[#1e3f2b] text-[#91b79a]")}
+                    >{d}</button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-emerald-400 font-bold block mb-2">PRIMARY INTEREST</label>
+                <div className="flex flex-wrap gap-2">
+                  {['Plants', 'Observation', 'Photography', 'Exploration'].map(i => (
+                    <button 
+                      key={i} onClick={() => setAiInterest(i)}
+                      className={clsx("px-3 py-2 rounded-lg border transition-colors cursor-pointer", aiInterest === i ? "bg-[#123a27] border-[#4f8a52] text-[#f3f1e7]" : "bg-[#081a11] border-[#1e3f2b] text-[#91b79a]")}
+                    >{i.toUpperCase()}</button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 mt-8">
+              <button
+                onClick={() => generateWithAi(false)}
+                disabled={isGeneratingAiQuest}
+                className="flex-1 py-3 bg-[#245336] hover:bg-[#2d6844] text-[#f3f1e7] text-xs font-black uppercase rounded-xl border border-[#4f8a52]/40 transition-colors cursor-pointer flex items-center justify-center gap-2 font-mono"
+              >
+                {isGeneratingAiQuest ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
+                <span>{isGeneratingAiQuest ? 'GENERATING...' : 'GENERATE WITH LOCAL AI'}</span>
+              </button>
+              <button
+                onClick={() => setAiModalOpen(false)}
+                className="px-5 py-3 rounded-xl bg-[#081a11] hover:bg-[#0c2619] border border-[#1e3f2b] text-[#91b79a] text-xs font-bold font-mono cursor-pointer transition-colors"
+              >
+                CANCEL
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Filters */}
+      <div className="flex overflow-x-auto gap-2 pb-2 scrollbar-hide font-mono text-[10px]">
         {FILTERS.map(f => (
           <button
             key={f}
             onClick={() => setSelectedFilter(f)}
             className={clsx(
-              "px-3.5 py-1.5 rounded-xl uppercase font-bold transition-all cursor-pointer",
-              selectedFilter === f
-                ? "bg-[#245336] text-[#f3f1e7] shadow-md border border-[#4f8a52]/40"
-                : "bg-[#081a11]/80 text-[#91b79a] hover:text-[#f3f1e7] border border-[#1e3f2b]/40"
+              "px-4 py-2 rounded-full font-bold uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer",
+              selectedFilter === f 
+                ? "bg-[#4f8a52] text-white shadow-md" 
+                : "bg-[#081a11] text-[#91b79a] hover:bg-[#0e2c1d] border border-[#1e3f2b]"
             )}
           >
             {f}
@@ -181,66 +249,87 @@ Respond strictly in JSON matching this schema:
         ))}
       </div>
 
-      {/* Quest Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filtered.map((quest) => {
-          const isActive = activeMission?.id === quest.id || activeMission?.task === quest.objective;
+      {/* Active Quest (if any) */}
+      {activeMission && (
+        <section className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+            <h3 className="text-sm font-mono font-bold text-emerald-300 uppercase tracking-wider">Currently Active</h3>
+          </div>
 
+          <div className="nature-surface-card rounded-2xl p-6 border-l-4 border-l-emerald-500 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div>
+              <div className="flex items-center gap-2 font-mono text-[10px] text-[#91b79a] mb-2">
+                <span className="text-emerald-300 font-bold uppercase">{activeMission.category}</span>
+                <span>•</span>
+                <span>{activeMission.duration}</span>
+                <span>•</span>
+                <span>{activeMission.difficulty}</span>
+              </div>
+              <h4 className="text-xl font-bold text-[#f3f1e7] mb-1 leading-snug">{activeMission.title}</h4>
+              <p className="text-sm text-[#d8c8a8] max-w-xl font-sans">{activeMission.objective}</p>
+            </div>
+            
+            <button
+              onClick={() => onStartQuest(activeMission)}
+              className="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#06100b] text-xs font-black uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer shrink-0"
+            >
+              <Compass className="w-4 h-4" />
+              <span>ENTER FIELD MODE</span>
+            </button>
+          </div>
+        </section>
+      )}
+
+      {/* Quest Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {filtered.map(q => {
+          const isActive = activeMission?.id === q.id;
           return (
-            <div
-              key={quest.id}
+            <div 
+              key={q.id}
               className={clsx(
-                "rounded-3xl p-6 sm:p-7 border transition-all flex flex-col justify-between backdrop-blur-xl relative",
+                "rounded-2xl p-6 transition-all flex flex-col justify-between group h-full",
                 isActive
-                  ? "nature-surface-card border-[#4f8a52]/80 shadow-2xl"
-                  : "nature-surface-subtle hover:border-[#315c3b]/60"
+                  ? "bg-[#0b1f16] border border-emerald-500/50 shadow-[0_0_15px_rgba(79,138,82,0.15)]"
+                  : "nature-surface-card border border-[#1e3f2b]/40 hover:border-[#4f8a52]/60"
               )}
             >
               <div>
-                <div className="flex items-center justify-between mb-3 font-mono text-[10px]">
-                  <span className="text-emerald-300 font-bold uppercase tracking-wider bg-[#0c2417] px-2.5 py-0.5 rounded-md border border-[#315c3b]/50">
-                    {quest.category}
+                <div className="flex items-center justify-between font-mono text-[10px] mb-3">
+                  <span className={clsx("font-bold uppercase tracking-wider", isActive ? "text-emerald-400" : "text-[#4f8a52]")}>
+                    {q.category}
                   </span>
                   <div className="flex items-center gap-2 text-[#91b79a]">
-                    <span>{quest.duration}</span>
+                    <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {q.duration}</span>
                     <span>•</span>
-                    <span className="text-[#f3f1e7] font-bold">{quest.difficulty}</span>
-                    <span>•</span>
-                    <span className="text-emerald-300 font-bold">+{quest.reward} XP</span>
+                    <span>{q.difficulty}</span>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-[#f3f1e7] mb-2 leading-snug">
-                  {quest.title}
-                </h3>
-
-                <p className="text-xs text-[#d8c8a8]/90 leading-relaxed mb-4">
-                  {quest.objective}
+                <h4 className="text-base font-bold text-[#f3f1e7] mb-2 leading-snug">
+                  {q.title}
+                </h4>
+                
+                <p className="text-xs text-[#d8c8a8]/80 leading-relaxed font-sans mb-4">
+                  {q.objective}
                 </p>
-
-                {quest.hint && (
-                  <p className="text-[11px] text-[#91b79a] italic mb-6 bg-[#06140d]/70 p-3 rounded-xl border border-[#1e3f2b]/40">
-                    💡 Tip: {quest.hint}
-                  </p>
-                )}
               </div>
 
-              <div className="pt-4 border-t border-[#1e3f2b]/40 flex items-center justify-between">
+              <div className="pt-4 border-t border-[#1e3f2b]/40 mt-auto flex items-center justify-between">
+                <span className="font-mono text-xs font-bold text-emerald-300">
+                  +{q.reward} XP
+                </span>
                 {isActive ? (
-                  <button
-                    onClick={() => onStartQuest(quest)}
-                    className="w-full py-3 bg-[#245336] hover:bg-[#2d6844] active:scale-95 text-[#f3f1e7] font-black text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 shadow-md border border-[#4f8a52]/40"
-                  >
-                    <Compass className="w-4 h-4 text-emerald-300" />
-                    <span>LAUNCH OUTDOOR MODE</span>
-                  </button>
+                  <span className="font-mono text-[10px] font-bold text-emerald-400 flex items-center gap-1">
+                    <Compass className="w-3 h-3" /> ACTIVE
+                  </span>
                 ) : (
                   <button
-                    onClick={() => onStartQuest(quest)}
-                    className="w-full py-3 bg-[#081a11] hover:bg-[#123a27] text-[#f3f1e7] text-xs font-mono font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 border border-[#1e3f2b] hover:border-[#4f8a52]"
+                    onClick={() => onStartQuest(q)}
+                    className="text-[10px] font-mono font-bold bg-[#091b12] hover:bg-[#123a27] text-[#f3f1e7] px-3 py-1.5 rounded-lg border border-[#1e3f2b] transition-colors cursor-pointer"
                   >
-                    <span>START THIS QUEST</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-emerald-400" />
+                    START
                   </button>
                 )}
               </div>
@@ -248,86 +337,6 @@ Respond strictly in JSON matching this schema:
           );
         })}
       </div>
-
-      {/* Custom Quest Creator Modal */}
-      {customModalOpen && (
-        <div className="fixed inset-0 z-50 bg-[#040e08]/92 backdrop-blur-2xl flex items-center justify-center p-4">
-          <div className="nature-surface-card border border-[#1e3f2b] w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl space-y-4">
-            <h3 className="text-xl font-black text-[#f3f1e7]">Create Outdoor Plant Quest</h3>
-            <p className="text-xs text-[#d8c8a8] font-mono">Design a localized botanical challenge for your neighborhood.</p>
-
-            <form onSubmit={handleCustomSubmit} className="space-y-4 font-mono text-xs">
-              <div>
-                <label className="block text-[#f3f1e7] font-bold uppercase mb-1">Quest Title</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Find 3 Alternate-Leaved Shrubs"
-                  value={customTitle}
-                  onChange={(e) => setCustomTitle(e.target.value)}
-                  className="w-full bg-[#07160f] border border-[#1e3f2b] rounded-xl p-2.5 text-[#f3f1e7] focus:outline-none focus:border-[#4f8a52]"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-[#f3f1e7] font-bold uppercase mb-1">Objective Description</label>
-                <textarea
-                  rows={3}
-                  placeholder="What must the explorer observe in nature?"
-                  value={customObjective}
-                  onChange={(e) => setCustomObjective(e.target.value)}
-                  className="w-full bg-[#07160f] border border-[#1e3f2b] rounded-xl p-2.5 text-[#f3f1e7] focus:outline-none focus:border-[#4f8a52]"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[#91b79a] uppercase text-[10px] mb-1">Category</label>
-                  <select
-                    value={customCategory}
-                    onChange={(e) => setCustomCategory(e.target.value)}
-                    className="w-full bg-[#07160f] border border-[#1e3f2b] rounded-xl p-2.5 text-[#f3f1e7]"
-                  >
-                    {FILTERS.filter(f => f !== 'ALL').map(f => (
-                      <option key={f} value={f}>{f}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[#91b79a] uppercase text-[10px] mb-1">XP Reward</label>
-                  <input
-                    type="number"
-                    min="20"
-                    max="150"
-                    value={customReward}
-                    onChange={(e) => setCustomReward(e.target.value)}
-                    className="w-full bg-[#07160f] border border-[#1e3f2b] rounded-xl p-2 text-[#f3f1e7]"
-                  />
-                </div>
-              </div>
-
-              <div className="pt-4 flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setCustomModalOpen(false)}
-                  className="px-4 py-2 text-[#91b79a] hover:text-[#f3f1e7] cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-6 py-2.5 bg-[#245336] hover:bg-[#2d6844] text-[#f3f1e7] font-black uppercase tracking-wider rounded-xl cursor-pointer border border-[#4f8a52]/40"
-                >
-                  Activate Quest
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }

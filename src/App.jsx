@@ -15,6 +15,7 @@ import NatureGuideView from './components/NatureGuideView';
 import FieldStoriesView from './components/FieldStoriesView';
 import LocalAiView from './components/LocalAiView';
 import SettingsView from './components/SettingsView';
+import MyPlantsView from './components/MyPlantsView';
 
 import CameraModal from './components/CameraModal';
 import ScanProcessingModal from './components/ScanProcessingModal';
@@ -185,8 +186,10 @@ Respond STRICTLY with a valid JSON object matching this schema:
   "confidence": "Moderate" | "High",
   "category": "Tree" | "Flower" | "Plant",
   "visible_features": ["leaf structure detail", "arrangement detail", "bark or petal appearance"],
+  "visual_evidence": ["Compound leaf structure", "Serrated leaflets"],
+  "plant_condition": "Looks generally healthy (Visual estimate only)",
+  "what_to_observe_next": ["Look at the leaf arrangement", "Compare the bark texture"],
   "field_notes": "Short concise educational explanation",
-  "where_to_look": "General natural habitat information",
   "observation_challenge": "Actionable sensory prompt for another nearby plant",
   "safety_note": "Do not consume or handle unknown plant material",
   "xp": 50
@@ -203,8 +206,10 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
           confidence: sampleOverride.confidence || 'Moderate',
           category: sampleOverride.category || 'Plant',
           visible_features: sampleOverride.features || ['Distinctive leaf pattern', 'Healthy chlorophyll'],
+          visual_evidence: ['Clear leaf shape visible', 'Distinct color pattern'],
+          plant_condition: 'Looks generally healthy (Visual estimate only. This is not a scientific diagnosis.)',
+          what_to_observe_next: ['Examine the stem texture', 'Look for nearby companions'],
           field_notes: sampleOverride.fieldNotes,
-          where_to_look: sampleOverride.whereToLook || 'Common in open woodland margins and parkways.',
           observation_challenge: sampleOverride.observationChallenge,
           safety_note: sampleOverride.safetyNote || 'AI identification is an estimate. Do not consume wild plants.',
           xp: sampleOverride.xp || 50
@@ -245,6 +250,9 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
           confidence: parsed.confidence || 'Moderate',
           image: selectedFilePreview,
           features: parsed.visible_features || ['Characteristic morphology', 'Healthy wild foliage'],
+          visualEvidence: parsed.visual_evidence || ['Clear leaf shape', 'Stem structure'],
+          plantCondition: parsed.plant_condition || 'Condition unclear (Visual estimate only. This is not a scientific diagnosis.)',
+          whatToObserveNext: parsed.what_to_observe_next || ['Look at the leaf arrangement', 'Find a similar plant'],
           fieldNotes: parsed.field_notes || 'Observed outdoors and verified via local Gemma 3 inference.',
           whereToLook: parsed.where_to_look || 'Native groundcover and park margins.',
           observationChallenge: parsed.observation_challenge || 'Find another nearby tree with a different leaf structure.',
@@ -273,6 +281,20 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
       setErrorMsg('Please select or capture a plant photograph first.');
       return;
     }
+    
+    // Smart Image Quality Check
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(selectedFileRaw.type)) {
+      addToast('Unsupported format. Please use JPG, PNG, or WEBP.', 'error');
+      setErrorMsg('Unsupported image format.');
+      return;
+    }
+    if (selectedFileRaw.size > 8 * 1024 * 1024) {
+      addToast('Image too large. Please use a smaller photo (under 8MB).', 'error');
+      setErrorMsg('Image size exceeds 8MB limit.');
+      return;
+    }
+
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64Data = reader.result.split(',')[1];
@@ -392,7 +414,7 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
       />
 
       {/* Application Shell */}
-      <div className="relative z-10 flex flex-1 w-full max-w-[1600px] mx-auto">
+      <div className="relative z-10 flex flex-1 w-full max-w-[1600px] mx-auto overflow-hidden">
         
         {/* Left Sidebar */}
         <Sidebar
@@ -435,6 +457,7 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
                 { id: 'codex', label: 'Field Codex' },
                 { id: 'achievements', label: 'Achievements' },
                 { id: 'progress', label: 'My Progress' },
+                { id: 'my-plants', label: 'My Plants' },
                 { id: 'guide', label: 'Nature Guide' },
                 { id: 'stories', label: 'Field Stories' },
                 { id: 'local-ai', label: 'Local AI' },
@@ -561,6 +584,14 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
               completedMissionsCount={completedMissionsCount}
               streak={3}
               longestStreak={5}
+            />
+          )}
+
+          {activePage === 'my-plants' && (
+            <MyPlantsView 
+              history={history} 
+              onNavigate={(p) => setActivePage(p)} 
+              onUpdateHistory={setHistory} 
             />
           )}
 

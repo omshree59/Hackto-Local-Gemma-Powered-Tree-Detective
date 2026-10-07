@@ -1,8 +1,9 @@
 import React from 'react';
 import { 
   CheckCircle, AlertTriangle, ArrowRight, BookOpen, 
-  Leaf, Trees, Flower, RefreshCw, Compass
+  Leaf, Trees, Flower, RefreshCw, Compass, Eye, HeartPulse
 } from 'lucide-react';
+import clsx from 'clsx';
 
 const CATEGORY_ICONS = {
   tree: Trees,
@@ -25,9 +26,9 @@ export default function FieldReportModal({
   const IconComp = CATEGORY_ICONS[catKey] || Leaf;
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#040e08]/92 backdrop-blur-3xl flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-in fade-in duration-300 font-sans select-none">
+    <div className="fixed inset-0 z-50 bg-[#040e08]/92 backdrop-blur-3xl flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-in fade-in duration-300 font-sans select-none py-12">
       
-      <div className="relative w-full max-w-2xl nature-surface-card rounded-[2.5rem] p-6 sm:p-9 shadow-[0_20px_80px_rgba(0,0,0,0.85)] my-auto overflow-hidden">
+      <div className="relative w-full max-w-2xl nature-surface-card rounded-[2.5rem] p-6 sm:p-9 shadow-[0_20px_80px_rgba(0,0,0,0.85)] my-auto">
         
         {/* Header Eyebrow */}
         <div className="flex items-center justify-between border-b border-[#1e3f2b]/40 pb-4 mb-6 font-mono text-[11px]">
@@ -68,7 +69,7 @@ export default function FieldReportModal({
         </div>
 
         {/* Identification Heading */}
-        <div className="mb-5">
+        <div className="mb-6">
           <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-[#91b79a]">
             LIKELY IDENTIFICATION
           </span>
@@ -77,51 +78,64 @@ export default function FieldReportModal({
           </h3>
         </div>
 
-        {/* Visible Morphological Features */}
-        {report.features && report.features.length > 0 && (
-          <div className="mb-5">
-            <h4 className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#91b79a] mb-2">
-              VISIBLE FEATURES
+        {/* WHY THIS MATCH? (Visual Reasoning) */}
+        {report.visualEvidence && report.visualEvidence.length > 0 && (
+          <div className="mb-5 bg-[#0a1e14]/50 border border-[#1e3f2b]/40 rounded-2xl p-4">
+            <h4 className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#91b79a] mb-3 flex items-center gap-1.5">
+              <Eye className="w-3 h-3 text-emerald-400" /> WHY THIS MATCH?
             </h4>
-            <div className="flex flex-wrap gap-2">
-              {report.features.map((f, i) => (
-                <span 
-                  key={i}
-                  className="text-xs text-[#f3f1e7] bg-[#0c2417]/80 border border-[#1e3f2b] px-3 py-1 rounded-xl"
-                >
-                  • {f}
-                </span>
+            <div className="space-y-1.5 font-sans text-xs text-[#d8c8a8]">
+              {report.visualEvidence.map((ev, i) => (
+                <div key={i} className="flex items-start gap-2">
+                  <span className="text-emerald-500 mt-0.5 font-bold">✓</span>
+                  <span>{ev}</span>
+                </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* Field Notes & Where To Look */}
-        <div className="bg-[#07160f]/80 border border-[#1e3f2b]/50 rounded-2xl p-5 mb-5 space-y-3 text-xs leading-relaxed">
-          <div>
-            <h4 className="text-[10px] font-mono font-bold uppercase text-emerald-400 mb-1">
-              FIELD NOTES
+        {/* PLANT CONDITION */}
+        {report.plantCondition && (
+          <div className="mb-5 bg-[#0a1e14]/50 border border-[#1e3f2b]/40 rounded-2xl p-4">
+            <h4 className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#91b79a] mb-2 flex items-center gap-1.5">
+              <HeartPulse className="w-3 h-3 text-amber-400" /> PLANT CONDITION
             </h4>
-            <p className="text-[#d8c8a8] font-sans">
-              {report.fieldNotes || report.fact || 'Botanical features analyzed locally using open-weight vision inference.'}
-            </p>
+            <p className="font-sans text-sm text-[#f3f1e7] leading-relaxed mb-1">{report.plantCondition}</p>
+            <p className="text-[9px] font-mono text-[#91b79a]/70">Visual estimate only. This is not a scientific diagnosis.</p>
           </div>
+        )}
 
-          {report.whereToLook && (
-            <div className="pt-2 border-t border-[#1e3f2b]/40">
-              <h4 className="text-[10px] font-mono font-bold uppercase text-[#91b79a] mb-1">
-                WHERE TO LOOK (HABITAT)
-              </h4>
-              <p className="text-[#d8c8a8]/80 font-sans">
-                {report.whereToLook}
-              </p>
-            </div>
-          )}
+        {/* Field Notes */}
+        <div className="mb-5 bg-[#0a1e14]/50 border border-[#1e3f2b]/40 rounded-2xl p-4">
+          <h4 className="text-[10px] font-mono font-bold uppercase text-emerald-400 mb-2">
+            FIELD NOTES
+          </h4>
+          <p className="text-[#d8c8a8] font-sans text-xs leading-relaxed">
+            {report.fieldNotes || 'Botanical features analyzed locally using open-weight vision inference.'}
+          </p>
         </div>
+
+        {/* WHAT TO OBSERVE NEXT */}
+        {report.whatToObserveNext && report.whatToObserveNext.length > 0 && (
+          <div className="mb-6 border-l-2 border-emerald-500 pl-4">
+            <h4 className="text-xs font-black uppercase tracking-wider text-[#f3f1e7] mb-2">
+              WHAT TO OBSERVE NEXT
+            </h4>
+            <ul className="space-y-2 font-sans text-sm text-[#d8c8a8]">
+              {report.whatToObserveNext.map((obs, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">{i + 1}.</span>
+                  <span>{obs}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Observation Challenge */}
         {(report.observationChallenge || report.nextChallenge) && (
-          <div className="bg-gradient-to-r from-[#123a27]/60 to-[#0e2c1d]/60 border border-[#315c3b]/60 rounded-2xl p-5 mb-5 flex items-start gap-4">
+          <div className="bg-gradient-to-r from-[#123a27]/60 to-[#0e2c1d]/60 border border-[#315c3b]/60 rounded-2xl p-5 mb-5 flex items-start gap-4 shadow-lg">
             <div className="bg-[#245336] p-2 rounded-xl text-[#f3f1e7] shrink-0 mt-0.5 border border-[#4f8a52]/40">
               <Compass className="w-5 h-5 text-emerald-300" />
             </div>
@@ -149,7 +163,7 @@ export default function FieldReportModal({
         <div className="flex flex-col sm:flex-row items-center gap-3 font-mono">
           <button
             onClick={onStartChallenge}
-            className="w-full sm:flex-1 py-3.5 px-4 rounded-xl bg-[#245336] hover:bg-[#2d6844] active:scale-95 text-[#f3f1e7] font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-black/30 border border-[#4f8a52]/40 cursor-pointer"
+            className="w-full sm:flex-1 py-3.5 px-4 rounded-xl bg-[#245336] hover:bg-[#2d6844] active:scale-95 text-[#f3f1e7] font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-black/30 border border-[#4f8a52]/40 cursor-pointer transition-all"
           >
             <span>START QUEST</span>
             <ArrowRight className="w-4 h-4 text-[#f3f1e7]" />
@@ -171,7 +185,7 @@ export default function FieldReportModal({
 
           <button
             onClick={onScanAnother}
-            className="w-full sm:w-auto py-3.5 px-4 rounded-xl bg-[#06140d] hover:bg-[#0a2015] border border-[#1e3f2b] text-[#91b79a] hover:text-[#f3f1e7] text-xs font-bold uppercase cursor-pointer"
+            className="w-full sm:w-auto py-3.5 px-4 rounded-xl bg-[#06140d] hover:bg-[#0a2015] border border-[#1e3f2b] text-[#91b79a] hover:text-[#f3f1e7] text-xs font-bold uppercase cursor-pointer transition-colors"
           >
             SCAN ANOTHER
           </button>
