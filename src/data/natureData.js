@@ -28,7 +28,7 @@ export const INITIAL_QUESTS = [
     equipment: 'Sensible walking shoes',
     objective: 'Find and compare three distinctly different leaf shapes (e.g. heart-shaped, lobed, and needle-like).',
     hint: 'Notice how shape correlates with how much wind and sunlight the plant receives.',
-    progress: '1 / 3 found',
+    progress: '0 / 3 found',
     completed: false
   },
   {
@@ -151,7 +151,7 @@ export const CURATED_TRAILS = [
     bestFor: 'Sedges, aquatic rushes, pollinator meadow wildflowers',
     safetyNotes: 'Boardwalk can have morning dew slickness. Do not step off boardwalk into sensitive wetland peat.',
     plantHighlights: ['Cattail reeds', 'Meadow Violet', 'Wild Iris blooms'],
-    completed: true,
+    completed: false,
     saved: true
   },
   {

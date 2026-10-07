@@ -22,7 +22,7 @@ export default function AchievementsView({
   xp = 0,
   level = 1,
   completedMissionsCount = 0,
-  streak = 3,
+  streak = 0,
   onOpenScanner
 }) {
   const [activeTab, setActiveTab] = useState('SPECIES'); // 'SPECIES' or 'BADGES'

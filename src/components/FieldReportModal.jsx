@@ -21,7 +21,7 @@ export default function FieldReportModal({
   onScanAnother,
   onBackToHome,
   isSaved,
-  streak = 3,
+  streak = 1,
   level = 1,
   historyCount = 1
 }) {

@@ -7,14 +7,14 @@ import {
 import clsx from 'clsx';
 
 export default function MyProgressView({
-  history,
-  xp,
-  level,
-  outdoorMinutes = 45,
-  completedMissionsCount = 4,
+  history = [],
+  xp = 0,
+  level = 1,
+  outdoorMinutes = 0,
+  completedMissionsCount = 0,
   trailsCompleted = 0,
-  streak = 3,
-  longestStreak = 5
+  streak = 0,
+  longestStreak = 0
 }) {
   const categoriesCount = {
     Tree: history.filter(h => (h.category || '').toLowerCase() === 'tree').length,
@@ -167,7 +167,7 @@ export default function MyProgressView({
             Personal exploration score
           </span>
           <p className="text-[10px] text-[#91b79a]/60 mt-4 max-w-[200px] leading-tight">
-            *This is a personal metric to encourage exploration, not a scientific measurement of the local ecosystem.
+            Note: This is a personal metric to encourage exploration, not a scientific measurement of the local ecosystem.
           </p>
         </div>
       </section>

@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Leaf, Plus, Camera, CalendarDays, ArrowRight, Eye, X, Check, Image as ImageIcon } from 'lucide-react';
 import clsx from 'clsx';
 
-export default function MyPlantsView({ history, onNavigate, onUpdateHistory }) {
+export default function MyPlantsView({ history, onNavigate, onUpdateHistory, onRecordActivity }) {
   const [selectedPlant, setSelectedPlant] = useState(null);
   const [attachedImage, setAttachedImage] = useState(null);
   const fileInputRef = useRef(null);
@@ -78,6 +78,7 @@ export default function MyPlantsView({ history, onNavigate, onUpdateHistory }) {
     setSelectedPlant(newPlant);
     setAttachedImage(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
+    if (onRecordActivity) onRecordActivity();
     e.target.reset();
   };
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   BookOpen, Search, Leaf, Trees, Flower, 
-  ArrowUpDown, Download, Trash2, X, Eye, Compass, LayoutDashboard
+  ArrowUpDown, Download, Trash2, X, Eye, Compass, LayoutDashboard, CheckCircle
 } from 'lucide-react';
 import clsx from 'clsx';
 

@@ -121,6 +121,7 @@ export default function MissionActiveModal({
       };
       reader.readAsDataURL(file);
     }
+    if (e.target) e.target.value = '';
   };
 
   const verifyProofWithAi = async (imageDataUrl) => {

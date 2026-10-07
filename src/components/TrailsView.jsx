@@ -7,12 +7,12 @@ import clsx from 'clsx';
 import { CURATED_TRAILS } from '../data/natureData';
 
 export default function TrailsView({
-  trails: initialTrails = CURATED_TRAILS,
+  trails = CURATED_TRAILS,
   onStartTrailMission,
   onToggleSaveTrail,
-  onToggleCompleteTrail
+  onToggleCompleteTrail,
+  onAddCustomTrail
 }) {
-  const [trails, setTrails] = useState(initialTrails);
   const [selectedTrail, setSelectedTrail] = useState(null);
   const [filterDifficulty, setFilterDifficulty] = useState('ALL');
   
@@ -25,7 +25,7 @@ export default function TrailsView({
   const [bNotes, setBNotes] = useState('');
   const [bStops, setBStops] = useState(['START', 'FINISH']);
 
-  const filteredTrails = trails.filter(t => 
+  const filteredTrails = (trails || []).filter(t => 
     filterDifficulty === 'ALL' ? true : t.difficulty.toUpperCase() === filterDifficulty.toUpperCase()
   );
 
@@ -65,7 +65,9 @@ export default function TrailsView({
       completed: false
     };
 
-    setTrails([customTrail, ...trails]);
+    if (onAddCustomTrail) {
+      onAddCustomTrail(customTrail);
+    }
     setBuilderOpen(false);
     
     // reset

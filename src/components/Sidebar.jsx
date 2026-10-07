@@ -47,7 +47,7 @@ export default function Sidebar({
   collapsed,
   onToggleCollapse,
   ollamaStatus,
-  xp = 140,
+  xp = 0,
   level = 1,
   historyCount = 0,
   activeMission,

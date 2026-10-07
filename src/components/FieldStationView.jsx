@@ -13,7 +13,9 @@ export default function FieldStationView({
   onOpenScanner,
   onNavigate,
   recentPlants,
-  onSelectFile
+  onSelectFile,
+  streak = 4,
+  onRecordActivity
 }) {
   const todayTask = getTodayTask();
   const [completedToday, setCompletedToday] = useState(() => {
@@ -26,6 +28,7 @@ export default function FieldStationView({
 
   const handleMarkDailyComplete = () => {
     setCompletedToday(true);
+    if (onRecordActivity) onRecordActivity();
     try {
       localStorage.setItem(`nq_daily_${todayTask.dateKey}`, 'true');
     } catch (e) {
@@ -130,10 +133,11 @@ export default function FieldStationView({
           </div>
 
           <div className="flex items-center gap-2 font-mono text-xs">
-            <span className="flex items-center gap-1 text-amber-300 bg-[#161f0d] px-2.5 py-1 rounded-xl border border-amber-900/40">
-              <Flame className="w-3.5 h-3.5 fill-current text-amber-400" /> Daily Streak
+            <span className="flex items-center gap-1.5 text-amber-300 bg-[#161f0d] px-3 py-1.5 rounded-xl border border-amber-900/50 shadow-sm">
+              <Flame className="w-3.5 h-3.5 fill-amber-400 text-amber-400 animate-pulse drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+              <span className="font-bold">{streak} Day Streak</span>
             </span>
-            <span className="text-emerald-300 font-bold bg-[#0c2417] px-2.5 py-1 rounded-xl border border-[#315c3b]">
+            <span className="text-emerald-300 font-bold bg-[#0c2417] px-2.5 py-1.5 rounded-xl border border-[#315c3b]">
               +{todayTask.reward} XP
             </span>
           </div>
