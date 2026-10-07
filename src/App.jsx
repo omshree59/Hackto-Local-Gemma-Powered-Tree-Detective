@@ -3,54 +3,64 @@ import Squares from './components/Squares';
 import TopNav from './components/TopNav';
 import Sidebar from './components/Sidebar';
 import RightContextPanel from './components/RightContextPanel';
-import FieldStationHero from './components/FieldStationHero';
+
+import FieldStationView from './components/FieldStationView';
+import PlantScoutView from './components/PlantScoutView';
 import QuestsView from './components/QuestsView';
+import TrailsView from './components/TrailsView';
 import CodexView from './components/CodexView';
-import MetricsView from './components/MetricsView';
-import OpenInnovationView from './components/OpenInnovationView';
-import WhyNatureQuestView from './components/WhyNatureQuestView';
+import AchievementsView from './components/AchievementsView';
+import MyProgressView from './components/MyProgressView';
+import NatureGuideView from './components/NatureGuideView';
+import FieldStoriesView from './components/FieldStoriesView';
+import LocalAiView from './components/LocalAiView';
+import SettingsView from './components/SettingsView';
+
 import CameraModal from './components/CameraModal';
 import ScanProcessingModal from './components/ScanProcessingModal';
 import FieldReportModal from './components/FieldReportModal';
-import TouchGrassModal from './components/TouchGrassModal';
+import MissionActiveModal from './components/MissionActiveModal';
 import ToastContainer from './components/ToastContainer';
 
 import { 
+  INITIAL_PLANTS, 
   INITIAL_QUESTS, 
-  INITIAL_DISCOVERIES, 
-  SAMPLE_SPECIMENS,
-  ACTIVITIES 
-} from './data/datasets';
+  CURATED_TRAILS, 
+  SAMPLE_TEST_PLANTS 
+} from './data/natureData';
 
 export default function App() {
-  // Persistence state
+  // Persistent data state via localStorage
   const [xp, setXp] = useState(() => Number(localStorage.getItem('nq_xp')) || 140);
   const [history, setHistory] = useState(() => {
     const saved = localStorage.getItem('nq_history');
-    return saved ? JSON.parse(saved) : INITIAL_DISCOVERIES;
+    return saved ? JSON.parse(saved) : INITIAL_PLANTS;
   });
   const [quests, setQuests] = useState(() => {
     const saved = localStorage.getItem('nq_quests');
     return saved ? JSON.parse(saved) : INITIAL_QUESTS;
   });
+  const [trails, setTrails] = useState(() => {
+    const saved = localStorage.getItem('nq_trails');
+    return saved ? JSON.parse(saved) : CURATED_TRAILS;
+  });
   const [activeMission, setActiveMission] = useState(() => {
     const saved = localStorage.getItem('nq_challenge');
-    return saved ? JSON.parse(saved) : INITIAL_QUESTS[2]; // Default: The Five-Petal Bloom
+    return saved ? JSON.parse(saved) : INITIAL_QUESTS[0];
   });
   const [outdoorMinutes, setOutdoorMinutes] = useState(() => {
     return Number(localStorage.getItem('nq_outdoor_mins')) || 45;
   });
   const [completedMissionsCount, setCompletedMissionsCount] = useState(() => {
-    return Number(localStorage.getItem('nq_completed_count')) || 3;
+    return Number(localStorage.getItem('nq_completed_count')) || 4;
   });
 
-  // Navigation & UI Layout state
-  const [activeTab, setActiveTab] = useState('station');
-  const [selectedActivity, setSelectedActivity] = useState('station');
+  // UI Navigation state
+  const [activePage, setActivePage] = useState('station');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Real Ollama Connectivity State
+  // Real Local Ollama Daemon State
   const [ollamaStatus, setOllamaStatus] = useState({
     connected: false,
     modelReady: false,
@@ -58,14 +68,14 @@ export default function App() {
     lastChecked: null
   });
 
-  // Modals & Overlay state
+  // Modals state
   const [cameraModalOpen, setCameraModalOpen] = useState(false);
   const [scanProcessingOpen, setScanProcessingOpen] = useState(false);
   const [scanStageIndex, setScanStageIndex] = useState(0);
   const [fieldReportModalOpen, setFieldReportModalOpen] = useState(false);
-  const [touchGrassModalOpen, setTouchGrassModalOpen] = useState(false);
+  const [missionActiveModalOpen, setMissionActiveModalOpen] = useState(false);
 
-  // Active Scan State
+  // Active Scan data state
   const [selectedFilePreview, setSelectedFilePreview] = useState(null);
   const [selectedFileRaw, setSelectedFileRaw] = useState(null);
   const [currentReport, setCurrentReport] = useState(null);
@@ -73,49 +83,48 @@ export default function App() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Toasts queue
+  // Toast Queue
   const [toasts, setToasts] = useState([]);
-  const [copiedDevDraft, setCopiedDevDraft] = useState(false);
-
-  const fileInputHiddenRef = useRef(null);
+  const hiddenFileInputRef = useRef(null);
 
   const level = Math.floor(xp / 200) + 1;
 
-  // Sync to local storage
+  // Persist storage
   useEffect(() => {
     localStorage.setItem('nq_xp', xp);
     localStorage.setItem('nq_history', JSON.stringify(history));
     localStorage.setItem('nq_quests', JSON.stringify(quests));
+    localStorage.setItem('nq_trails', JSON.stringify(trails));
     localStorage.setItem('nq_challenge', JSON.stringify(activeMission));
     localStorage.setItem('nq_outdoor_mins', outdoorMinutes);
     localStorage.setItem('nq_completed_count', completedMissionsCount);
-  }, [xp, history, quests, activeMission, outdoorMinutes, completedMissionsCount]);
+  }, [xp, history, quests, trails, activeMission, outdoorMinutes, completedMissionsCount]);
 
-  // Real Ollama Health Check Heartbeat
-  useEffect(() => {
-    const checkOllama = async () => {
-      try {
-        const res = await fetch('/api/ollama/api/tags');
-        if (res.ok) {
-          const data = await res.json();
-          const hasGemma = data.models?.some(m => m.name.includes('gemma3') || m.name.includes('gemma'));
-          setOllamaStatus({
-            connected: true,
-            modelReady: hasGemma || (data.models && data.models.length > 0),
-            modelName: hasGemma ? 'gemma3:4b' : (data.models?.[0]?.name || 'gemma3:4b'),
-            lastChecked: Date.now()
-          });
-        } else {
-          setOllamaStatus(prev => ({ ...prev, connected: false, modelReady: false }));
-        }
-      } catch (err) {
+  // Real Ollama Health Check
+  const checkOllamaHealth = async () => {
+    try {
+      const res = await fetch('/api/ollama/api/tags');
+      if (res.ok) {
+        const data = await res.json();
+        const hasGemma = data.models?.some(m => m.name.includes('gemma3') || m.name.includes('gemma'));
+        setOllamaStatus({
+          connected: true,
+          modelReady: hasGemma || (data.models && data.models.length > 0),
+          modelName: hasGemma ? 'gemma3:4b' : (data.models?.[0]?.name || 'gemma3:4b'),
+          lastChecked: Date.now()
+        });
+      } else {
         setOllamaStatus(prev => ({ ...prev, connected: false, modelReady: false }));
       }
-    };
+    } catch (err) {
+      setOllamaStatus(prev => ({ ...prev, connected: false, modelReady: false }));
+    }
+  };
 
-    checkOllama();
-    const interval = setInterval(checkOllama, 30000);
-    return () => clearInterval(interval);
+  useEffect(() => {
+    checkOllamaHealth();
+    const timer = setInterval(checkOllamaHealth, 30000);
+    return () => clearInterval(timer);
   }, []);
 
   const addToast = (message, type = 'info') => {
@@ -123,7 +132,7 @@ export default function App() {
     setToasts(prev => [...prev, { id, message, type }]);
     setTimeout(() => {
       setToasts(prev => prev.filter(t => t.id !== id));
-    }, 4000);
+    }, 3800);
   };
 
   const handleSelectFile = (file) => {
@@ -141,25 +150,25 @@ export default function App() {
 
   const handleCameraCapture = (dataUrl) => {
     setSelectedFilePreview(dataUrl);
-    // Convert dataURL to mock file for pipeline
     fetch(dataUrl)
       .then(res => res.blob())
       .then(blob => {
-        const file = new File([blob], `trail_capture_${Date.now()}.jpg`, { type: 'image/jpeg' });
+        const file = new File([blob], `field_camera_${Date.now()}.jpg`, { type: 'image/jpeg' });
         setSelectedFileRaw(file);
         setCameraModalOpen(false);
-        addToast('Optical snapshot ready for local analysis', 'success');
+        addToast('Plant photograph captured', 'success');
       });
   };
 
-  const runAnalysisPipeline = async (base64Image, fallbackData = null) => {
+  // Inference execution pipeline
+  const runAnalysis = async (base64Image, sampleOverride = null) => {
     setIsProcessing(true);
     setScanProcessingOpen(true);
     setScanStageIndex(0);
     setErrorMsg('');
     setIsReportSaved(false);
 
-    // Staged cinematic sequence: 01 to 06
+    // Staged progression: 01 to 06
     let stage = 0;
     const stageTimer = setInterval(() => {
       stage += 1;
@@ -169,47 +178,44 @@ export default function App() {
     }, 600);
 
     const prompt = `
-You are an offline wilderness nature exploration game master and field biologist. Analyze this nature photo.
+You are an offline field botanist. Analyze this plant photograph.
 Respond STRICTLY with a valid JSON object matching this schema:
 {
-  "identification": "Common and scientific name of plant, tree, bug, bird, or rock",
-  "confidence": "MODERATE" | "HIGH",
-  "category": "TREE" | "FLOWER" | "INSECT" | "ROCK" | "BIRD" | "OTHER",
-  "visible_features": ["Feature 1", "Feature 2", "Feature 3"],
-  "field_notes": "A short, engaging 1-2 sentence ecological or geological fact",
-  "observation": "A specific sensory observation for the user to look closer at",
-  "next_challenge": "A short, actionable outdoor quest to find next in this ecosystem",
-  "safety_note": "A safety reminder for outdoor handling",
+  "identification": "Likely common name and botanical name",
+  "confidence": "Moderate" | "High",
+  "category": "Tree" | "Flower" | "Plant",
+  "visible_features": ["leaf structure detail", "arrangement detail", "bark or petal appearance"],
+  "field_notes": "Short concise educational explanation",
+  "where_to_look": "General natural habitat information",
+  "observation_challenge": "Actionable sensory prompt for another nearby plant",
+  "safety_note": "Do not consume or handle unknown plant material",
   "xp": 50
 }
-Active challenge context: "${activeMission?.task || activeMission?.objective || 'Find something in nature'}".
-Do not output markdown blocks or conversational text outside the raw JSON object.`;
+Never claim absolute certainty. Do not output text or markdown outside the raw JSON object.`;
 
     try {
       let parsed = null;
 
-      if (fallbackData) {
-        // Desktop test sample simulation
-        await new Promise(res => setTimeout(res, 2200));
+      if (sampleOverride) {
+        await new Promise(r => setTimeout(r, 2200));
         parsed = {
-          identification: fallbackData.name,
-          confidence: fallbackData.confidence || 'HIGH',
-          category: fallbackData.category,
-          visible_features: fallbackData.features || ['Characteristic morphology', 'Wild specimen structure'],
-          field_notes: fallbackData.fact,
-          observation: fallbackData.observation,
-          next_challenge: fallbackData.nextChallenge,
-          safety_note: fallbackData.safetyNote || 'Do not consume or handle wild species without field expertise.',
-          xp: fallbackData.xp || 50
+          identification: sampleOverride.name,
+          confidence: sampleOverride.confidence || 'Moderate',
+          category: sampleOverride.category || 'Plant',
+          visible_features: sampleOverride.features || ['Distinctive leaf pattern', 'Healthy chlorophyll'],
+          field_notes: sampleOverride.fieldNotes,
+          where_to_look: sampleOverride.whereToLook || 'Common in open woodland margins and parkways.',
+          observation_challenge: sampleOverride.observationChallenge,
+          safety_note: sampleOverride.safetyNote || 'AI identification is an estimate. Do not consume wild plants.',
+          xp: sampleOverride.xp || 50
         };
       } else {
-        // Genuine call to Ollama Gemma 3 instance
         const response = await fetch('/api/ollama/api/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             model: ollamaStatus.modelName || 'gemma3:4b',
-            prompt: prompt,
+            prompt,
             images: [base64Image],
             stream: false,
             format: 'json'
@@ -217,7 +223,7 @@ Do not output markdown blocks or conversational text outside the raw JSON object
         });
 
         if (!response.ok) {
-          throw new Error('Local Ollama daemon unreachable. Ensure Ollama is running (`ollama run gemma3:4b`).');
+          throw new Error('Local Ollama daemon unreachable. Please start Ollama (`ollama run gemma3:4b`).');
         }
 
         const data = await response.json();
@@ -231,45 +237,46 @@ Do not output markdown blocks or conversational text outside the raw JSON object
         setIsProcessing(false);
         setScanProcessingOpen(false);
 
-        const earnedXp = parsed.xp || 50;
+        const earned = parsed.xp || 50;
         const report = {
-          id: Date.now(),
-          name: parsed.identification || parsed.name || 'Wilderness Specimen',
-          category: parsed.category || 'OTHER',
-          confidence: parsed.confidence || 'VISUAL ESTIMATE (MODERATE)',
-          features: parsed.visible_features || parsed.features || ['Distinctive leaf pattern', 'Healthy pigmentation'],
-          fact: parsed.field_notes || parsed.fact || 'Ecological observations recorded locally.',
-          observation: parsed.observation || 'Take a closer look at the leaf venation or surface texture.',
-          nextChallenge: parsed.next_challenge || parsed.nextChallenge || 'Find another specimen with contrasting texture.',
-          safetyNote: parsed.safety_note || parsed.safetyNote || 'Observe wildlife with respect; leave no trace.',
-          earned: earnedXp,
-          date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+          id: `plant-${Date.now()}`,
+          name: parsed.identification || 'Wild Flora Specimen',
+          category: parsed.category || 'Plant',
+          confidence: parsed.confidence || 'Moderate',
+          image: selectedFilePreview,
+          features: parsed.visible_features || ['Characteristic morphology', 'Healthy wild foliage'],
+          fieldNotes: parsed.field_notes || 'Observed outdoors and verified via local Gemma 3 inference.',
+          whereToLook: parsed.where_to_look || 'Native groundcover and park margins.',
+          observationChallenge: parsed.observation_challenge || 'Find another nearby tree with a different leaf structure.',
+          safetyNote: parsed.safety_note || 'AI identification is an estimate. Do not consume wild plants.',
+          xp: earned,
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit' }),
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
 
         setCurrentReport(report);
         setFieldReportModalOpen(true);
-        addToast(`Gemma 3 Identification Complete: +${earnedXp} XP`, 'success');
+        addToast(`Plant Identified: +${earned} XP`, 'success');
       }, 700);
 
     } catch (err) {
       clearInterval(stageTimer);
       setIsProcessing(false);
       setScanProcessingOpen(false);
-      setErrorMsg(err.message || 'Error processing local image with Gemma 3.');
-      addToast('Local inference failed. Check Ollama daemon.', 'error');
+      setErrorMsg(err.message || 'Error executing local Gemma 3 inference.');
+      addToast('Local AI unavailable. Verify Ollama is running.', 'error');
     }
   };
 
   const handleTriggerAnalyze = () => {
     if (!selectedFileRaw) {
-      setErrorMsg('Please select or capture a specimen photo first.');
+      setErrorMsg('Please select or capture a plant photograph first.');
       return;
     }
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64Data = reader.result.split(',')[1];
-      runAnalysisPipeline(base64Data, null);
+      runAnalysis(base64Data, null);
     };
     reader.readAsDataURL(selectedFileRaw);
   };
@@ -277,102 +284,98 @@ Do not output markdown blocks or conversational text outside the raw JSON object
   const handleTriggerSampleTest = (sample) => {
     setSelectedFilePreview(null);
     setSelectedFileRaw(null);
-    runAnalysisPipeline(null, sample);
+    runAnalysis(null, sample);
   };
 
   const handleSaveToCodex = () => {
     if (!currentReport || isReportSaved) return;
-
-    setXp(prev => prev + currentReport.earned);
+    setXp(prev => prev + currentReport.xp);
     setHistory(prev => [currentReport, ...prev]);
     setIsReportSaved(true);
-    addToast(`"${currentReport.name}" saved to Field Codex! +${currentReport.earned} XP`, 'success');
+    addToast(`"${currentReport.name}" saved to Field Codex! +${currentReport.xp} XP`, 'success');
   };
 
   const handleStartReportChallenge = () => {
-    if (currentReport?.nextChallenge) {
-      const nextMission = {
+    if (currentReport?.observationChallenge) {
+      const quest = {
         id: `challenge-${Date.now()}`,
-        task: currentReport.nextChallenge,
-        title: 'Ecological Follow-Up Challenge',
+        title: 'Botanical Observation Challenge',
+        task: currentReport.observationChallenge,
+        objective: currentReport.observationChallenge,
         reward: 50,
-        category: currentReport.category || 'NATURE',
-        hint: currentReport.observation
+        category: 'OBSERVATION',
+        duration: '20 min',
+        difficulty: 'Easy'
       };
-      setActiveMission(nextMission);
+      setActiveMission(quest);
       setFieldReportModalOpen(false);
-      setTouchGrassModalOpen(true);
-      addToast('Field Challenge Activated in Touch Grass Mode', 'success');
+      setMissionActiveModalOpen(true);
+      addToast('Outdoor Mission Started', 'success');
     }
   };
 
-  const handleCompleteActiveMission = (secondsElapsed = 1200) => {
-    const mins = Math.max(1, Math.round(secondsElapsed / 60));
+  const handleStartQuest = (quest) => {
+    setActiveMission(quest);
+    setMissionActiveModalOpen(true);
+    addToast(`Quest Active: ${quest.title}`, 'info');
+  };
+
+  const handleCompleteMission = (seconds = 900) => {
+    const mins = Math.max(1, Math.round(seconds / 60));
     setOutdoorMinutes(prev => prev + mins);
     setCompletedMissionsCount(prev => prev + 1);
-    setXp(prev => prev + (activeMission.reward || 50));
-    setTouchGrassModalOpen(false);
-    addToast(`Mission Complete! +${activeMission.reward || 50} XP • +${mins} Outdoor Mins`, 'success');
+    setXp(prev => prev + (activeMission?.reward || 40));
+    setMissionActiveModalOpen(false);
+    addToast(`Quest Completed! +${activeMission?.reward || 40} XP • +${mins} Outdoor Mins`, 'success');
   };
 
-  const handleSelectSidebarActivity = (actId) => {
-    setSelectedActivity(actId);
-    setMobileMenuOpen(false);
-
-    if (actId === 'station') {
-      setActiveTab('station');
-    } else if (actId === 'random') {
-      setActiveTab('quests');
-      addToast('Switched to Quest Center for Random Expedition', 'info');
-    } else {
-      // Find discipline and switch to relevant mission or tab
-      const activity = ACTIVITIES.find(a => a.id === actId);
-      if (activity) {
-        setActiveMission({
-          id: `act-${actId}`,
-          title: activity.title,
-          task: `Focus your field session on ${activity.discipline}: ${activity.desc}`,
-          reward: parseInt(activity.reward) || 50,
-          category: activity.discipline.toUpperCase(),
-          hint: 'Observe with all five senses.'
-        });
-        setActiveTab('station');
-        addToast(`Module Activated: ${activity.title} (${activity.discipline})`, 'info');
-      }
-    }
+  const handleToggleSaveTrail = (trailId) => {
+    setTrails(prev => prev.map(t => t.id === trailId ? { ...t, saved: !t.saved } : t));
+    addToast('Trail saved to local list', 'info');
   };
 
-  const copyDevPost = () => {
-    const draftText = `---
-title: NatureQuest: Touching Grass with Offline Gemma 3 on the Trail
-published: true
-tags: hacktoberfest, devchallenge, ai, opensource
-cover_image: https://raw.githubusercontent.com/dev2/hero.png
----
+  const handleToggleCompleteTrail = (trailId) => {
+    setTrails(prev => prev.map(t => t.id === trailId ? { ...t, completed: !t.completed } : t));
+    addToast('Trail completion status updated', 'success');
+  };
 
-## 🌲 The Philosophy: Touch Grass
-In an era where technology commands continuous screen time, **NatureQuest** flips the script: **The screen is the shortest part of the experience.**
+  const handleExportBackup = () => {
+    const backup = {
+      xp,
+      history,
+      quests,
+      trails,
+      outdoorMinutes,
+      completedMissionsCount,
+      exportedAt: new Date().toISOString()
+    };
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
+    const dl = document.createElement('a');
+    dl.setAttribute("href", dataStr);
+    dl.setAttribute("download", `naturequest_backup_${new Date().toISOString().slice(0,10)}.json`);
+    document.body.appendChild(dl);
+    dl.click();
+    dl.remove();
+    addToast('Expedition data backup exported', 'success');
+  };
 
-Built for the **DEV Challenge: Touch Grass** during **Hacktoberfest 2026**.
-
-## ⚡ Why Open Innovation Matters
-- **100% Trail-Ready (Zero Signal):** Deep in old-growth forests, cellular networks don't exist. NatureQuest runs **Gemma 3 (4B)** directly on device via **Ollama**.
-- **Absolute Privacy:** Your geo-coordinates and high-resolution trail photographs never leave your laptop.
-- **Zero API Ingestion Costs:** Run unlimited taxonomic vision passes without a corporate credit card.
-
-Built with React, Tailwind CSS, Ollama, and Gemma 3.
-`;
-    navigator.clipboard.writeText(draftText);
-    setCopiedDevDraft(true);
-    setTimeout(() => setCopiedDevDraft(false), 3000);
-    addToast('Dev.to Markdown Article Copied to Clipboard!', 'success');
+  const handleResetProgress = () => {
+    localStorage.clear();
+    setXp(0);
+    setHistory([]);
+    setQuests(INITIAL_QUESTS);
+    setTrails(CURATED_TRAILS);
+    setActiveMission(INITIAL_QUESTS[0]);
+    setOutdoorMinutes(0);
+    setCompletedMissionsCount(0);
+    addToast('All expedition data reset to default', 'info');
   };
 
   return (
     <div className="min-h-screen bg-[#060806] text-stone-100 font-sans selection:bg-emerald-500/30 relative flex flex-col overflow-x-hidden">
       
-      {/* ReactBits Squares Full-Canvas Background Grid */}
-      <div className="fixed inset-0 z-0 opacity-20 pointer-events-none mix-blend-screen">
+      {/* Background Technical Grid (ReactBits Squares) */}
+      <div className="fixed inset-0 z-0 opacity-15 pointer-events-none mix-blend-screen">
         <Squares 
           direction="diagonal"
           speed={0.2}
@@ -382,47 +385,44 @@ Built with React, Tailwind CSS, Ollama, and Gemma 3.
         />
       </div>
 
-      {/* Ambient Radial Glowing Wilderness Cones */}
+      {/* Ambient Lighting Cones */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[-15%] left-[20%] w-[700px] h-[700px] bg-emerald-950/25 rounded-full blur-[160px]" />
         <div className="absolute bottom-[-10%] right-[10%] w-[700px] h-[700px] bg-teal-950/20 rounded-full blur-[180px]" />
       </div>
 
-      {/* Top Refined Status Bar */}
+      {/* Top Header */}
       <TopNav
-        activeTab={activeTab}
-        setActiveTab={(tab) => {
-          if (tab === 'touch-grass') {
-            setTouchGrassModalOpen(true);
-          } else {
-            setActiveTab(tab);
-          }
-        }}
+        activePage={activePage}
+        onOpenMobileMenu={() => setMobileMenuOpen(prev => !prev)}
+        mobileMenuOpen={mobileMenuOpen}
         xp={xp}
         level={level}
         ollamaStatus={ollamaStatus}
         onOpenScanner={() => setCameraModalOpen(true)}
-        onOpenMobileMenu={() => setMobileMenuOpen(prev => !prev)}
-        mobileMenuOpen={mobileMenuOpen}
       />
 
-      {/* Application Shell: Sidebar + Main Content + Context Panel */}
+      {/* Application Shell */}
       <div className="relative z-10 flex flex-1 w-full max-w-[1600px] mx-auto">
         
-        {/* Left Sidebar (Activities Navigation) */}
+        {/* Left Sidebar */}
         <Sidebar
-          selectedActivity={selectedActivity}
-          onSelectActivity={handleSelectSidebarActivity}
+          activePage={activePage}
+          onNavigate={(page) => {
+            setActivePage(page);
+            setMobileMenuOpen(false);
+          }}
           collapsed={sidebarCollapsed}
           onToggleCollapse={() => setSidebarCollapsed(prev => !prev)}
+          ollamaStatus={ollamaStatus}
         />
 
-        {/* Mobile Slide-out Drawer for Activities */}
+        {/* Mobile Slide-out Drawer */}
         {mobileMenuOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden bg-[#040604]/90 backdrop-blur-2xl flex flex-col p-6 animate-in fade-in">
+          <div className="fixed inset-0 z-50 md:hidden bg-[#040604]/95 backdrop-blur-2xl flex flex-col p-6 animate-in fade-in">
             <div className="flex items-center justify-between pb-4 border-b border-stone-800 mb-4">
               <span className="text-xs font-mono font-bold uppercase text-emerald-400">
-                EXPEDITION ACTIVITIES
+                NATUREQUEST NAVIGATION
               </span>
               <button 
                 onClick={() => setMobileMenuOpen(false)}
@@ -432,34 +432,57 @@ Built with React, Tailwind CSS, Ollama, and Gemma 3.
               </button>
             </div>
             <div className="flex-1 overflow-y-auto space-y-2">
-              {ACTIVITIES.map(a => (
+              {[
+                { id: 'station', label: 'Field Station' },
+                { id: 'plant-scout', label: 'Plant Scout' },
+                { id: 'quests', label: 'Quests' },
+                { id: 'trails', label: 'Trails' },
+                { id: 'codex', label: 'Field Codex' },
+                { id: 'achievements', label: 'Achievements' },
+                { id: 'progress', label: 'My Progress' },
+                { id: 'guide', label: 'Nature Guide' },
+                { id: 'stories', label: 'Field Stories' },
+                { id: 'local-ai', label: 'Local AI' },
+                { id: 'settings', label: 'Settings' }
+              ].map(item => (
                 <button
-                  key={a.id}
-                  onClick={() => handleSelectSidebarActivity(a.id)}
-                  className="w-full text-left p-3.5 rounded-2xl bg-stone-900/60 border border-stone-800 flex items-center justify-between"
+                  key={item.id}
+                  onClick={() => {
+                    setActivePage(item.id);
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full text-left p-3.5 rounded-2xl bg-stone-900/60 border border-stone-800 font-bold text-sm text-stone-200"
                 >
-                  <div>
-                    <h5 className="text-xs font-bold text-white uppercase">{a.title}</h5>
-                    <p className="text-[11px] text-stone-400">{a.desc}</p>
-                  </div>
-                  <span className="text-xs font-mono font-bold text-emerald-400">{a.reward}</span>
+                  {item.label}
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {/* Main Content Area */}
+        {/* Main Content Viewport */}
         <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 overflow-y-auto">
           
-          {activeTab === 'station' && (
-            <FieldStationHero
+          {activePage === 'station' && (
+            <FieldStationView
               activeMission={activeMission}
+              onStartQuest={handleStartQuest}
               onOpenScanner={() => setCameraModalOpen(true)}
-              onOpenQuests={() => setActiveTab('quests')}
-              onStartTouchGrass={() => setTouchGrassModalOpen(true)}
-              onChangeMission={() => setActiveTab('quests')}
-              onCompleteActiveMission={() => handleCompleteActiveMission(1200)}
+              onNavigate={(page) => setActivePage(page)}
+              recentPlants={history}
+              questsPreview={quests}
+              trailsPreview={trails}
+              onSelectFile={handleSelectFile}
+              selectedFilePreview={selectedFilePreview}
+              onTriggerAnalyze={handleTriggerAnalyze}
+              onTriggerSampleTest={handleTriggerSampleTest}
+              isProcessing={isProcessing}
+            />
+          )}
+
+          {activePage === 'plant-scout' && (
+            <PlantScoutView
+              onOpenScanner={() => setCameraModalOpen(true)}
               selectedFilePreview={selectedFilePreview}
               selectedFileRaw={selectedFileRaw}
               onSelectFile={handleSelectFile}
@@ -470,41 +493,72 @@ Built with React, Tailwind CSS, Ollama, and Gemma 3.
             />
           )}
 
-          {activeTab === 'quests' && (
+          {activePage === 'quests' && (
             <QuestsView
               activeMission={activeMission}
-              onSetActiveMission={(quest) => {
-                setActiveMission(quest);
-                setActiveTab('station');
-                addToast(`Active Mission: ${quest.task || quest.title}`, 'info');
-              }}
-              onStartTouchGrass={() => setTouchGrassModalOpen(true)}
+              onStartQuest={handleStartQuest}
               quests={quests}
               onCreateCustomQuest={(newQ) => {
                 setQuests(prev => [newQ, ...prev]);
                 setActiveMission(newQ);
-                setActiveTab('station');
-                addToast('Custom Quest Activated!', 'success');
+                addToast('Custom Quest Created!', 'success');
               }}
+              ollamaStatus={ollamaStatus}
             />
           )}
 
-          {activeTab === 'codex' && (
+          {activePage === 'trails' && (
+            <TrailsView
+              trails={trails}
+              onStartTrailMission={(trail) => {
+                const quest = {
+                  id: `trail-mission-${trail.id}`,
+                  title: `${trail.name} Expedition`,
+                  objective: `Walk the ${trail.name} route (${trail.distance}) and look for ${trail.bestFor}.`,
+                  reward: 80,
+                  category: 'WALK',
+                  duration: trail.duration,
+                  difficulty: trail.difficulty,
+                  hint: trail.safetyNotes
+                };
+                setActiveMission(quest);
+                setMissionActiveModalOpen(true);
+              }}
+              onToggleSaveTrail={handleToggleSaveTrail}
+              onToggleCompleteTrail={handleToggleCompleteTrail}
+            />
+          )}
+
+          {activePage === 'codex' && (
             <CodexView
               history={history}
               onOpenScanner={() => {
-                setActiveTab('station');
+                setActivePage('plant-scout');
                 setCameraModalOpen(true);
               }}
               onClearHistory={() => {
                 setHistory([]);
                 addToast('Field Codex Reset', 'info');
               }}
+              onStartChallengeFromCodex={(quest) => {
+                setActiveMission(quest);
+                setMissionActiveModalOpen(true);
+              }}
             />
           )}
 
-          {activeTab === 'metrics' && (
-            <MetricsView
+          {activePage === 'achievements' && (
+            <AchievementsView
+              history={history}
+              xp={xp}
+              level={level}
+              completedMissionsCount={completedMissionsCount}
+              streak={3}
+            />
+          )}
+
+          {activePage === 'progress' && (
+            <MyProgressView
               history={history}
               xp={xp}
               level={level}
@@ -515,69 +569,78 @@ Built with React, Tailwind CSS, Ollama, and Gemma 3.
             />
           )}
 
-          {activeTab === 'open-innovation' && (
-            <OpenInnovationView
-              onCopyDevPost={copyDevPost}
-              copiedDevDraft={copiedDevDraft}
+          {activePage === 'guide' && (
+            <NatureGuideView />
+          )}
+
+          {activePage === 'stories' && (
+            <FieldStoriesView />
+          )}
+
+          {activePage === 'local-ai' && (
+            <LocalAiView
+              ollamaStatus={ollamaStatus}
+              onRecheckOllama={checkOllamaHealth}
             />
           )}
 
-          {activeTab === 'why' && (
-            <WhyNatureQuestView
-              onStartExploring={() => {
-                setActiveTab('station');
-                setTouchGrassModalOpen(true);
+          {activePage === 'settings' && (
+            <SettingsView
+              onClearCodex={() => {
+                setHistory([]);
+                addToast('Field Codex cleared', 'info');
               }}
+              onResetProgress={handleResetProgress}
+              onExportBackup={handleExportBackup}
             />
           )}
 
         </main>
 
-        {/* Right Context Panel (Desktop Only) */}
+        {/* Right Context Rail (Desktop Only) */}
         <RightContextPanel
           activeMission={activeMission}
-          onStartTouchGrass={() => setTouchGrassModalOpen(true)}
-          recentDiscoveries={history}
-          onViewCodex={() => setActiveTab('codex')}
+          onStartQuest={handleStartQuest}
+          recentPlants={history}
+          onNavigate={(page) => setActivePage(page)}
           ollamaStatus={ollamaStatus}
         />
 
       </div>
 
-      {/* Hidden File Input for fallback uploads */}
+      {/* Hidden file input for file selection */}
       <input 
         type="file" 
-        accept="image/*" 
-        ref={fileInputHiddenRef} 
+        accept="image/jpeg,image/png,image/webp" 
+        ref={hiddenFileInputRef} 
         className="hidden" 
         onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) handleSelectFile(file);
+          const f = e.target.files?.[0];
+          if (f) handleSelectFile(f);
         }}
       />
 
-      {/* Camera Capture Modal */}
+      {/* Field Camera Modal */}
       {cameraModalOpen && (
         <CameraModal
           onCapture={handleCameraCapture}
           onClose={() => setCameraModalOpen(false)}
           onFallbackUpload={() => {
             setCameraModalOpen(false);
-            fileInputHiddenRef.current?.click();
+            hiddenFileInputRef.current?.click();
           }}
         />
       )}
 
-      {/* Scientific Scan Processing Sequence (2-4s) */}
+      {/* 6-Stage Progressive Scan Processing Modal */}
       {scanProcessingOpen && (
         <ScanProcessingModal
           currentStageIndex={scanStageIndex}
           imagePreviewUrl={selectedFilePreview}
-          modelName={ollamaStatus.modelName}
         />
       )}
 
-      {/* Detailed Field Identification Report Modal */}
+      {/* Field Identification Report Modal */}
       {fieldReportModalOpen && (
         <FieldReportModal
           report={currentReport}
@@ -594,16 +657,16 @@ Built with React, Tailwind CSS, Ollama, and Gemma 3.
         />
       )}
 
-      {/* Full-Screen Touch Grass Mode */}
-      {touchGrassModalOpen && (
-        <TouchGrassModal
+      {/* Outdoor Mode / Mission Active Screen */}
+      {missionActiveModalOpen && (
+        <MissionActiveModal
           mission={activeMission}
-          onComplete={handleCompleteActiveMission}
-          onClose={() => setTouchGrassModalOpen(false)}
+          onComplete={handleCompleteMission}
+          onClose={() => setMissionActiveModalOpen(false)}
         />
       )}
 
-      {/* Toast Notification Queue */}
+      {/* Toast Notifications */}
       <ToastContainer
         toasts={toasts}
         onDismiss={(id) => setToasts(prev => prev.filter(t => t.id !== id))}
