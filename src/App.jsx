@@ -372,7 +372,7 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
   };
 
   return (
-    <div className="min-h-screen bg-[#06100b] text-[#f3f1e7] font-sans selection:bg-[#4f8a52]/40 relative flex flex-col overflow-x-hidden">
+    <div className="h-screen bg-[#06100b] text-[#f3f1e7] font-sans selection:bg-[#4f8a52]/40 relative flex flex-col overflow-hidden">
       
       {/* Dynamic Cinematic Nature Background (NO TECHNICAL GRID) */}
       <NatureBackground 
@@ -404,6 +404,12 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
           collapsed={sidebarCollapsed}
           onToggleCollapse={() => setSidebarCollapsed(prev => !prev)}
           ollamaStatus={ollamaStatus}
+          xp={xp}
+          level={level}
+          historyCount={history.length}
+          activeMission={activeMission}
+          onStartQuest={handleStartQuest}
+          onOpenScanner={() => setCameraModalOpen(true)}
         />
 
         {/* Mobile Slide-out Drawer */}

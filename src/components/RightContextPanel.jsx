@@ -11,7 +11,7 @@ export default function RightContextPanel({
   const latestDiscovery = recentPlants?.[0];
 
   return (
-    <aside className="hidden 2xl:flex flex-col w-72 shrink-0 border-l border-[#1e3f2b]/35 bg-[#07160f]/65 backdrop-blur-xl p-5 space-y-5 overflow-y-auto select-none">
+    <aside className="hidden 2xl:flex flex-col sticky top-18 h-[calc(100vh-4.5rem)] w-72 shrink-0 border-l border-[#1e3f2b]/35 bg-[#07160f]/65 backdrop-blur-xl p-5 space-y-5 overflow-y-auto select-none">
       
       {/* Current Quest Preview */}
       <div className="nature-surface-card rounded-3xl p-5 space-y-3">
