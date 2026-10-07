@@ -145,7 +145,10 @@ export default function App() {
     setErrorMsg('');
     setSelectedFileRaw(file);
     const reader = new FileReader();
-    reader.onload = () => setSelectedFilePreview(reader.result);
+    reader.onload = () => {
+      setSelectedFilePreview(reader.result);
+      setActivePage('plant-scout');
+    };
     reader.readAsDataURL(file);
   };
 
@@ -157,6 +160,7 @@ export default function App() {
         const file = new File([blob], `field_camera_${Date.now()}.jpg`, { type: 'image/jpeg' });
         setSelectedFileRaw(file);
         setCameraModalOpen(false);
+        setActivePage('plant-scout');
         addToast('Plant photograph captured', 'success');
       });
   };
@@ -283,10 +287,9 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
     }
     
     // Smart Image Quality Check
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!validTypes.includes(selectedFileRaw.type)) {
-      addToast('Unsupported format. Please use JPG, PNG, or WEBP.', 'error');
-      setErrorMsg('Unsupported image format.');
+    if (selectedFileRaw.type && !selectedFileRaw.type.startsWith('image/')) {
+      addToast('Unsupported format. Please upload an image file.', 'error');
+      setErrorMsg(`Unsupported format: ${selectedFileRaw.type}`);
       return;
     }
     if (selectedFileRaw.size > 8 * 1024 * 1024) {
@@ -637,7 +640,7 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
       {/* Hidden file input */}
       <input 
         type="file" 
-        accept="image/jpeg,image/png,image/webp" 
+        accept="image/*" 
         ref={hiddenFileInputRef} 
         className="hidden" 
         onChange={(e) => {
