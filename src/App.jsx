@@ -29,6 +29,7 @@ import {
   CURATED_TRAILS, 
   SAMPLE_TEST_PLANTS 
 } from './data/natureData';
+import { cleanAiText } from './utils/textCleaner';
 
 export default function App() {
   // Persistent data state via localStorage
@@ -186,6 +187,7 @@ export default function App() {
 
     const prompt = `
 You are an offline field botanist. Analyze this plant photograph.
+Write all text in natural, plain human conversational English without asterisks (no ** or *), without hashtags (no #), and without markdown symbols.
 Respond STRICTLY with a valid JSON object matching this schema:
 {
   "identification": "Likely common name and botanical name",
@@ -195,12 +197,12 @@ Respond STRICTLY with a valid JSON object matching this schema:
   "visual_evidence": ["Compound leaf structure", "Serrated leaflets"],
   "plant_condition": "Looks generally healthy (Visual estimate only)",
   "what_to_observe_next": ["Look at the leaf arrangement", "Compare the bark texture"],
-  "field_notes": "Short concise educational explanation",
-  "observation_challenge": "Actionable sensory prompt for another nearby plant",
+  "field_notes": "Short concise educational explanation in plain text",
+  "observation_challenge": "Actionable sensory prompt for another nearby plant in plain text",
   "safety_note": "Do not consume or handle unknown plant material",
   "xp": 50
 }
-Never claim absolute certainty. Do not output text or markdown outside the raw JSON object.`;
+Never claim absolute certainty. Do not use asterisks or hashtags in values. Do not output text outside the raw JSON object.`;
 
     try {
       let parsed = null;
@@ -251,18 +253,18 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
         const earned = parsed.xp || 50;
         const report = {
           id: `plant-${Date.now()}`,
-          name: parsed.identification || 'Wild Flora Specimen',
-          category: parsed.category || 'Plant',
-          confidence: parsed.confidence || 'Moderate',
+          name: cleanAiText(parsed.identification) || 'Wild Flora Specimen',
+          category: cleanAiText(parsed.category) || 'Plant',
+          confidence: cleanAiText(parsed.confidence) || 'Moderate',
           image: selectedFilePreview,
-          features: parsed.visible_features || ['Characteristic morphology', 'Healthy wild foliage'],
-          visualEvidence: parsed.visual_evidence || ['Clear leaf shape', 'Stem structure'],
-          plantCondition: parsed.plant_condition || 'Condition unclear (Visual estimate only. This is not a scientific diagnosis.)',
-          whatToObserveNext: parsed.what_to_observe_next || ['Look at the leaf arrangement', 'Find a similar plant'],
-          fieldNotes: parsed.field_notes || 'Observed outdoors and verified via local Gemma 3 inference.',
-          whereToLook: parsed.where_to_look || 'Native groundcover and park margins.',
-          observationChallenge: parsed.observation_challenge || 'Find another nearby tree with a different leaf structure.',
-          safetyNote: parsed.safety_note || 'AI identification is an estimate. Do not consume wild plants.',
+          features: cleanAiText(parsed.visible_features) || ['Characteristic morphology', 'Healthy wild foliage'],
+          visualEvidence: cleanAiText(parsed.visual_evidence) || ['Clear leaf shape', 'Stem structure'],
+          plantCondition: cleanAiText(parsed.plant_condition) || 'Condition unclear (Visual estimate only. This is not a scientific diagnosis.)',
+          whatToObserveNext: cleanAiText(parsed.what_to_observe_next) || ['Look at the leaf arrangement', 'Find a similar plant'],
+          fieldNotes: cleanAiText(parsed.field_notes) || 'Observed outdoors and verified via local Gemma 3 inference.',
+          whereToLook: cleanAiText(parsed.where_to_look) || 'Native groundcover and park margins.',
+          observationChallenge: cleanAiText(parsed.observation_challenge) || 'Find another nearby tree with a different leaf structure.',
+          safetyNote: cleanAiText(parsed.safety_note) || 'AI identification is an estimate. Do not consume wild plants.',
           xp: earned,
           date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit' }),
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -605,7 +607,7 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
           )}
 
           {activePage === 'stories' && (
-            <FieldStoriesView />
+            <FieldStoriesView ollamaStatus={ollamaStatus} />
           )}
 
           {activePage === 'local-ai' && (
@@ -684,7 +686,16 @@ Never claim absolute certainty. Do not output text or markdown outside the raw J
             setSelectedFileRaw(null);
             setCameraModalOpen(true);
           }}
+          onBackToHome={() => {
+            setFieldReportModalOpen(false);
+            setSelectedFilePreview(null);
+            setSelectedFileRaw(null);
+            setActivePage('station');
+          }}
           isSaved={isReportSaved}
+          streak={3}
+          level={level}
+          historyCount={history.length}
         />
       )}
 

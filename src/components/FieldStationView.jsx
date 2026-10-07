@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Camera, Compass, Target, BookOpen, 
-  Leaf, ArrowRight, Upload 
+  Leaf, ArrowRight, Upload, Calendar, 
+  Flame, CheckCircle, Clock, Sparkles 
 } from 'lucide-react';
 import clsx from 'clsx';
+import { getTodayTask } from '../data/dailyTasks';
 
 export default function FieldStationView({
   activeMission,
@@ -13,8 +15,42 @@ export default function FieldStationView({
   recentPlants,
   onSelectFile
 }) {
+  const todayTask = getTodayTask();
+  const [completedToday, setCompletedToday] = useState(() => {
+    try {
+      return localStorage.getItem(`nq_daily_${todayTask.dateKey}`) === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const handleMarkDailyComplete = () => {
+    setCompletedToday(true);
+    try {
+      localStorage.setItem(`nq_daily_${todayTask.dateKey}`, 'true');
+    } catch (e) {
+      console.warn('Storage error:', e);
+    }
+  };
+
+  const handleStartTodayTask = () => {
+    if (onStartQuest) {
+      onStartQuest({
+        id: `daily-${todayTask.dateKey}`,
+        title: todayTask.title,
+        task: todayTask.description,
+        objective: todayTask.description,
+        category: todayTask.category,
+        duration: todayTask.duration,
+        difficulty: 'Daily',
+        reward: todayTask.reward,
+        hint: todayTask.hint
+      });
+    }
+  };
+
   return (
-    <div className="space-y-12 animate-in fade-in duration-500 max-w-6xl mx-auto pb-12 select-none">
+    <div className="space-y-10 animate-in fade-in duration-500 max-w-6xl mx-auto pb-12 select-none font-sans">
       
       {/* ============================================================== */}
       {/* HERO: FIELD STATION (CINEMATIC BOTANICAL HERO) */}
@@ -68,13 +104,96 @@ export default function FieldStationView({
       </section>
 
       {/* ============================================================== */}
-      {/* SECTION 1: ACTIVE QUEST */}
+      {/* SECTION 1: TODAY'S EXPEDITION TASK (DAILY CALENDAR UPDATE) */}
+      {/* ============================================================== */}
+      <section className="nature-surface-card rounded-[2rem] p-6 sm:p-8 border border-emerald-500/30 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+        
+        {/* Header Strip with Date Badge */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-[#1e3f2b]/40">
+          <div className="flex items-center gap-2.5">
+            <div className="bg-[#123a27] p-2 rounded-xl text-emerald-300 border border-[#315c3b]/60">
+              <Calendar className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono font-black uppercase tracking-wider text-emerald-400">
+                  TODAY'S TASK • {todayTask.dateString.toUpperCase()}
+                </span>
+                <span className="text-[9px] font-mono bg-emerald-950 px-2 py-0.5 rounded text-emerald-300 border border-emerald-800">
+                  DAILY ROTATION
+                </span>
+              </div>
+              <span className="text-[11px] text-[#91b79a] block font-sans">
+                Theme: {todayTask.theme}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 font-mono text-xs">
+            <span className="flex items-center gap-1 text-amber-300 bg-[#161f0d] px-2.5 py-1 rounded-xl border border-amber-900/40">
+              <Flame className="w-3.5 h-3.5 fill-current text-amber-400" /> Daily Streak
+            </span>
+            <span className="text-emerald-300 font-bold bg-[#0c2417] px-2.5 py-1 rounded-xl border border-[#315c3b]">
+              +{todayTask.reward} XP
+            </span>
+          </div>
+        </div>
+
+        {/* Task Details */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="max-w-2xl space-y-2">
+            <h3 className="text-xl sm:text-2xl font-black text-[#f3f1e7] leading-snug">
+              {todayTask.title}
+            </h3>
+            <p className="text-xs sm:text-sm text-[#d8c8a8] font-sans leading-relaxed">
+              {todayTask.description}
+            </p>
+            <div className="flex items-center gap-3 pt-1 text-[11px] font-mono text-[#91b79a]">
+              <span className="flex items-center gap-1">
+                <Clock className="w-3 h-3 text-[#4f8a52]" /> {todayTask.duration}
+              </span>
+              <span>•</span>
+              <span>Tip: {todayTask.hint}</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0 self-start md:self-auto font-mono">
+            {completedToday ? (
+              <div className="px-5 py-3 rounded-2xl bg-[#0c2619] border border-[#315c3b] text-emerald-300 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-emerald-400" />
+                <span>COMPLETED FOR TODAY</span>
+              </div>
+            ) : (
+              <>
+                <button
+                  onClick={handleStartTodayTask}
+                  className="w-full sm:w-auto px-6 py-3.5 bg-[#245336] hover:bg-[#2d6844] active:scale-95 text-[#f3f1e7] text-xs font-black uppercase tracking-wider rounded-2xl shadow-lg border border-[#4f8a52]/40 transition-all cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <Compass className="w-4 h-4 text-emerald-300" />
+                  <span>START TODAY'S TASK</span>
+                </button>
+
+                <button
+                  onClick={handleMarkDailyComplete}
+                  className="w-full sm:w-auto px-4 py-3.5 bg-[#091b12] hover:bg-[#0f2c1e] text-[#91b79a] hover:text-[#f3f1e7] border border-[#1e3f2b] rounded-2xl text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  <CheckCircle className="w-4 h-4 text-emerald-400" />
+                  <span>CHECK-IN</span>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================== */}
+      {/* SECTION 2: ACTIVE QUEST */}
       {/* ============================================================== */}
       <section className="nature-surface-card rounded-[2rem] p-6 sm:p-8 backdrop-blur-xl shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div className="flex items-center gap-2 font-mono text-[11px]">
             <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span className="text-emerald-300 font-bold uppercase tracking-wider">ACTIVE QUEST</span>
+            <span className="text-emerald-300 font-bold uppercase tracking-wider">ACTIVE EXPEDITION QUEST</span>
             <span className="text-[#315c3b]">•</span>
             <span className="text-[#d8c8a8]">{activeMission?.category || 'PLANT OBSERVATION'}</span>
           </div>
@@ -100,16 +219,16 @@ export default function FieldStationView({
 
           <button
             onClick={() => onStartQuest(activeMission)}
-            className="self-start md:self-auto bg-[#245336] hover:bg-[#2d6844] active:scale-95 text-[#f3f1e7] font-black px-7 py-3.5 rounded-2xl text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-black/30 border border-[#4f8a52]/40 cursor-pointer transition-all shrink-0"
+            className="self-start md:self-auto bg-[#245336] hover:bg-[#2d6844] active:scale-95 text-[#f3f1e7] font-black px-7 py-3.5 rounded-2xl text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-black/30 border border-[#4f8a52]/40 cursor-pointer transition-all shrink-0 font-mono"
           >
             <Compass className="w-4 h-4 text-emerald-300" />
-            <span>START QUEST</span>
+            <span>LAUNCH OUTDOOR MODE</span>
           </button>
         </div>
       </section>
 
       {/* ============================================================== */}
-      {/* SECTION 2: RECENT DISCOVERIES & FIELD CODEX PREVIEW */}
+      {/* SECTION 3: RECENT DISCOVERIES & FIELD CODEX PREVIEW */}
       {/* ============================================================== */}
       <section className="space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-[#1e3f2b]/40">

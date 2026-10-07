@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 import { INITIAL_QUESTS } from '../data/natureData';
+import { cleanAiText } from '../utils/textCleaner';
 
 const FILTERS = ['ALL', 'PLANTS', 'OBSERVATION', 'WALK', 'DISCOVERY', 'PHOTOGRAPHY'];
 
@@ -35,15 +36,16 @@ export default function QuestsView({
       let prompt;
       if (isSurprise) {
         prompt = `You are an offline nature exploration master. Generate ONE SURPRISE plant exploration quest. Make it creative but safe.
+Write all text in natural, plain human conversational English without asterisks (no ** or *), without hashtags (no #), and without markdown symbols.
 Respond strictly in JSON matching this schema:
 {
-  "title": "Creative surprise title",
+  "title": "Creative surprise title in plain text",
   "category": "DISCOVERY",
   "duration": "30 min",
   "difficulty": "Medium",
   "reward": 100,
-  "objective": "A 1-sentence actionable plant discovery challenge",
-  "hint": "1 short tip where to look",
+  "objective": "A 1-sentence actionable plant discovery challenge in plain text",
+  "hint": "1 short tip where to look in plain text",
   "safetyNote": "Be careful outdoors."
 }`;
       } else {
@@ -53,15 +55,16 @@ Time: ${aiTime}
 Difficulty: ${aiDifficulty}
 Interest/Category: ${aiInterest}
 
+Write all text in natural, plain human conversational English without asterisks (no ** or *), without hashtags (no #), and without markdown symbols.
 Respond strictly in JSON matching this schema:
 {
-  "title": "Short catchy title matching parameters",
+  "title": "Short catchy title matching parameters in plain text",
   "category": "${aiInterest.toUpperCase()}",
   "duration": "${aiTime}",
   "difficulty": "${aiDifficulty}",
   "reward": 80,
-  "objective": "A 1-sentence actionable plant/outdoor discovery challenge matching parameters",
-  "hint": "1 short tip where to look",
+  "objective": "A 1-sentence actionable plant discovery challenge in plain text",
+  "hint": "1 short tip where to look in plain text",
   "safetyNote": "Safety tip."
 }`;
       }
@@ -101,14 +104,14 @@ Respond strictly in JSON matching this schema:
 
       const generated = {
         id: `ai-${Date.now()}`,
-        title: questData.title,
-        category: questData.category || 'PLANTS',
-        duration: questData.duration || '20 min',
-        difficulty: questData.difficulty || 'Easy',
+        title: cleanAiText(questData.title),
+        category: cleanAiText(questData.category) || 'PLANTS',
+        duration: cleanAiText(questData.duration) || '20 min',
+        difficulty: cleanAiText(questData.difficulty) || 'Easy',
         reward: questData.reward || 60,
         equipment: 'Curious eyes',
-        objective: questData.objective,
-        hint: questData.hint,
+        objective: cleanAiText(questData.objective),
+        hint: cleanAiText(questData.hint),
         progress: '0 / 1 complete',
         completed: false
       };

@@ -331,11 +331,74 @@ Lobed leaves (like oaks and maples) allow wind to pass freely through the sinuse
     summary: 'A simple sensory field guide to re-tuning your peripheral observation skills on familiar neighbourhood sidewalks.',
     content: `You don’t need a national park to explore. On your next brief walk around the block, set your screen to sleep and look for these five clues:
 
-1. **Sidewalk Crack Colonizers:** Notice how dandelions, plantain, and shepherd’s purse exploit the micro-climate of concrete seams, generating deep taproots that break up asphalt.
-2. **The Moss Compass:** Check north-facing masonry walls and tree trunks. The lack of direct afternoon sun preserves moisture, creating vibrant emerald mats.
-3. **Canopy Gaps:** Look up at tree crowns. Notice 'crown shyness'—how canopies of adjacent mature trees often maintain a visible narrow gap, never touching branch tips.
-4. **Seed Dispersal Mechanisms:** Look for winged maple samaras, sticky burrs, or feathery thistle parachutes designed to hitchhike across city parks.
-5. **Leaf Texture Differences:** Touch three leaves without picking them. Feel the difference between shade foliage and sun-drenched canopy leaves.`
+1. Sidewalk Crack Colonizers: Notice how dandelions, plantain, and shepherd’s purse exploit the micro-climate of concrete seams, generating deep taproots that break up asphalt.
+2. The Moss Compass: Check north-facing masonry walls and tree trunks. The lack of direct afternoon sun preserves moisture, creating vibrant emerald mats.
+3. Canopy Gaps: Look up at tree crowns. Notice crown shyness—how canopies of adjacent mature trees often maintain a visible narrow gap, never touching branch tips.
+4. Seed Dispersal Mechanisms: Look for winged maple samaras, sticky burrs, or feathery thistle parachutes designed to hitchhike across city parks.
+5. Leaf Texture Differences: Touch three leaves without picking them. Feel the difference between shade foliage and sun-drenched canopy leaves.`
+  }
+];
+
+export const YOUTUBE_JOURNALS = [
+  {
+    id: 'yt-1',
+    title: 'Introduction to Nature Journaling',
+    author: 'John Muir Laws',
+    youtubeId: '6BNzzjBIBPo',
+    duration: '11 min',
+    image: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80',
+    category: 'NATURE JOURNALING',
+    summary: 'A foundational field workshop on using words, sketches, and numbers to sharpen outdoor observational skills without needing to be an artist.',
+    takeaways: [
+      'Document what you see using words, pictures, and numbers',
+      'Ask three simple questions outdoors: I notice, I wonder, It reminds me of',
+      'The goal of journaling is curiosity and attention, not making fine museum art'
+    ]
+  },
+  {
+    id: 'yt-2',
+    title: 'How Trees Talk to Each Other and Share Nutrients',
+    author: 'TED-Ed & Suzanne Simard',
+    youtubeId: 'yWOqeyPIVRo',
+    duration: '5 min',
+    image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80',
+    category: 'FOREST ECOLOGY',
+    summary: 'Explore how underground mycorrhizal fungal networks link old-growth mother trees to young seedlings across the forest floor.',
+    takeaways: [
+      'Mycorrhizal fungi connect tree root networks throughout vast woodlands',
+      'Mature mother trees transfer carbon and warning signals to shaded saplings',
+      'A forest behaves like a cooperative living super-organism rather than isolated competitors'
+    ]
+  },
+  {
+    id: 'yt-3',
+    title: 'Meet the Plants: Crash Course Botany',
+    author: 'CrashCourse Botany',
+    youtubeId: 'Jb6P5E7b3jY',
+    duration: '13 min',
+    image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=800&q=80',
+    category: 'BOTANY BASICS',
+    summary: 'An engaging, accessible introduction to plant biodiversity, photosynthesis, and how flora shaped earth’s oxygenated atmosphere.',
+    takeaways: [
+      'Plants transformed the planetary atmosphere by generating atmospheric oxygen',
+      'Vascular systems evolved to allow vertical growth into towering forest canopies',
+      'Understanding fundamental plant anatomy unlocks deeper appreciation on any outdoor walk'
+    ]
+  },
+  {
+    id: 'yt-4',
+    title: 'The Real Reason Leaves Change Color in Autumn',
+    author: 'MinuteEarth',
+    youtubeId: 'd260CmZoxj8',
+    duration: '3 min',
+    image: 'https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=800&q=80',
+    category: 'SEASONAL SCIENCE',
+    summary: 'Why deciduous trees break down green chlorophyll to salvage nitrogen and phosphorus before winter dormancy.',
+    takeaways: [
+      'Trees actively reabsorb valuable nutrients from leaves into branch bark before shedding',
+      'Carotenoids and xanthophylls produce golden yellows already present inside foliage',
+      'Anthocyanin reds act as a protective sunscreen while nutrients are safely recovered'
+    ]
   }
 ];
 
