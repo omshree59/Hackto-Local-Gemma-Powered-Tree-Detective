@@ -71,8 +71,23 @@ export default function App() {
     return Number(localStorage.getItem('nq_completed_count')) || 4;
   });
 
-  // UI Navigation state
-  const [activePage, setActivePage] = useState('station');
+  // UI Navigation state with URL hash support
+  const [activePage, setActivePage] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const h = window.location.hash.replace('#', '');
+      if (h) return h;
+    }
+    return 'station';
+  });
+
+  useEffect(() => {
+    const handleHash = () => {
+      const h = window.location.hash.replace('#', '');
+      if (h) setActivePage(h);
+    };
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 

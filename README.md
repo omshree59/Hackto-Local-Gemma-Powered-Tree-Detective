@@ -25,6 +25,28 @@ NatureQuest flips this paradigm entirely:
 
 ---
 
+## 📸 Visual Showcase & Interface Gallery
+
+<div align="center">
+
+### 🧭 Field Station — Central Exploration Hub & Daily Rotating Task
+![Field Station](./public/screenshots/field_station.png)
+
+### 🎯 Species Milestones — 15 Popular Findable Flora Checklist (Satisfied with Photo Proof)
+![Species Milestones](./public/screenshots/species_milestones.png)
+
+</div>
+
+| 🌿 Plant Scout Optical Lens | 🎥 Video Journals & Field Stories |
+| :---: | :---: |
+| ![Plant Scout](./public/screenshots/plant_scout.png) | ![Field Stories](./public/screenshots/field_stories.png) |
+
+| 🎯 Field Quests & Procedural Mission Engine |
+| :---: |
+| ![Field Quests](./public/screenshots/quests.png) |
+
+---
+
 ## 🌟 Key Features
 
 ### 🌿 1. Plant Scout & Optical Lens
