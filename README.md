@@ -163,7 +163,7 @@ TRACHEOPHYTES
         │                ~319 Million Years Ago
         │
         └──────────────► ANGIOSPERMS
-                         ~135 Million Years Ago
+                         ~135 Million Years Ago ```text
 
 - **Dynamic Specimen Matching:** Automatically correlates the user's recorded Field Codex specimens against evolutionary clades, indicating which ancestral plant families they have verified in the wild.
 
