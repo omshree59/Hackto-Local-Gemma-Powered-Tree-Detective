@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
-import { 
-  Camera, Menu, X, Award, ChevronDown, 
-  Cpu, WifiOff, User, Flame, Sparkles, CheckCircle, ArrowRight
-} from 'lucide-react';
-import clsx from 'clsx';
+import { useState } from 'react';
+import { Camera, Menu, X, Award, Flame, ArrowRight, ChevronDown } from 'lucide-react';
+import ParticleText from './ParticleText';
 
 const PAGE_TITLES = {
   'station': 'Field Station',
@@ -20,7 +17,7 @@ const PAGE_TITLES = {
   'settings': 'Settings'
 };
 
-export function getTierTitle(lvl) {
+function getTierTitle(lvl) {
   const titles = [
     'Field Novice',
     'Botanical Scout',
@@ -40,11 +37,9 @@ export default function TopNav({
   xp = 0,
   level = 1,
   streak = 4,
-  ollamaStatus,
   onOpenScanner,
   onNavigate
 }) {
-  const [statusPopoverOpen, setStatusPopoverOpen] = useState(false);
   const [tierPopoverOpen, setTierPopoverOpen] = useState(false);
   const [streakPopoverOpen, setStreakPopoverOpen] = useState(false);
 
@@ -75,63 +70,28 @@ export default function TopNav({
           </div>
         </div>
 
-        {/* Center / Status Indicator with Popover */}
-        <div className="relative">
-          <button
-            onClick={() => {
-              setStatusPopoverOpen(prev => !prev);
-              setTierPopoverOpen(false);
-              setStreakPopoverOpen(false);
-            }}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#081a11]/80 border border-[#1e3f2b]/45 hover:border-[#315c3b]/60 font-mono text-[11px] transition-all cursor-pointer"
-            title="View local AI runtime status"
-          >
-            <span className={clsx(
-              "w-2 h-2 rounded-full shrink-0",
-              ollamaStatus?.connected ? "bg-emerald-400 animate-pulse" : "bg-amber-400"
-            )}></span>
-            <span className={clsx(
-              "font-bold hidden sm:inline",
-              ollamaStatus?.connected ? "text-emerald-300" : "text-amber-300"
-            )}>
-              {ollamaStatus?.connected ? "OLLAMA CONNECTED" : "OLLAMA STANDBY"}
-            </span>
-            <span className="text-[#91b79a]/80 hidden md:inline">• Gemma 3 4B</span>
-            <span className="text-[#4f8a52] font-bold hidden lg:inline">• LOCAL</span>
-            <ChevronDown className="w-3 h-3 text-[#91b79a] ml-0.5" />
-          </button>
-
-          {/* Status Details Popover */}
-          {statusPopoverOpen && (
-            <div 
-              onMouseLeave={() => setStatusPopoverOpen(false)}
-              className="absolute top-10 left-1/2 -translate-x-1/2 w-72 bg-[#081a11]/95 border border-[#1e3f2b] rounded-2xl p-4 shadow-2xl backdrop-blur-2xl z-50 animate-in fade-in zoom-in-95 text-xs font-mono space-y-3"
-            >
-              <div className="flex items-center justify-between border-b border-[#1e3f2b] pb-2">
-                <span className="text-[#f3f1e7] font-bold">LOCAL AI STATUS</span>
-                <span className={clsx("font-bold text-[10px]", ollamaStatus?.connected ? "text-emerald-400" : "text-amber-400")}>
-                  {ollamaStatus?.connected ? "ONLINE" : "DISCONNECTED"}
-                </span>
-              </div>
-              <div className="space-y-1.5 text-[11px] text-[#d8c8a8]">
-                <div className="flex justify-between">
-                  <span>Host Endpoint:</span>
-                  <span className="text-[#f3f1e7]">127.0.0.1:11434</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Vision Model:</span>
-                  <span className="text-emerald-300 font-bold">Gemma 3 4B</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Cloud Dependency:</span>
-                  <span className="text-[#91b79a] font-bold">0% / Zero</span>
-                </div>
-              </div>
-              <p className="text-[10px] text-[#91b79a] font-sans leading-relaxed pt-2 border-t border-[#1e3f2b]/80">
-                NatureQuest runs multimodal vision inference strictly inside your local Ollama environment. No photos leave your machine.
-              </p>
-            </div>
-          )}
+        {/* Center / NatureQuest ParticleText */}
+        <div className="flex items-center justify-center flex-1 max-w-[240px] sm:max-w-[360px] md:max-w-[440px] h-14 relative overflow-hidden mx-auto select-none">
+          <ParticleText
+            text="NatureQuest"
+            particleSize={2.6}
+            density={2.2}
+            color="#ffffff"
+            highlightColor="#4ade80"
+            scatter={60}
+            gatherDuration={1200}
+            stagger={280}
+            pointerRepel={38}
+            repelRadius={90}
+            idleDrift={0.5}
+            trigger="hover"
+            fontSize="2.1rem"
+            fontWeight={900}
+            fontFamily="inherit"
+            glow={true}
+            className="w-full h-full min-h-0 cursor-pointer"
+            style={{ height: 56, minHeight: 56 }}
+          />
         </div>
 
         {/* Right: Active Fire Streak + Clickable Tier Section + Scan Plant CTA */}
@@ -143,7 +103,6 @@ export default function TopNav({
               onClick={() => {
                 setStreakPopoverOpen(prev => !prev);
                 setTierPopoverOpen(false);
-                setStatusPopoverOpen(false);
               }}
               className="flex items-center gap-2 bg-[#131b0e]/90 hover:bg-[#1a2512] active:scale-95 border border-amber-900/50 hover:border-amber-500/70 px-3 py-1.5 rounded-2xl font-mono transition-all cursor-pointer group shadow-sm shadow-amber-950/20"
               title="Click to view your active participation streak"
@@ -203,7 +162,6 @@ export default function TopNav({
               onClick={() => {
                 setTierPopoverOpen(prev => !prev);
                 setStreakPopoverOpen(false);
-                setStatusPopoverOpen(false);
               }}
               className="hidden sm:flex items-center gap-2.5 bg-[#081a11]/90 hover:bg-[#0e2c1d] active:scale-95 border border-[#1e3f2b]/60 hover:border-emerald-500/70 px-3 py-1.5 rounded-2xl font-mono transition-all cursor-pointer group shadow-sm"
               title="Click to view Tier details & achievements"
@@ -300,11 +258,10 @@ export default function TopNav({
         </div>
 
       {/* Click-away backdrop for active popovers */}
-      {(statusPopoverOpen || tierPopoverOpen || streakPopoverOpen) && (
+      {(tierPopoverOpen || streakPopoverOpen) && (
         <div 
           className="fixed inset-0 z-30 bg-transparent"
           onClick={() => {
-            setStatusPopoverOpen(false);
             setTierPopoverOpen(false);
             setStreakPopoverOpen(false);
           }}
