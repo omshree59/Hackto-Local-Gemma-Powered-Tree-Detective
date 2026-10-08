@@ -149,7 +149,21 @@ Built specifically for the global open-source community, NatureQuest introduces 
 
 - **Lineage Navigation:** Traces plants across geological deep time:
 
-  $$\text{Plantae } (\sim 1.6\text{ Bya}) \longrightarrow \text{Tracheophytes } (\sim 430\text{ Mya}) \longrightarrow \text{Gymnosperms } (\sim 319\text{ Mya}) \ \& \ \text{Angiosperms } (\sim 135\text{ Mya})$$
+  **Evolutionary Timeline**
+
+```text
+PLANTAE
+~1.6 Billion Years Ago
+        │
+        ▼
+TRACHEOPHYTES
+~430 Million Years Ago
+        │
+        ├──────────────► GYMNOSPERMS
+        │                ~319 Million Years Ago
+        │
+        └──────────────► ANGIOSPERMS
+                         ~135 Million Years Ago
 
 - **Dynamic Specimen Matching:** Automatically correlates the user's recorded Field Codex specimens against evolutionary clades, indicating which ancestral plant families they have verified in the wild.
 
