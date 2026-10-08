@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { getTodayTask } from '../data/dailyTasks';
 import MaskedHeading from './MaskedHeading';
+import TrueFocus from './TrueFocus';
 
 export default function FieldStationView({
   activeMission,
@@ -96,10 +97,19 @@ export default function FieldStationView({
           <div className="flex flex-wrap items-center gap-3.5">
             <button
               onClick={onOpenScanner}
-              className="bg-[#245336] hover:bg-[#2d6844] active:scale-95 text-[#f3f1e7] font-black px-6 py-3.5 rounded-2xl text-xs uppercase tracking-wider flex items-center gap-2 shadow-xl shadow-black/40 border border-[#4f8a52]/40 transition-all cursor-pointer"
+              className="bg-[#245336] hover:bg-[#2d6844] active:scale-95 text-[#f3f1e7] font-black px-6 py-3.5 rounded-2xl text-xs uppercase tracking-wider flex items-center gap-2.5 shadow-xl shadow-black/40 border border-[#4f8a52]/40 transition-all cursor-pointer"
+              title="Launch optical plant scanner"
             >
-              <Camera className="w-4 h-4 text-emerald-300" />
-              <span>SCAN A PLANT</span>
+              <Camera className="w-4 h-4 text-emerald-300 shrink-0" />
+              <TrueFocus
+                sentence="SCAN THE PLANT"
+                blurAmount={1.5}
+                borderColor="#4ade80"
+                glowColor="rgba(74, 222, 128, 0.7)"
+                animationDuration={0.45}
+                pauseBetweenAnimations={0.9}
+                wordClassName="text-xs font-black tracking-wider text-[#f3f1e7]"
+              />
             </button>
 
             <label className="bg-[#0b1f16]/90 hover:bg-[#123a27] text-[#f3f1e7] border border-[#315c3b]/50 px-5 py-3.5 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer">

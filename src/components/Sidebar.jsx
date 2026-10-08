@@ -1,12 +1,12 @@
-import React from 'react';
 import { 
   Compass, Leaf, Target, Footprints, BookOpen, 
   Award, Activity, Book, FileText, Cpu, Settings, 
-  ChevronLeft, ChevronRight, Camera, WifiOff, Sparkles, Play
+  ChevronLeft, ChevronRight, Camera, Play
 } from 'lucide-react';
 import clsx from 'clsx';
+import TrueFocus from './TrueFocus';
 
-export const NAV_GROUPS = [
+const NAV_GROUPS = [
   {
     title: 'EXPLORE',
     items: [
@@ -276,9 +276,18 @@ export default function Sidebar({
               <button
                 onClick={onOpenScanner}
                 className="w-full py-2 bg-[#4f8a52] hover:bg-[#315c3b] text-[#f3f1e7] rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-md shadow-[#4f8a52]/20 cursor-pointer transition-all active:scale-[0.98]"
+                title="Scan specimen with optical camera"
               >
-                <Camera className="w-3.5 h-3.5 text-[#f3f1e7]" />
-                <span>SCAN SPECIMEN</span>
+                <Camera className="w-3.5 h-3.5 text-[#f3f1e7] shrink-0" />
+                <TrueFocus
+                  sentence="SCAN THE PLANT"
+                  blurAmount={1.5}
+                  borderColor="#86efac"
+                  glowColor="rgba(134, 239, 172, 0.7)"
+                  animationDuration={0.45}
+                  pauseBetweenAnimations={0.9}
+                  wordClassName="text-[11px] font-mono font-black tracking-wider text-[#f3f1e7]"
+                />
               </button>
             )}
 

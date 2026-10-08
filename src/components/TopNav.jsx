@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Camera, Menu, X, Award, Flame, ArrowRight, ChevronDown } from 'lucide-react';
 import ParticleText from './ParticleText';
+import TrueFocus from './TrueFocus';
 
 const PAGE_TITLES = {
   'station': 'Field Station',
@@ -263,13 +264,24 @@ export default function TopNav({
             )}
           </div>
 
-          {/* Primary Action Button: SCAN PLANT */}
+          {/* Primary Action Button: SCAN THE PLANT */}
           <button
             onClick={onOpenScanner}
             className="bg-[#245336] hover:bg-[#2d6844] active:scale-95 text-[#f3f1e7] font-black px-4 sm:px-5 py-2.5 rounded-2xl flex items-center gap-2 text-xs uppercase tracking-wider shadow-lg shadow-black/30 border border-[#4f8a52]/40 transition-all cursor-pointer font-mono"
+            title="Scan specimen with optical camera"
           >
-            <Camera className="w-4 h-4 text-emerald-300" />
-            <span className="hidden xs:inline">SCAN PLANT</span>
+            <Camera className="w-4 h-4 text-emerald-300 shrink-0" />
+            <span className="hidden xs:inline">
+              <TrueFocus
+                sentence="SCAN THE PLANT"
+                blurAmount={1.5}
+                borderColor="#4ade80"
+                glowColor="rgba(74, 222, 128, 0.7)"
+                animationDuration={0.45}
+                pauseBetweenAnimations={0.9}
+                wordClassName="text-xs font-mono font-black tracking-wider text-[#f3f1e7]"
+              />
+            </span>
           </button>
         </div>
 
