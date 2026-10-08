@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   Camera, Compass, Target, BookOpen, 
-  Leaf, ArrowRight, Upload, Calendar, 
-  Flame, CheckCircle, Clock, Sparkles 
+  ArrowRight, Upload, Calendar, 
+  Flame, CheckCircle, Clock 
 } from 'lucide-react';
-import clsx from 'clsx';
 import { getTodayTask } from '../data/dailyTasks';
+import MaskedHeading from './MaskedHeading';
 
 export default function FieldStationView({
   activeMission,
@@ -59,14 +59,35 @@ export default function FieldStationView({
       {/* HERO: FIELD STATION (CINEMATIC BOTANICAL HERO) */}
       {/* ============================================================== */}
       <section className="relative overflow-hidden rounded-[2.5rem] nature-surface-card p-8 sm:p-12 shadow-2xl">
+        {/* Ambient botanical background lighting */}
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 right-1/3 w-80 h-80 bg-[#123a27]/40 rounded-full blur-3xl pointer-events-none" />
+
         <div className="relative z-10 max-w-2xl">
-          <span className="text-[10px] font-mono font-black uppercase tracking-widest text-[#91b79a] bg-[#123a27]/90 px-3.5 py-1 rounded-full border border-[#315c3b]/60 inline-block mb-3.5">
+          <span className="text-[10px] font-mono font-black uppercase tracking-widest text-[#91b79a] bg-[#123a27]/90 px-3.5 py-1 rounded-full border border-[#315c3b]/60 inline-flex items-center gap-1.5 mb-3.5 shadow-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             FIELD STATION
           </span>
 
-          <h1 className="text-3xl sm:text-5xl font-black text-[#f3f1e7] tracking-tight leading-[1.15] mb-3.5">
-            Discover what is growing around you.
-          </h1>
+          <div className="mb-4">
+            <MaskedHeading
+              tag="h1"
+              text="Discover what is growing around you."
+              src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=2000&q=85"
+              align="left"
+              weight={900}
+              tracking={-0.02}
+              lineHeight={1.12}
+              parallax={28}
+              drift={14}
+              brightness={1.2}
+              saturation={1.35}
+              reveal="rise"
+              trigger="view"
+              duration={1.1}
+              className="text-3xl sm:text-5xl lg:text-[3.25rem] font-black tracking-tight leading-[1.12] drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]"
+            />
+          </div>
 
           <p className="text-sm sm:text-base text-[#d8c8a8] font-sans leading-relaxed mb-7 max-w-xl">
             Scan a plant you find outdoors, learn what you can observe, and turn discoveries into field quests.

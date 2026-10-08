@@ -37,6 +37,7 @@ export default function TopNav({
   xp = 0,
   level = 1,
   streak = 4,
+  ollamaStatus,
   onOpenScanner,
   onNavigate
 }) {
@@ -50,7 +51,7 @@ export default function TopNav({
     <header className="sticky top-0 z-40 w-full bg-[#06110a]/80 backdrop-blur-2xl border-b border-[#1e3f2b]/35 transition-all select-none">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
         
-        {/* Left: Mobile Menu Toggle & Current Page Name */}
+        {/* Left: Mobile Menu Toggle & Real-time Ollama Status & Current Page Name */}
         <div className="flex items-center gap-3">
           <button
             onClick={onOpenMobileMenu}
@@ -61,9 +62,24 @@ export default function TopNav({
           </button>
 
           <div>
-            <span className="text-[10px] font-mono font-bold tracking-widest text-[#91b79a] uppercase hidden sm:block">
-              NATUREQUEST
-            </span>
+            <div 
+              onClick={() => onNavigate && onNavigate('local-ai')}
+              className="flex items-center gap-1.5 cursor-pointer group"
+              title={ollamaStatus?.connected ? "Ollama Local AI Connected (click to view details)" : "Ollama Local AI Disconnected (click to view details)"}
+            >
+              <span className={`w-2 h-2 rounded-full shrink-0 transition-all duration-300 ${
+                ollamaStatus?.connected 
+                  ? "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] animate-pulse" 
+                  : "bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.7)]"
+              }`} />
+              <span className={`text-[10px] font-mono font-bold tracking-wider uppercase transition-colors duration-300 ${
+                ollamaStatus?.connected 
+                  ? "text-emerald-400 group-hover:text-emerald-300" 
+                  : "text-amber-400 group-hover:text-amber-300"
+              }`}>
+                {ollamaStatus?.connected ? "OLLAMA CONNECTED" : "OLLAMA DISCONNECTED"}
+              </span>
+            </div>
             <h2 className="text-lg sm:text-xl font-black text-[#f3f1e7] tracking-tight leading-tight">
               {PAGE_TITLES[activePage] || 'Field Station'}
             </h2>

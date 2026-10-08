@@ -216,8 +216,13 @@ export default function App() {
 
   useEffect(() => {
     checkOllamaHealth();
-    const timer = setInterval(checkOllamaHealth, 30000);
-    return () => clearInterval(timer);
+    const timer = setInterval(checkOllamaHealth, 4000);
+    const handleFocus = () => checkOllamaHealth();
+    window.addEventListener('focus', handleFocus);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   const addToast = (message, type = 'info') => {
