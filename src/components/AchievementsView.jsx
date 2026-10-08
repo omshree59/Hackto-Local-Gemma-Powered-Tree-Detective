@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   Award, Leaf, Compass, Target, Eye, 
   ShieldCheck, BookOpen, CheckCircle, Trophy,
-  Camera, Sparkles, Trees, Flower, Lock, Check
+  Camera, Sparkles, Trees, Flower, Lock, Check,
+  Printer, FileText
 } from 'lucide-react';
 import clsx from 'clsx';
 import { ACHIEVEMENTS_LIST, POPULAR_MILESTONE_SPECIES, getMilestoneStatus } from '../data/natureData';
@@ -23,7 +24,9 @@ export default function AchievementsView({
   level = 1,
   completedMissionsCount = 0,
   streak = 0,
-  onOpenScanner
+  outdoorMinutes = 0,
+  onOpenScanner,
+  onOpenCertificate
 }) {
   const [activeTab, setActiveTab] = useState('SPECIES'); // 'SPECIES' or 'BADGES'
   const [speciesFilter, setSpeciesFilter] = useState('ALL');
@@ -97,6 +100,39 @@ export default function AchievementsView({
           <span className="text-[9px] text-[#91b79a] uppercase block mb-1">OUTDOOR STREAK</span>
           <span className="text-lg font-black text-amber-400">{streak} Days</span>
         </div>
+      </div>
+
+      {/* Official Archival Naturalist Field Certificate Banner */}
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-[#092215] via-[#0b2b1b] to-[#071d11] border-2 border-emerald-500/40 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-5 relative overflow-hidden">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-emerald-950/80 border border-emerald-500/60 flex items-center justify-center text-emerald-300 shrink-0 shadow-lg">
+            <Award className="w-7 h-7 text-emerald-400" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono uppercase font-black px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                OFFICIAL GUILD CREDENTIAL
+              </span>
+              <span className="text-[10px] font-mono text-[#91b79a]">ARCHIVAL PARCHMENT</span>
+            </div>
+            <h3 className="text-lg sm:text-xl font-black text-[#f3f1e7] mt-0.5">
+              Naturalist Field Certificate
+            </h3>
+            <p className="text-xs text-[#d8c8a8] max-w-xl font-sans mt-0.5">
+              Conferred for real outdoor plant discovery with offline Gemma 3 4B verification. Ready to print or export as PDF.
+            </p>
+          </div>
+        </div>
+
+        {onOpenCertificate && (
+          <button
+            onClick={onOpenCertificate}
+            className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#245336] hover:bg-[#2d6844] text-[#f3f1e7] font-mono text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2.5 border border-emerald-400/50 shadow-xl cursor-pointer transition-all active:scale-95 shrink-0"
+          >
+            <Printer className="w-4 h-4 text-emerald-300" />
+            <span>VIEW / PRINT CERTIFICATE</span>
+          </button>
+        )}
       </div>
 
       {/* Main Mode Navigation Tabs */}

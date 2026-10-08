@@ -2,6 +2,7 @@ import { Camera, Upload, Zap, Eye, RefreshCw } from 'lucide-react';
 import clsx from 'clsx';
 import { SAMPLE_TEST_PLANTS } from '../data/natureData';
 import ElectricLogo from './ElectricLogo';
+import OpticalHudScanner from './OpticalHudScanner';
 
 export default function PlantScoutView({
   onOpenScanner,
@@ -57,11 +58,10 @@ export default function PlantScoutView({
         >
           {selectedFilePreview ? (
             <div className="w-full flex flex-col items-center gap-5">
-              <div className="relative rounded-2xl overflow-hidden border border-[#315c3b] shadow-2xl max-h-[300px] max-w-md">
-                <img 
-                  src={selectedFilePreview} 
-                  alt="Field capture preview" 
-                  className="w-full h-full object-cover max-h-[300px]"
+              <div className="w-full max-w-lg">
+                <OpticalHudScanner 
+                  imageSrc={selectedFilePreview} 
+                  plantName={selectedFileRaw?.name || 'Field Botanical Specimen'} 
                 />
               </div>
 

@@ -21,6 +21,9 @@ import CameraModal from './components/CameraModal';
 import ScanProcessingModal from './components/ScanProcessingModal';
 import FieldReportModal from './components/FieldReportModal';
 import MissionActiveModal from './components/MissionActiveModal';
+import SoundscapeModal from './components/SoundscapeModal';
+import CertificateModal from './components/CertificateModal';
+import HacktoberfestModal from './components/HacktoberfestModal';
 import ToastContainer from './components/ToastContainer';
 
 import { 
@@ -165,6 +168,9 @@ export default function App() {
   const [scanStageIndex, setScanStageIndex] = useState(0);
   const [fieldReportModalOpen, setFieldReportModalOpen] = useState(false);
   const [missionActiveModalOpen, setMissionActiveModalOpen] = useState(false);
+  const [soundscapeModalOpen, setSoundscapeModalOpen] = useState(false);
+  const [certificateModalOpen, setCertificateModalOpen] = useState(false);
+  const [hacktoberfestModalOpen, setHacktoberfestModalOpen] = useState(false);
 
   // Active Scan data state
   const [selectedFilePreview, setSelectedFilePreview] = useState(null);
@@ -547,6 +553,9 @@ Never claim absolute certainty. Do not use asterisks or hashtags in values. Do n
         ollamaStatus={ollamaStatus}
         onOpenScanner={() => setCameraModalOpen(true)}
         onNavigate={(page) => setActivePage(page)}
+        onOpenSoundscape={() => setSoundscapeModalOpen(true)}
+        onOpenHacktoberfest={() => setHacktoberfestModalOpen(true)}
+        onOpenCertificate={() => setCertificateModalOpen(true)}
       />
 
       {/* Application Shell */}
@@ -714,7 +723,9 @@ Never claim absolute certainty. Do not use asterisks or hashtags in values. Do n
               level={level}
               completedMissionsCount={completedMissionsCount}
               streak={streak}
+              outdoorMinutes={outdoorMinutes}
               onOpenScanner={() => setCameraModalOpen(true)}
+              onOpenCertificate={() => setCertificateModalOpen(true)}
             />
           )}
 
@@ -844,6 +855,32 @@ Never claim absolute certainty. Do not use asterisks or hashtags in values. Do n
           onComplete={handleCompleteMission}
           onClose={() => setMissionActiveModalOpen(false)}
           ollamaStatus={ollamaStatus}
+        />
+      )}
+
+      {/* Procedural Web Audio Soundscape Synthesizer Modal */}
+      {soundscapeModalOpen && (
+        <SoundscapeModal
+          onClose={() => setSoundscapeModalOpen(false)}
+        />
+      )}
+
+      {/* Archival Naturalist Field Certificate Modal */}
+      {certificateModalOpen && (
+        <CertificateModal
+          onClose={() => setCertificateModalOpen(false)}
+          level={level}
+          xp={xp}
+          historyCount={history.length}
+          streak={streak}
+          outdoorMinutes={outdoorMinutes}
+        />
+      )}
+
+      {/* Hacktoberfest 2026 Contributor Lab Modal */}
+      {hacktoberfestModalOpen && (
+        <HacktoberfestModal
+          onClose={() => setHacktoberfestModalOpen(false)}
         />
       )}
 

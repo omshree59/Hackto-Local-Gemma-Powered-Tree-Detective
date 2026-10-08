@@ -235,6 +235,81 @@ Never consume any wild plant, berry, seed, or mushroom based solely on an app or
 - Do not uproot wild plants or strip bark from living tree trunks.
 - When taking close-up macro photographs, gently support the stem from behind with your finger rather than snapping the flower head off.
 - Stay on established footpaths to prevent soil compaction over shallow tree roots.`
+  },
+  {
+    id: 'guide-showcase-plant-scout',
+    title: 'Plant Scout: Multimodal Vision Lens',
+    category: 'SHOWCASE',
+    readTime: '3 min',
+    image: '/screenshots/plant_scout.png',
+    summary: 'Hardware-aware camera lens, drag-and-drop local image ingestion, and offline Gemma 3 4B botanical inference.',
+    content: `The Plant Scout system provides instant on-device botanical intelligence.
+
+### 1. Hardware Lifecycle Safety
+The browser camera stream mounts strictly upon user trigger and automatically disengages all video tracks the moment a photo is captured, extinguishing device hardware indicator lights immediately.
+
+### 2. Zero-Cloud Local Inference
+Your photos are converted to base64 tensor payloads and sent strictly across your local loopback to \`http://127.0.0.1:11434\` where Gemma 3 4B identifies leaf venation, serrations, and margins offline.`
+  },
+  {
+    id: 'guide-showcase-milestones',
+    title: '15 Species Milestones Checklist',
+    category: 'SHOWCASE',
+    readTime: '3 min',
+    image: '/screenshots/species_milestones.png',
+    summary: 'A curated outdoor target list requiring authentic wild photographic proof to satisfy each milestone.',
+    content: `NatureQuest provides a curated target list of 15 iconic, findable species across trees, flowers, and foliage.
+
+### 1. Photographic Verification
+Unlike apps that award badges for simple clicks or screen taps, NatureQuest milestones unlock strictly when you provide a verified photograph analyzed by local AI.
+
+### 2. Naturalist Tier Progression
+Each verified specimen earns Bio XP, advances your rank from Field Novice to Apex Wilderness Pioneer, and issues a cryptographic Field Certificate.`
+  },
+  {
+    id: 'guide-showcase-field-station',
+    title: 'Field Station: Daily Expedition Center',
+    category: 'SHOWCASE',
+    readTime: '2 min',
+    image: '/screenshots/field_station.png',
+    summary: 'Daily calendar-synced routines, flame participation streak tracker, and bio-electric WebGL emblem.',
+    content: `The Field Station serves as your central command post for daily outdoor exploration.
+
+### 1. Calendar-Synchronized Routines
+Each morning at dawn, the station automatically calculates a new exploration theme tailored to the day of the week—from canopy skywatching to microhabitat moss investigation.
+
+### 2. Bio-Electric Nature Emblem
+An interactive WebGL electric logo on the station banner shifts between Flora (leaf), Arbor (tree), and Nav (compass), symbolizing the living currents of the natural world.`
+  },
+  {
+    id: 'guide-showcase-quests',
+    title: 'Sensory Nature Quests & Minimal Screen Engine',
+    category: 'SHOWCASE',
+    readTime: '3 min',
+    image: '/screenshots/quests.png',
+    summary: 'Auditory and tactile outdoor observation challenges engineered to reduce digital screen time.',
+    content: `NatureQuest is designed around the core philosophy that the outdoors—not the glass screen—is the product.
+
+### 1. Tactile & Auditory Challenges
+Quests prompt naturalists to listen for wind gusts in needle canopies, feel rough fissures in old oak bark, and search for three distinct shades of green.
+
+### 2. Zen Screen Dimming Mode
+During timed field quests, naturalists can activate Zen Dimming Mode, fading the screen to a calm dark slate so they look upward at trees instead of down at pixels.`
+  },
+  {
+    id: 'guide-showcase-stories',
+    title: 'Field Stories & Ecological Masterclasses',
+    category: 'SHOWCASE',
+    readTime: '3 min',
+    image: '/screenshots/field_stories.png',
+    summary: 'Curated video tutorials and naturalist reflections to sharpen observational habits in everyday environments.',
+    content: `Deepen your ecological eye through curated video journals and field reflection guides.
+
+### 1. Nature Journaling Workshops
+Learn the three foundational outdoor observation questions popularized by renowned naturalists: "I notice, I wonder, It reminds me of."
+
+### 2. Daily Neighborhood Walks
+Discover how to re-tune your peripheral vision to spot dandelion sidewalk colonizers, north-facing moss mats, and crown shyness in urban trees.`
   }
 ];
 
@@ -653,7 +728,7 @@ export function getMilestoneStatus(milestone, userHistory = []) {
     const itemCategory = (item.category || '').toLowerCase();
 
     return milestone.keywords.some(kw => 
-      itemName.includes(kw) || itemNotes.includes(kw) || itemFeatures.includes(kw)
+      itemName.includes(kw) || itemNotes.includes(kw) || itemFeatures.includes(kw) || itemCategory.includes(kw)
     );
   });
 

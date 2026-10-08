@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Book, Clock, ArrowRight, ShieldCheck, Leaf, Trees, Flower, X } from 'lucide-react';
+import { useState } from 'react';
+import { Clock, ArrowRight, X } from 'lucide-react';
 import clsx from 'clsx';
 import { NATURE_GUIDE_ARTICLES } from '../data/natureData';
 
-const CATEGORIES = ['ALL', 'LEAVES', 'TREES', 'FLOWERS', 'SAFETY'];
+const CATEGORIES = ['ALL', 'SHOWCASE', 'LEAVES', 'TREES', 'FLOWERS', 'SAFETY'];
 
 export default function NatureGuideView() {
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -70,6 +70,17 @@ export default function NatureGuideView() {
                 </span>
               </div>
 
+              {article.image && (
+                <div className="w-full aspect-video rounded-2xl overflow-hidden mb-4 border border-[#1e3f2b] bg-[#05110a]">
+                  <img 
+                    src={article.image} 
+                    alt={article.title} 
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" 
+                    loading="lazy"
+                  />
+                </div>
+              )}
+
               <h3 className="text-xl font-bold text-[#f3f1e7] group-hover:text-[#91b79a] transition-colors leading-snug mb-3">
                 {article.title}
               </h3>
@@ -107,6 +118,16 @@ export default function NatureGuideView() {
                 <X className="w-5 h-5" />
               </button>
             </div>
+
+            {activeArticle.image && (
+              <div className="w-full rounded-2xl overflow-hidden border border-[#1e3f2b] bg-[#05110a] max-h-64 flex items-center justify-center">
+                <img 
+                  src={activeArticle.image} 
+                  alt={activeArticle.title} 
+                  className="w-full h-auto max-h-64 object-contain" 
+                />
+              </div>
+            )}
 
             <div className="text-xs sm:text-sm text-[#f3f1e7]/90 leading-relaxed space-y-4 max-h-[60vh] overflow-y-auto pr-2">
               {activeArticle.content.split('\n\n').map((paragraph, idx) => {

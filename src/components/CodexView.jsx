@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   BookOpen, Search, Leaf, Trees, Flower, 
-  ArrowUpDown, Download, Trash2, X, Eye, Compass, LayoutDashboard, CheckCircle
+  ArrowUpDown, Download, Trash2, X, Eye, Compass, LayoutDashboard, CheckCircle,
+  GitFork
 } from 'lucide-react';
 import clsx from 'clsx';
+import PhylogeneticTree from './PhylogeneticTree';
 
 const CATEGORY_FILTERS = ['ALL', 'TREES', 'FLOWERS', 'PLANTS'];
 
@@ -16,6 +18,7 @@ export default function CodexView({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [selectedEntry, setSelectedEntry] = useState(null);
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'tree'
   
   // Compare Mode State
   const [isCompareMode, setIsCompareMode] = useState(false);
@@ -103,6 +106,35 @@ export default function CodexView({
         </div>
 
         <div className="flex flex-wrap items-center gap-3 self-start md:self-auto font-mono text-xs">
+          {/* Mode Switcher: Grid vs Phylogenetic Tree */}
+          <div className="flex items-center rounded-xl bg-[#071910] border border-[#1e3f2b] p-1">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={clsx(
+                "px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all cursor-pointer",
+                viewMode === 'grid'
+                  ? "bg-[#245336] text-[#f3f1e7] shadow"
+                  : "text-[#91b79a] hover:text-[#f3f1e7]"
+              )}
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>Grid Codex</span>
+            </button>
+
+            <button
+              onClick={() => setViewMode('tree')}
+              className={clsx(
+                "px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all cursor-pointer",
+                viewMode === 'tree'
+                  ? "bg-[#245336] text-[#f3f1e7] shadow"
+                  : "text-[#91b79a] hover:text-[#f3f1e7]"
+              )}
+            >
+              <GitFork className="w-3.5 h-3.5" />
+              <span>Tree of Life</span>
+            </button>
+          </div>
+
           <button
             onClick={() => {
               setIsCompareMode(!isCompareMode);
@@ -162,8 +194,12 @@ export default function CodexView({
         </div>
       )}
 
-      {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 font-mono text-xs">
+      {viewMode === 'tree' ? (
+        <PhylogeneticTree history={history} />
+      ) : (
+        <>
+          {/* Filter and Search Bar */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 font-mono text-xs">
         
         {/* Category Filter Pills */}
         <div className="flex flex-wrap items-center gap-2">
@@ -283,6 +319,8 @@ export default function CodexView({
             );
           })}
         </div>
+      )}
+      </>
       )}
 
       {/* Compare Result Modal */}

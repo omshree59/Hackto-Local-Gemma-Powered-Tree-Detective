@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Camera, Menu, X, Award, Flame, ArrowRight, ChevronDown } from 'lucide-react';
+import { Camera, Menu, X, Award, Flame, ArrowRight, ChevronDown, Volume2, GitPullRequest, FileText } from 'lucide-react';
 import ParticleText from './ParticleText';
 import TrueFocus from './TrueFocus';
 
@@ -40,7 +40,10 @@ export default function TopNav({
   streak = 4,
   ollamaStatus,
   onOpenScanner,
-  onNavigate
+  onNavigate,
+  onOpenSoundscape,
+  onOpenHacktoberfest,
+  onOpenCertificate
 }) {
   const [tierPopoverOpen, setTierPopoverOpen] = useState(false);
   const [streakPopoverOpen, setStreakPopoverOpen] = useState(false);
@@ -111,9 +114,37 @@ export default function TopNav({
           />
         </div>
 
-        {/* Right: Active Fire Streak + Clickable Tier Section + Scan Plant CTA */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Right: Soundscape + Hacktoberfest Lab + Fire Streak + Clickable Tier + Scan Plant CTA */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5">
           
+          {/* Procedural Web Audio Soundscape Launcher */}
+          {onOpenSoundscape && (
+            <button
+              onClick={onOpenSoundscape}
+              className="hidden md:flex items-center gap-1.5 bg-[#091b12]/90 hover:bg-[#102d1f] active:scale-95 border border-[#1e3f2b] hover:border-emerald-500/60 px-2.5 py-1.5 rounded-2xl font-mono transition-all cursor-pointer group"
+              title="Bio-Acoustic Nature Soundscape Engine (Offline Synthesizer)"
+            >
+              <Volume2 className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
+              <span className="text-[10px] font-bold text-[#91b79a] group-hover:text-emerald-200 uppercase tracking-wider">
+                Soundscape
+              </span>
+            </button>
+          )}
+
+          {/* Hacktoberfest Contributor Lab */}
+          {onOpenHacktoberfest && (
+            <button
+              onClick={onOpenHacktoberfest}
+              className="flex items-center gap-1.5 bg-amber-950/40 hover:bg-amber-950/80 active:scale-95 border border-amber-600/40 hover:border-amber-400 px-2.5 py-1.5 rounded-2xl font-mono transition-all cursor-pointer group"
+              title="Hacktoberfest 2026 Open Source Contributor Lab"
+            >
+              <GitPullRequest className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
+              <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider hidden lg:inline">
+                Hacktoberfest
+              </span>
+            </button>
+          )}
+
           {/* Active Participation Streak with Animated Fire */}
           <div className="relative">
             <button
@@ -240,25 +271,38 @@ export default function TopNav({
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
+                <div className="grid grid-cols-3 gap-2 pt-1 font-mono text-[10px]">
                   <button
                     onClick={() => {
                       setTierPopoverOpen(false);
                       if (onNavigate) onNavigate('achievements');
                     }}
-                    className="py-2.5 px-3 rounded-xl bg-[#123a27] hover:bg-[#1a4e34] border border-emerald-500/40 text-emerald-200 font-bold uppercase transition-colors cursor-pointer text-center"
+                    className="py-2.5 px-2 rounded-xl bg-[#123a27] hover:bg-[#1a4e34] border border-emerald-500/40 text-emerald-200 font-bold uppercase transition-colors cursor-pointer text-center"
                   >
-                    Achievements
+                    Badges
                   </button>
                   <button
                     onClick={() => {
                       setTierPopoverOpen(false);
                       if (onNavigate) onNavigate('progress');
                     }}
-                    className="py-2.5 px-3 rounded-xl bg-[#091b12] hover:bg-[#123a27] border border-[#1e3f2b] text-[#d8c8a8] hover:text-[#f3f1e7] font-bold uppercase transition-colors cursor-pointer text-center"
+                    className="py-2.5 px-2 rounded-xl bg-[#091b12] hover:bg-[#123a27] border border-[#1e3f2b] text-[#d8c8a8] hover:text-[#f3f1e7] font-bold uppercase transition-colors cursor-pointer text-center"
                   >
-                    My Stats
+                    Stats
                   </button>
+                  {onOpenCertificate && (
+                    <button
+                      onClick={() => {
+                        setTierPopoverOpen(false);
+                        onOpenCertificate();
+                      }}
+                      className="py-2.5 px-2 rounded-xl bg-[#1d3d28] hover:bg-[#285737] border border-emerald-400/50 text-emerald-300 font-bold uppercase transition-colors cursor-pointer text-center flex items-center justify-center gap-1"
+                      title="Archival Field Certificate"
+                    >
+                      <FileText className="w-3 h-3 shrink-0" />
+                      <span>Cert</span>
+                    </button>
+                  )}
                 </div>
               </div>
             )}

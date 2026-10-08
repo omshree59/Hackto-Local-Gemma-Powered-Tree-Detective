@@ -2,12 +2,66 @@ import { useState } from 'react';
 import { 
   Camera, Compass, Target, BookOpen, 
   ArrowRight, Upload, Calendar, 
-  Flame, CheckCircle, Clock 
+  Flame, CheckCircle, Clock,
+  Maximize2, X, Sparkles, Layers
 } from 'lucide-react';
 import { getTodayTask } from '../data/dailyTasks';
 import MaskedHeading from './MaskedHeading';
 import TrueFocus from './TrueFocus';
 import ElectricLogo from './ElectricLogo';
+
+const FEATURE_SHOWCASES = [
+  {
+    id: 'plant-scout',
+    title: 'Plant Scout Optical Lens',
+    tag: 'ON-DEVICE VISION AI',
+    tagBg: 'bg-emerald-950/80 border-emerald-500/50 text-emerald-300',
+    image: '/screenshots/plant_scout.png',
+    summary: 'Hardware-aware camera lens and drag-and-drop local photo analyzer. Inspects leaves, bark, and flowers with offline Gemma 3 4B tensor inference and diagnostic reports.',
+    actionLabel: 'Launch Plant Scout',
+    page: 'plant-scout'
+  },
+  {
+    id: 'milestones',
+    title: '15 Species Milestones',
+    tag: 'PHOTO-VERIFIED TARGETS',
+    tagBg: 'bg-amber-950/80 border-amber-500/50 text-amber-300',
+    image: '/screenshots/species_milestones.png',
+    summary: 'Curated outdoor target list across trees, flowers, and plants. Milestones unlock only when you provide photographic proof captured in the wild.',
+    actionLabel: 'View Milestones',
+    page: 'achievements'
+  },
+  {
+    id: 'field-station',
+    title: 'Central Field Station',
+    tag: 'CALENDAR-SYNCED HUB',
+    tagBg: 'bg-teal-950/80 border-teal-500/50 text-teal-300',
+    image: '/screenshots/field_station.png',
+    summary: 'Exploration operating system with daily rotating nature focus themes, flame day streak tracker, bio-electric emblems, and active mission shortcuts.',
+    actionLabel: 'Explore Station Hub',
+    page: 'station'
+  },
+  {
+    id: 'field-quests',
+    title: 'Sensory Nature Quests',
+    tag: 'MINIMAL SCREEN TIME',
+    tagBg: 'bg-cyan-950/80 border-cyan-500/50 text-cyan-300',
+    image: '/screenshots/quests.png',
+    summary: 'Tactile and auditory nature missions, stopwatch field timers, procedural AI challenge generator, and Zen Screen Dimming mode to direct focus outside.',
+    actionLabel: 'Accept Quests',
+    page: 'quests'
+  },
+  {
+    id: 'field-stories',
+    title: 'Field Stories & Workshops',
+    tag: 'OUTDOOR MASTERCLASSES',
+    tagBg: 'bg-purple-950/80 border-purple-500/50 text-purple-300',
+    image: '/screenshots/field_stories.png',
+    summary: 'Curated video guides on leaf identification, tree bark patterns, mindful forest bathing, and regional botanical ecology to hone naturalist observation.',
+    actionLabel: 'Watch Field Stories',
+    page: 'stories'
+  }
+];
 
 const NATURE_EMBLEMS = [
   { id: 'leaf', label: 'Flora', icon: '🌿', src: '/nature-leaf.svg', title: 'Bio-Electric Leaf' },
@@ -27,6 +81,7 @@ export default function FieldStationView({
 }) {
   const todayTask = getTodayTask();
   const [selectedEmblem, setSelectedEmblem] = useState(NATURE_EMBLEMS[0].src);
+  const [activeScreenshotModal, setActiveScreenshotModal] = useState(null);
   const [completedToday, setCompletedToday] = useState(() => {
     try {
       return localStorage.getItem(`nq_daily_${todayTask.dateKey}`) === 'true';
@@ -383,6 +438,169 @@ export default function FieldStationView({
           </div>
         )}
       </section>
+
+      {/* ============================================================== */}
+      {/* SECTION 4: SYSTEM CAPABILITIES & VISUAL FEATURE SHOWCASE */}
+      {/* ============================================================== */}
+      <section className="space-y-6 pt-4 border-t border-[#1e3f2b]/50">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[10px] font-mono font-black uppercase tracking-widest text-emerald-400">
+                SYSTEM ARCHITECTURE & VISUAL INTERFACE
+              </span>
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-black text-[#f3f1e7] tracking-tight mt-1">
+              Feature Showcase Gallery
+            </h3>
+            <p className="text-xs sm:text-sm text-[#91b79a] mt-0.5 max-w-xl">
+              Inspect the primary offline engines powering your botanical field exploration OS. Click any screenshot to view full resolution.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 text-xs font-mono text-[#91b79a]">
+            <Layers className="w-4 h-4 text-emerald-400" />
+            <span>5 Core Subsystems</span>
+          </div>
+        </div>
+
+        {/* 5 Feature Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {FEATURE_SHOWCASES.map((feat) => (
+            <div
+              key={feat.id}
+              className="nature-surface-card rounded-3xl border border-[#1e3f2b]/80 hover:border-emerald-500/50 shadow-xl overflow-hidden flex flex-col justify-between group transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-950/20"
+            >
+              <div>
+                {/* Screenshot Frame with Zoom overlay */}
+                <div 
+                  onClick={() => setActiveScreenshotModal(feat)}
+                  className="relative aspect-video w-full bg-[#05110a] overflow-hidden border-b border-[#1e3f2b]/60 cursor-pointer"
+                  title="Click to view full screenshot"
+                >
+                  <img
+                    src={feat.image}
+                    alt={feat.title}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  
+                  {/* Subtle vignette & hover overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                  
+                  <div className="absolute top-3 left-3">
+                    <span className={`text-[9px] font-mono font-black uppercase tracking-wider px-2.5 py-1 rounded-md border shadow-sm ${feat.tagBg}`}>
+                      {feat.tag}
+                    </span>
+                  </div>
+
+                  <div className="absolute top-3 right-3 p-1.5 rounded-xl bg-black/60 text-white/80 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-md">
+                    <Maximize2 className="w-3.5 h-3.5" />
+                  </div>
+                </div>
+
+                {/* Details */}
+                <div className="p-5 space-y-2">
+                  <h4 className="text-lg font-black text-[#f3f1e7] group-hover:text-emerald-300 transition-colors leading-snug">
+                    {feat.title}
+                  </h4>
+                  <p className="text-xs text-[#d8c8a8]/80 font-sans leading-relaxed">
+                    {feat.summary}
+                  </p>
+                </div>
+              </div>
+
+              {/* Card Footer CTAs */}
+              <div className="p-5 pt-0 flex items-center justify-between gap-2 font-mono text-xs">
+                <button
+                  onClick={() => setActiveScreenshotModal(feat)}
+                  className="text-[11px] text-[#91b79a] hover:text-white flex items-center gap-1 cursor-pointer transition-colors"
+                >
+                  <Maximize2 className="w-3 h-3" />
+                  <span>Inspect</span>
+                </button>
+
+                <button
+                  onClick={() => onNavigate(feat.page)}
+                  className="px-3.5 py-2 rounded-xl bg-[#123a27] hover:bg-[#1a4e34] border border-emerald-500/40 text-emerald-200 font-bold uppercase text-[11px] flex items-center gap-1.5 transition-colors cursor-pointer group-hover:border-emerald-400"
+                >
+                  <span>{feat.actionLabel}</span>
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Screenshot Lightbox Modal */}
+      {activeScreenshotModal && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-2xl flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-in fade-in select-none"
+          onClick={() => setActiveScreenshotModal(null)}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="nature-surface-card border-2 border-emerald-500/50 rounded-3xl overflow-hidden max-w-5xl w-full shadow-2xl relative my-auto animate-in zoom-in-95 space-y-4"
+          >
+            {/* Modal Header */}
+            <div className="p-5 sm:p-6 pb-0 flex items-start justify-between gap-4">
+              <div>
+                <span className="text-[10px] font-mono font-black uppercase text-emerald-400 tracking-wider">
+                  FEATURE SHOWCASE SPECIFICATION
+                </span>
+                <h3 className="text-2xl font-black text-[#f3f1e7] mt-0.5">
+                  {activeScreenshotModal.title}
+                </h3>
+                <p className="text-xs text-[#d8c8a8] mt-1 max-w-2xl font-sans">
+                  {activeScreenshotModal.summary}
+                </p>
+              </div>
+
+              <button
+                onClick={() => setActiveScreenshotModal(null)}
+                className="p-2 rounded-xl bg-[#091b12] hover:bg-[#123a27] text-zinc-400 hover:text-white border border-[#1e3f2b] cursor-pointer transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Full Screenshot View */}
+            <div className="p-4 sm:p-6 pt-0">
+              <div className="rounded-2xl overflow-hidden border border-[#1e3f2b] shadow-2xl max-h-[65vh] bg-black flex items-center justify-center">
+                <img
+                  src={activeScreenshotModal.image}
+                  alt={activeScreenshotModal.title}
+                  className="w-full h-auto max-h-[65vh] object-contain"
+                />
+              </div>
+            </div>
+
+            {/* Modal Footer Actions */}
+            <div className="p-5 sm:p-6 pt-0 border-t border-[#1e3f2b]/60 flex items-center justify-between gap-4 font-mono text-xs">
+              <span className="text-[11px] text-[#91b79a]">
+                High-Resolution System Capture • Verified Working Build
+              </span>
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => {
+                    const page = activeScreenshotModal.page;
+                    setActiveScreenshotModal(null);
+                    onNavigate(page);
+                  }}
+                  className="px-5 py-2.5 rounded-xl bg-[#245336] hover:bg-[#2d6844] text-[#f3f1e7] font-bold uppercase tracking-wider flex items-center gap-2 border border-emerald-400/50 shadow-lg cursor-pointer transition-all active:scale-95"
+                >
+                  <span>Open {activeScreenshotModal.actionLabel}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
 
     </div>
   );

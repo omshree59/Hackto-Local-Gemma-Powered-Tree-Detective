@@ -20,6 +20,8 @@
 
 ## 🍃 Table of Contents
 - [Product Overview](#-product-overview)
+- [📸 Visual Showcase & Interface Gallery](#-visual-showcase--interface-gallery)
+- [🎃 Hacktoberfest 2026 Judge Highlights & Innovations](#-hacktoberfest-2026-judge-highlights--innovations)
 - [Key Features](#-key-features)
   - [1. Plant Scout & Optical Lens](#1-plant-scout--optical-lens)
   - [2. 15 Species Milestone Checklist](#2-15-species-milestone-checklist)
@@ -51,6 +53,71 @@ NatureQuest flips this paradigm entirely:
 1. **Zero Cloud Telemetry:** Every vision inference, plant classification, and sensory challenge is computed strictly on your device using Ollama and Google's **Gemma 3 4B** multimodal neural network.
 2. **Minimal Screen Time:** The app is engineered to get you outside, provide observational clues within seconds, issue a physical sensory quest, and encourage you to pocket your device.
 3. **The Outdoors Is the Product:** The screen is only a tool. Nature is the experience.
+
+---
+
+## 📸 Visual Showcase & Interface Gallery
+
+<div align="center">
+
+### 🧭 Field Station — Central Exploration Hub & Daily Rotating Task
+![Field Station](./public/screenshots/field_station.png)
+
+### 🎯 Species Milestones — 15 Popular Findable Flora Checklist (Satisfied with Photo Proof)
+![Species Milestones](./public/screenshots/species_milestones.png)
+
+</div>
+
+| 🌿 Plant Scout Optical Lens | 🎥 Video Journals & Field Stories |
+| :---: | :---: |
+| ![Plant Scout](./public/screenshots/plant_scout.png) | ![Field Stories](./public/screenshots/field_stories.png) |
+
+<div align="center">
+
+### 🎯 Field Quests & Procedural Mission Engine
+![Field Quests](./public/screenshots/quests.png)
+
+</div>
+
+---
+
+## 🎃 Hacktoberfest 2026 Judge Highlights & Innovations
+
+Built specifically for the global open-source community, NatureQuest introduces 5 breakthrough features that highlight technical ingenuity, offline resilience, and interactive botanical pedagogy:
+
+### 🔊 1. Procedural Bio-Acoustic Nature Soundscape Engine
+- **100% Offline Audio Synthesis:** Powered entirely by the **Web Audio API** (`AudioContext`, `BiquadFilterNode`, `GainNode`, `OscillatorNode`) without downloading any external MP3 files or audio streams.
+- **Parametric Sound Nodes:**
+  - *Canopy Wind:* Low-frequency white noise generator shaped through a sweeping lowpass biquad filter and modulated by a sinusoidal Low-Frequency Oscillator (LFO).
+  - *Rain Drops:* Brown/pink noise burst emulation filtered through resonant bandpass nodes.
+  - *Babbling Brook:* Fluid stochastic pink noise modulated across multi-stage bandpass resonance filters.
+  - *Summer Crickets:* Dual high-frequency sine oscillators ($4500\text{ Hz}$ & $4550\text{ Hz}$) modulated at a rapid rhythm simulating biological cicada stridulation.
+  - *Morning Songbirds:* Stochastic exponential chirp sweeps generated algorithmically using frequency-ramped sine waves.
+- **Interactive Preset Mixer:** Switch instantly between *Canopy Breeze*, *Misty Rainforest*, *Babbling Creek*, and *Summer Dusk*, or adjust individual volume faders in real time.
+
+### 🔬 2. Optical Botanical HUD Scanner & Chlorophyll Contrast Filter
+- **Interactive Multi-Filter Optics:** Specimen inspector equipped with an SVG reticle crosshair, coordinate tracking, and on-the-fly digital color spectrum filters:
+  - *Standard Spectrum:* Natural daylight balanced optical view.
+  - *Chlorophyll Contrast:* High-contrast green wavelength isolation filter mimicking laboratory plant health NDVI sensors.
+  - *Venation Topology:* Inverted monochrome edge-enhancement filter designed to inspect secondary and tertiary leaf venation architecture.
+- **Morphological Diagnostic Stats:** Live telemetry displaying diagnostic bounding boxes, aspect ratios, estimated surface area, and vascular complexity index.
+
+### 🌳 3. Phylogenetic Tree of Life (Deep-Time Evolutionary Cladogram)
+- **Evolutionary Botanical Dendrogram:** Implements the modern **APG IV (Angiosperm Phylogeny Group IV)** taxonomic framework.
+- **Lineage Navigation:** Traces plants across geological deep time:
+  $$\text{Plantae } (\sim 1.6\text{ Bya}) \longrightarrow \text{Tracheophytes } (\sim 430\text{ Mya}) \longrightarrow \text{Gymnosperms } (\sim 319\text{ Mya}) \ \& \ \text{Angiosperms } (\sim 135\text{ Mya})$$
+- **Dynamic Specimen Matching:** Automatically correlates the user's recorded Field Codex specimens against evolutionary clades, indicating which ancestral plant families they have verified in the wild.
+- **Detailed Clade Dossiers:** Click any node to review geological emergence eras, morphological leaf adaptions, and taxonomic classification.
+
+### 📜 4. Archival Naturalist Field Certificate & Archival Dossier
+- **Cryptographically Sealed Credential:** Generates an archival botanical diploma with the user's Naturalist Rank Tier, verified species count, day streak, and total outdoor exploration minutes.
+- **Offline Integrity Stamp:** Features a unique deterministic verification hash and archival seal guaranteed to require zero cloud sign-off.
+- **Print & PDF Export:** Custom `@media print` CSS formats the certificate into an ornate archival parchment document suitable for framing or high-resolution printing.
+
+### 🌿 5. Hacktoberfest Community Species Contributor Studio
+- **Open-Source Flora Sandbox:** Empowers contributors worldwide to propose new indigenous, regional, and endemic flora to the NatureQuest database.
+- **Live JSON Schema Validator:** Validates proposed flora definitions against strict botanical data schemas (`commonName`, `scientificName`, `family`, `nativeHabitat`, `ecologicalRole`, `tactileFeatures`, `naturalistChallenge`).
+- **1-Click Pull Request Generator:** Automatically formats valid flora entries into a complete GitHub Pull Request markdown template ready to submit to the repository.
 
 ---
 
