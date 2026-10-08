@@ -3,7 +3,7 @@
 
 > **Step away from the screen. Explore what grows around you.**
 
-> *Autonomous on-device multimodal AI • Zero cloud telemetry • 100% offline-ready.*
+> **Autonomous on-device multimodal AI • Zero cloud telemetry • 100% offline-ready.**
 
 <div align="center">
 
@@ -13,7 +13,7 @@
 [![Frontend](https://img.shields.io/badge/Frontend-React%2019%20%2B%20Vite%208-purple.svg)](https://vitejs.dev/)
 [![Styling](https://img.shields.io/badge/Styling-Tailwind%20CSS%20v4-teal.svg)](https://tailwindcss.com/)
 [![Animation](https://img.shields.io/badge/Motion-GSAP%20%2B%20Motion%20%2B%20OGL-cyan.svg)](https://motion.dev/)
-[![Security](https://img.shields.io/badge/Security-OWASP%20Hardened%20%2B%20CSP-green.svg#-enterprise-grade-security--owasp-hardening)
+[![Security](https://img.shields.io/badge/Security-OWASP%20Hardened%20%2B%20CSP-green.svg)](#-enterprise-grade-security--owasp-hardening)
 [![Privacy](https://img.shields.io/badge/Privacy-Zero%20External%20Telemetry-darkgreen.svg)](#-privacy-first-philosophy)
 
 </div>
@@ -23,6 +23,7 @@
 ## 🍃 Table of Contents
 
 <details>
+
 <summary><strong>Explore the README</strong></summary>
 
 - [🍃 Product Overview](#-product-overview)
@@ -85,7 +86,7 @@ The screen is only a tool.
 
 ### 🎯 Species Milestones — 15 Popular Findable Flora Checklist
 
-*Satisfied with photographic proof.*
+**Satisfied with photographic proof.**
 
 ![Species Milestones](./public/screenshots/species_milestones.png)
 
@@ -114,29 +115,21 @@ Built specifically for the global open-source community, NatureQuest introduces 
 - **100% Offline Audio Synthesis:** Powered entirely by the **Web Audio API** (`AudioContext`, `BiquadFilterNode`, `GainNode`, `OscillatorNode`) without downloading any external MP3 files or audio streams.
 
 - **Parametric Sound Nodes:**
-
   - **Canopy Wind:** Low-frequency white noise generator shaped through a sweeping lowpass biquad filter and modulated by a sinusoidal Low-Frequency Oscillator (LFO).
-
   - **Rain Drops:** Brown/pink noise burst emulation filtered through resonant bandpass nodes.
-
   - **Babbling Brook:** Fluid stochastic pink noise modulated across multi-stage bandpass resonance filters.
-
   - **Summer Crickets:** Dual high-frequency sine oscillators ($4500\text{ Hz}$ & $4550\text{ Hz}$) modulated at a rapid rhythm simulating biological cicada stridulation.
-
   - **Morning Songbirds:** Stochastic exponential chirp sweeps generated algorithmically using frequency-ramped sine waves.
 
-- **Interactive Preset Mixer:** Switch instantly between *Canopy Breeze*, *Misty Rainforest*, *Babbling Creek*, and *Summer Dusk*, or adjust individual volume faders in real time.
+- **Interactive Preset Mixer:** Switch instantly between **Canopy Breeze**, **Misty Rainforest**, **Babbling Creek**, and **Summer Dusk**, or adjust individual volume faders in real time.
 
 ---
 
 ### 🔬 2. Optical Botanical HUD Scanner & Chlorophyll Contrast Filter
 
 - **Interactive Multi-Filter Optics:** Specimen inspector equipped with an SVG reticle crosshair, coordinate tracking, and on-the-fly digital color spectrum filters:
-
   - **Standard Spectrum:** Natural daylight balanced optical view.
-
   - **Chlorophyll Contrast:** High-contrast green wavelength isolation filter mimicking laboratory plant health NDVI sensors.
-
   - **Venation Topology:** Inverted monochrome edge-enhancement filter designed to inspect secondary and tertiary leaf venation architecture.
 
 - **Morphological Diagnostic Stats:** Live telemetry displaying diagnostic bounding boxes, aspect ratios, estimated surface area, and vascular complexity index.
@@ -147,9 +140,9 @@ Built specifically for the global open-source community, NatureQuest introduces 
 
 - **Evolutionary Botanical Dendrogram:** Implements the modern **APG IV (Angiosperm Phylogeny Group IV)** taxonomic framework.
 
-- **Lineage Navigation:** Traces plants across geological deep time:
+- **Lineage Navigation:** Traces plants across geological deep time.
 
-  **Evolutionary Timeline**
+**Evolutionary Timeline**
 
 ```text
 PLANTAE
@@ -163,7 +156,8 @@ TRACHEOPHYTES
         │                ~319 Million Years Ago
         │
         └──────────────► ANGIOSPERMS
-                         ~135 Million Years Ago ```text
+                         ~135 Million Years Ago
+```
 
 - **Dynamic Specimen Matching:** Automatically correlates the user's recorded Field Codex specimens against evolutionary clades, indicating which ancestral plant families they have verified in the wild.
 
@@ -236,7 +230,6 @@ A curated target checklist designed for outdoor exploration. Milestones are **un
 - **Calendar-Synchronized Routines:** Rotates automatically each morning based on local calendar dates.
 
 - **Day-of-Week Focus Themes:**
-
   - **Sunday:** Canopy Skywatch & Tall Flora
   - **Monday:** Sprout Emergence & Young Shoots
   - **Tuesday:** Living Textures & Tree Bark
@@ -349,3 +342,4 @@ NatureQuest has been audited and secured against modern web vulnerabilities and 
         │
         ▼
 [Local Ollama Multimodal Daemon (127.0.0.1:11434)] ──► Zero External Egress
+```
