@@ -7,6 +7,13 @@ import {
 import { getTodayTask } from '../data/dailyTasks';
 import MaskedHeading from './MaskedHeading';
 import TrueFocus from './TrueFocus';
+import ElectricLogo from './ElectricLogo';
+
+const NATURE_EMBLEMS = [
+  { id: 'leaf', label: 'Flora', icon: '🌿', src: '/nature-leaf.svg', title: 'Bio-Electric Leaf' },
+  { id: 'tree', label: 'Arbor', icon: '🌲', src: '/nature-tree.svg', title: 'Ancient Canopy' },
+  { id: 'compass', label: 'Nav', icon: '🧭', src: '/nature-compass.svg', title: 'Expedition Rose' },
+];
 
 export default function FieldStationView({
   activeMission,
@@ -19,6 +26,7 @@ export default function FieldStationView({
   onRecordActivity
 }) {
   const todayTask = getTodayTask();
+  const [selectedEmblem, setSelectedEmblem] = useState(NATURE_EMBLEMS[0].src);
   const [completedToday, setCompletedToday] = useState(() => {
     try {
       return localStorage.getItem(`nq_daily_${todayTask.dateKey}`) === 'true';
@@ -64,75 +72,120 @@ export default function FieldStationView({
         <div className="absolute -top-20 -right-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 right-1/3 w-80 h-80 bg-[#123a27]/40 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 max-w-2xl">
-          <span className="text-[10px] font-mono font-black uppercase tracking-widest text-[#91b79a] bg-[#123a27]/90 px-3.5 py-1 rounded-full border border-[#315c3b]/60 inline-flex items-center gap-1.5 mb-3.5 shadow-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            FIELD STATION
-          </span>
+        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
+          <div className="max-w-2xl w-full">
+            <span className="text-[10px] font-mono font-black uppercase tracking-widest text-[#91b79a] bg-[#123a27]/90 px-3.5 py-1 rounded-full border border-[#315c3b]/60 inline-flex items-center gap-1.5 mb-3.5 shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              FIELD STATION
+            </span>
 
-          <div className="mb-4">
-            <MaskedHeading
-              tag="h1"
-              text="Discover what is growing around you."
-              src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=2000&q=85"
-              align="left"
-              weight={900}
-              tracking={-0.02}
-              lineHeight={1.12}
-              parallax={28}
-              drift={14}
-              brightness={1.2}
-              saturation={1.35}
-              reveal="rise"
-              trigger="view"
-              duration={1.1}
-              className="text-3xl sm:text-5xl lg:text-[3.25rem] font-black tracking-tight leading-[1.12] drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]"
-            />
+            <div className="mb-4">
+              <MaskedHeading
+                tag="h1"
+                text="Discover what is growing around you."
+                src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=2000&q=85"
+                align="left"
+                weight={900}
+                tracking={-0.02}
+                lineHeight={1.12}
+                parallax={28}
+                drift={14}
+                brightness={1.2}
+                saturation={1.35}
+                reveal="rise"
+                trigger="view"
+                duration={1.1}
+                className="text-3xl sm:text-5xl lg:text-[3.25rem] font-black tracking-tight leading-[1.12] drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]"
+              />
+            </div>
+
+            <p className="text-sm sm:text-base text-[#d8c8a8] font-sans leading-relaxed mb-7 max-w-xl">
+              Scan a plant you find outdoors, learn what you can observe, and turn discoveries into field quests.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3.5">
+              <button
+                onClick={onOpenScanner}
+                className="bg-[#245336] hover:bg-[#2d6844] active:scale-95 text-[#f3f1e7] font-black px-6 py-3.5 rounded-2xl text-xs uppercase tracking-wider flex items-center gap-2.5 shadow-xl shadow-black/40 border border-[#4f8a52]/40 transition-all cursor-pointer"
+                title="Launch optical plant scanner"
+              >
+                <Camera className="w-4 h-4 text-emerald-300 shrink-0" />
+                <TrueFocus
+                  sentence="SCAN THE PLANT"
+                  blurAmount={1.5}
+                  borderColor="#4ade80"
+                  glowColor="rgba(74, 222, 128, 0.7)"
+                  animationDuration={0.45}
+                  pauseBetweenAnimations={0.9}
+                  wordClassName="text-xs font-black tracking-wider text-[#f3f1e7]"
+                />
+              </button>
+
+              <label className="bg-[#0b1f16]/90 hover:bg-[#123a27] text-[#f3f1e7] border border-[#315c3b]/50 px-5 py-3.5 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer">
+                <Upload className="w-4 h-4 text-[#91b79a]" />
+                <span>UPLOAD PHOTO</span>
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  className="hidden" 
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f && onSelectFile) onSelectFile(f);
+                  }}
+                />
+              </label>
+
+              <button
+                onClick={() => onNavigate('quests')}
+                className="bg-[#0b1f16]/90 hover:bg-[#123a27] text-[#f3f1e7] border border-[#315c3b]/50 px-6 py-3.5 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer"
+              >
+                <Target className="w-4 h-4 text-[#91b79a]" />
+                <span>VIEW QUESTS</span>
+              </button>
+            </div>
           </div>
 
-          <p className="text-sm sm:text-base text-[#d8c8a8] font-sans leading-relaxed mb-7 max-w-xl">
-            Scan a plant you find outdoors, learn what you can observe, and turn discoveries into field quests.
-          </p>
+          {/* Bioluminescent Electric Nature Emblem Showcase */}
+          <div className="hidden lg:flex flex-col items-center justify-center shrink-0 w-64 xl:w-72 relative">
+            <div className="w-60 h-60 xl:w-64 xl:h-64 relative rounded-3xl bg-[#06180f]/80 border border-[#2d5a38]/60 p-2 shadow-2xl backdrop-blur-md overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/10 via-transparent to-emerald-950/30 pointer-events-none" />
+              <div className="w-full h-full relative cursor-crosshair">
+                <ElectricLogo
+                  src={selectedEmblem}
+                  color="#bbf7d0"
+                  glowColor="#22c55e"
+                  scale={0.72}
+                  strands={4}
+                  bend={0.65}
+                  crackle={1.4}
+                  arcs={1}
+                  speed={2.2}
+                  interactive={true}
+                />
+              </div>
+            </div>
 
-          <div className="flex flex-wrap items-center gap-3.5">
-            <button
-              onClick={onOpenScanner}
-              className="bg-[#245336] hover:bg-[#2d6844] active:scale-95 text-[#f3f1e7] font-black px-6 py-3.5 rounded-2xl text-xs uppercase tracking-wider flex items-center gap-2.5 shadow-xl shadow-black/40 border border-[#4f8a52]/40 transition-all cursor-pointer"
-              title="Launch optical plant scanner"
-            >
-              <Camera className="w-4 h-4 text-emerald-300 shrink-0" />
-              <TrueFocus
-                sentence="SCAN THE PLANT"
-                blurAmount={1.5}
-                borderColor="#4ade80"
-                glowColor="rgba(74, 222, 128, 0.7)"
-                animationDuration={0.45}
-                pauseBetweenAnimations={0.9}
-                wordClassName="text-xs font-black tracking-wider text-[#f3f1e7]"
-              />
-            </button>
-
-            <label className="bg-[#0b1f16]/90 hover:bg-[#123a27] text-[#f3f1e7] border border-[#315c3b]/50 px-5 py-3.5 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer">
-              <Upload className="w-4 h-4 text-[#91b79a]" />
-              <span>UPLOAD PHOTO</span>
-              <input 
-                type="file" 
-                accept="image/*" 
-                className="hidden" 
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f && onSelectFile) onSelectFile(f);
-                }}
-              />
-            </label>
-
-            <button
-              onClick={() => onNavigate('quests')}
-              className="bg-[#0b1f16]/90 hover:bg-[#123a27] text-[#f3f1e7] border border-[#315c3b]/50 px-6 py-3.5 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer"
-            >
-              <Target className="w-4 h-4 text-[#91b79a]" />
-              <span>VIEW QUESTS</span>
-            </button>
+            {/* Emblem Switcher Pills */}
+            <div className="mt-3 flex items-center gap-1.5 p-1 rounded-2xl bg-[#071910]/90 border border-[#234b2f]/80 backdrop-blur-md shadow-lg">
+              {NATURE_EMBLEMS.map(emblem => {
+                const isActive = selectedEmblem === emblem.src;
+                return (
+                  <button
+                    key={emblem.id}
+                    onClick={() => setSelectedEmblem(emblem.src)}
+                    title={emblem.title}
+                    className={`px-2.5 py-1 rounded-xl text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                      isActive 
+                        ? 'bg-emerald-600/90 text-white shadow-md shadow-emerald-900/50' 
+                        : 'text-[#91b79a] hover:text-[#f3f1e7] hover:bg-[#103420]'
+                    }`}
+                  >
+                    <span>{emblem.icon}</span>
+                    <span>{emblem.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>

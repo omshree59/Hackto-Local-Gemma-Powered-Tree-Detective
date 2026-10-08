@@ -1,10 +1,7 @@
-import React from 'react';
-import { 
-  Leaf, Camera, Upload, Zap, Eye, RefreshCw, 
-  ShieldCheck, AlertTriangle
-} from 'lucide-react';
+import { Camera, Upload, Zap, Eye, RefreshCw } from 'lucide-react';
 import clsx from 'clsx';
 import { SAMPLE_TEST_PLANTS } from '../data/natureData';
+import ElectricLogo from './ElectricLogo';
 
 export default function PlantScoutView({
   onOpenScanner,
@@ -98,8 +95,20 @@ export default function PlantScoutView({
             </div>
           ) : (
             <div className="flex flex-col items-center gap-4 max-w-md">
-              <div className="w-16 h-16 rounded-3xl bg-[#0a2015] border border-[#1e3f2b] text-emerald-400 flex items-center justify-center shadow-inner">
-                <Leaf className="w-8 h-8" />
+              <div className="w-28 h-28 relative rounded-3xl bg-[#0a2015] border border-[#1e3f2b] p-1 shadow-inner overflow-hidden cursor-crosshair group">
+                <div className="absolute inset-0 bg-emerald-500/10 rounded-full blur-xl pointer-events-none group-hover:bg-emerald-400/20 transition-all duration-300" />
+                <ElectricLogo
+                  src="/nature-leaf.svg"
+                  color="#bbf7d0"
+                  glowColor="#22c55e"
+                  scale={0.76}
+                  strands={4}
+                  bend={0.6}
+                  crackle={1.3}
+                  arcs={1}
+                  speed={2.2}
+                  interactive={true}
+                />
               </div>
 
               <div>
