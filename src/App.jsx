@@ -577,6 +577,7 @@ Never claim absolute certainty. Do not use asterisks or hashtags in values. Do n
           activeMission={activeMission}
           onStartQuest={handleStartQuest}
           onOpenScanner={() => setCameraModalOpen(true)}
+          onOpenSoundscape={() => setSoundscapeModalOpen(true)}
         />
 
         {/* Mobile Slide-out Drawer */}
@@ -861,6 +862,7 @@ Never claim absolute certainty. Do not use asterisks or hashtags in values. Do n
       {/* Procedural Web Audio Soundscape Synthesizer Modal */}
       {soundscapeModalOpen && (
         <SoundscapeModal
+          isOpen={soundscapeModalOpen}
           onClose={() => setSoundscapeModalOpen(false)}
         />
       )}

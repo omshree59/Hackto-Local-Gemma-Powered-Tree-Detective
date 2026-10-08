@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Camera, Menu, X, Award, Flame, ArrowRight, ChevronDown, Volume2, GitPullRequest, FileText } from 'lucide-react';
 import ParticleText from './ParticleText';
 import TrueFocus from './TrueFocus';
+import { soundEngine } from '../utils/soundEngine';
 
 const PAGE_TITLES = {
   'station': 'Field Station',
@@ -47,6 +48,11 @@ export default function TopNav({
 }) {
   const [tierPopoverOpen, setTierPopoverOpen] = useState(false);
   const [streakPopoverOpen, setStreakPopoverOpen] = useState(false);
+  const [isSoundPlaying, setIsSoundPlaying] = useState(soundEngine.isPlaying);
+
+  useEffect(() => {
+    return soundEngine.subscribe(setIsSoundPlaying);
+  }, []);
 
   const xpProgress = xp % 200;
   const xpRemaining = 200 - xpProgress;
@@ -121,12 +127,16 @@ export default function TopNav({
           {onOpenSoundscape && (
             <button
               onClick={onOpenSoundscape}
-              className="hidden md:flex items-center gap-1.5 bg-[#091b12]/90 hover:bg-[#102d1f] active:scale-95 border border-[#1e3f2b] hover:border-emerald-500/60 px-2.5 py-1.5 rounded-2xl font-mono transition-all cursor-pointer group"
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-2xl font-mono transition-all cursor-pointer group active:scale-95 ${
+                isSoundPlaying
+                  ? 'bg-emerald-950/90 border border-emerald-400 text-emerald-300 shadow-[0_0_12px_rgba(74,222,128,0.5)]'
+                  : 'bg-[#091b12]/90 hover:bg-[#102d1f] border border-[#1e3f2b] hover:border-emerald-500/60 text-[#91b79a]'
+              }`}
               title="Bio-Acoustic Nature Soundscape Engine (Offline Synthesizer)"
             >
-              <Volume2 className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-bold text-[#91b79a] group-hover:text-emerald-200 uppercase tracking-wider">
-                Soundscape
+              <Volume2 className={`w-3.5 h-3.5 text-emerald-400 ${isSoundPlaying ? 'animate-pulse' : 'group-hover:scale-110'} transition-transform`} />
+              <span className="text-[10px] font-bold uppercase tracking-wider hidden xs:inline">
+                {isSoundPlaying ? 'Audio ON' : 'Soundscape'}
               </span>
             </button>
           )}

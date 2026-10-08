@@ -1,11 +1,13 @@
+import { useState, useEffect } from 'react';
 import { 
   Compass, Leaf, Target, Footprints, BookOpen, 
   Award, Activity, Book, FileText, Cpu, Settings, 
-  ChevronLeft, ChevronRight, Camera, Play
+  ChevronLeft, ChevronRight, Camera, Play, Volume2
 } from 'lucide-react';
 import clsx from 'clsx';
 import TrueFocus from './TrueFocus';
 import RotatingText from './RotatingText';
+import { soundEngine } from '../utils/soundEngine';
 
 const NAV_GROUPS = [
   {
@@ -126,8 +128,15 @@ export default function Sidebar({
   historyCount = 0,
   activeMission,
   onStartQuest,
-  onOpenScanner
+  onOpenScanner,
+  onOpenSoundscape
 }) {
+  const [isSoundPlaying, setIsSoundPlaying] = useState(soundEngine.isPlaying);
+
+  useEffect(() => {
+    return soundEngine.subscribe(setIsSoundPlaying);
+  }, []);
+
   const xpInTier = xp % 200;
   const xpPct = Math.min((xpInTier / 200) * 100, 100);
 
@@ -392,7 +401,28 @@ export default function Sidebar({
       </div>
 
       {/* 3. Sleek, Non-Obtrusive Pinned Footer */}
-      <div className="px-3 py-2.5 border-t border-[#1e3f2b]/40 bg-[#06150e] shrink-0 text-center">
+      <div className="px-3 py-2.5 border-t border-[#1e3f2b]/40 bg-[#06150e] shrink-0 text-center space-y-2">
+        {onOpenSoundscape && !collapsed && (
+          <button
+            onClick={onOpenSoundscape}
+            className={`w-full py-2 px-3 rounded-xl border flex items-center justify-between text-xs font-mono transition-all cursor-pointer ${
+              isSoundPlaying 
+                ? 'bg-emerald-950/90 border-emerald-500/70 text-emerald-300 shadow-[0_0_12px_rgba(74,222,128,0.35)]' 
+                : 'bg-[#091e13] hover:bg-[#0f2c1c] border-[#1e3f2b] text-[#91b79a] hover:text-[#f3f1e7]'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <Volume2 className={`w-3.5 h-3.5 text-emerald-400 ${isSoundPlaying ? 'animate-pulse' : ''}`} />
+              <span className="font-bold">Soundscape</span>
+            </div>
+            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+              isSoundPlaying ? 'bg-emerald-500 text-black' : 'bg-[#123a27] text-emerald-300'
+            }`}>
+              {isSoundPlaying ? 'ACTIVE' : 'MUTED'}
+            </span>
+          </button>
+        )}
+
         {!collapsed ? (
           <div className="flex items-center justify-between text-[9px] font-mono text-emerald-400/80">
             <span className="flex items-center gap-1.5 glow-text-emerald-sm">
@@ -403,6 +433,19 @@ export default function Sidebar({
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2">
+            {onOpenSoundscape && (
+              <button
+                onClick={onOpenSoundscape}
+                className={`p-2 rounded-xl border cursor-pointer transition-all ${
+                  isSoundPlaying 
+                    ? 'bg-emerald-950 border-emerald-400 text-emerald-300 shadow-md animate-pulse' 
+                    : 'bg-[#091e13] hover:bg-[#0f2c1c] border-[#1e3f2b] text-[#91b79a]'
+                }`}
+                title="Bio-Acoustic Nature Soundscape Engine"
+              >
+                <Volume2 className="w-4 h-4 text-emerald-400" />
+              </button>
+            )}
             {onOpenScanner && (
               <button
                 onClick={onOpenScanner}
