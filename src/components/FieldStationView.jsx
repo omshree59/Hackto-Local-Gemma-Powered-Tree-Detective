@@ -126,7 +126,7 @@ export default function FieldStationView({
                 <span>UPLOAD PHOTO</span>
                 <input 
                   type="file" 
-                  accept="image/*" 
+                  accept="image/jpeg,image/png,image/webp" 
                   className="hidden" 
                   onChange={(e) => {
                     const f = e.target.files?.[0];

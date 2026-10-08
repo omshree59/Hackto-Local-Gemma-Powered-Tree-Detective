@@ -21,6 +21,10 @@ export function cleanAiText(input) {
     .replace(/_{1,3}(.*?)_{1,3}/g, '$1')
     // Remove backticks (`code`)
     .replace(/`{1,3}(.*?)`{1,3}/g, '$1')
+    // Sanitize any script, iframe, or dangerous HTML injection attempts
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+    .replace(/<[^>]+>/g, '') // Strip remaining raw HTML tags
     // Clean excess spaces
     .replace(/[ \t]+/g, ' ')
     .trim();

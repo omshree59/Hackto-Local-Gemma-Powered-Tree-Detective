@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
-import { Leaf, Plus, Camera, CalendarDays, ArrowRight, Eye, X, Check, Image as ImageIcon } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Leaf, Plus, Camera, CalendarDays, ArrowRight, Eye, X, Check } from 'lucide-react';
 import clsx from 'clsx';
+import { validateUploadedImage, sanitizeInputString } from '../utils/security';
 
 export default function MyPlantsView({ history, onNavigate, onUpdateHistory, onRecordActivity }) {
   const [selectedPlant, setSelectedPlant] = useState(null);
@@ -37,9 +38,16 @@ export default function MyPlantsView({ history, onNavigate, onUpdateHistory, onR
     setSelectedPlant(newPlant);
   };
 
-  const handleImageSelect = (e) => {
+  const handleImageSelect = async (e) => {
     const file = e.target.files?.[0];
     if (file) {
+      const validation = await validateUploadedImage(file);
+      if (!validation.valid) {
+        alert(validation.error || 'Invalid file format. Please upload JPG, PNG, or WEBP under 8MB.');
+        if (e.target) e.target.value = '';
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setAttachedImage(reader.result);
@@ -50,7 +58,9 @@ export default function MyPlantsView({ history, onNavigate, onUpdateHistory, onR
 
   const handleAddJournalEntry = (e, plant) => {
     e.preventDefault();
-    const note = e.target.note.value;
+    const rawNote = e.target.note.value;
+    if (!rawNote) return;
+    const note = sanitizeInputString(rawNote.trim());
     if (!note) return;
     
     const photoToSave = attachedImage || plant.image;
@@ -184,7 +194,7 @@ export default function MyPlantsView({ history, onNavigate, onUpdateHistory, onR
           <input 
             type="file" 
             ref={fileInputRef} 
-            accept="image/*" 
+            accept="image/jpeg,image/png,image/webp" 
             className="hidden" 
             onChange={handleImageSelect} 
           />

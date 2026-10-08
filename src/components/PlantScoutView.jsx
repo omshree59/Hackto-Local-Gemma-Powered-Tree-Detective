@@ -134,7 +134,7 @@ export default function PlantScoutView({
                   <span>CHOOSE LOCAL IMAGE</span>
                   <input 
                     type="file" 
-                    accept="image/*" 
+                    accept="image/jpeg,image/png,image/webp" 
                     className="hidden" 
                     onChange={(e) => {
                       const f = e.target.files?.[0];

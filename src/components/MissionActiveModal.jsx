@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { 
   Compass, CheckCircle, Pause, Play, X, EyeOff, ShieldAlert, 
-  ListChecks, Camera, Upload, RefreshCw, AlertTriangle, Check, 
+  ListChecks, Camera, Upload, AlertTriangle, 
   RotateCcw, Sparkles, Lock 
 } from 'lucide-react';
 import clsx from 'clsx';
 import { cleanAiText } from '../utils/textCleaner';
+import { validateUploadedImage } from '../utils/security';
 
 export default function MissionActiveModal({
   mission,
@@ -30,23 +31,6 @@ export default function MissionActiveModal({
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  useEffect(() => {
-    let timer = null;
-    if (isRunning && !isPrepPhase) {
-      timer = setInterval(() => {
-        setSecondsElapsed(prev => prev + 1);
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [isRunning, isPrepPhase]);
-
-  // Clean up camera hardware on unmount
-  useEffect(() => {
-    return () => {
-      stopCameraHardware();
-    };
-  }, []);
-
   const stopCameraHardware = () => {
     if (streamRef.current) {
       try {
@@ -63,6 +47,23 @@ export default function MissionActiveModal({
     }
     setIsCameraActive(false);
   };
+
+  useEffect(() => {
+    let timer = null;
+    if (isRunning && !isPrepPhase) {
+      timer = setInterval(() => {
+        setSecondsElapsed(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isRunning, isPrepPhase]);
+
+  // Clean up camera hardware on unmount
+  useEffect(() => {
+    return () => {
+      stopCameraHardware();
+    };
+  }, []);
 
   const startCamera = async () => {
     stopCameraHardware();
@@ -109,10 +110,23 @@ export default function MissionActiveModal({
     verifyProofWithAi(dataUrl);
   };
 
-  const handleFileUpload = (e) => {
+  const handleFileUpload = async (e) => {
     stopCameraHardware();
     const file = e.target.files?.[0];
     if (file) {
+      const validation = await validateUploadedImage(file);
+      if (!validation.valid) {
+        setVerificationResult({
+          isCorrect: false,
+          confidence: 'Low',
+          headline: 'Upload Validation Failed',
+          feedback: validation.error || 'The uploaded file is not a valid image format.',
+          detectedFeatures: ['Invalid or corrupted file structure']
+        });
+        if (e.target) e.target.value = '';
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setProofImage(reader.result);
@@ -426,7 +440,7 @@ Never use asterisks or hashtags. Return only valid raw JSON.`;
         <input 
           type="file" 
           ref={fileInputRef} 
-          accept="image/*" 
+          accept="image/jpeg,image/png,image/webp" 
           className="hidden" 
           onChange={handleFileUpload} 
         />

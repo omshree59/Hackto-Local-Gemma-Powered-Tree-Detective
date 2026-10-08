@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import NatureBackground from './components/NatureBackground';
 import TopNav from './components/TopNav';
 import Sidebar from './components/Sidebar';
@@ -24,12 +24,11 @@ import MissionActiveModal from './components/MissionActiveModal';
 import ToastContainer from './components/ToastContainer';
 
 import { 
-  INITIAL_PLANTS, 
   INITIAL_QUESTS, 
-  CURATED_TRAILS, 
-  SAMPLE_TEST_PLANTS 
+  CURATED_TRAILS 
 } from './data/natureData';
 import { cleanAiText } from './utils/textCleaner';
+import { validateUploadedImage, createRateLimiter } from './utils/security';
 
 export default function App() {
   // One-time auto-reset stale cached demo data from older iterations to true 0 defaults
@@ -175,9 +174,10 @@ export default function App() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Toast Queue
+  // Toast Queue & Security Rate Limiter
   const [toasts, setToasts] = useState([]);
   const hiddenFileInputRef = useRef(null);
+  const inferenceLimiterRef = useRef(createRateLimiter(2, 5000));
 
   const level = Math.floor(xp / 200) + 1;
 
@@ -209,17 +209,18 @@ export default function App() {
       } else {
         setOllamaStatus(prev => ({ ...prev, connected: false, modelReady: false }));
       }
-    } catch (err) {
+    } catch {
       setOllamaStatus(prev => ({ ...prev, connected: false, modelReady: false }));
     }
   };
 
   useEffect(() => {
-    checkOllamaHealth();
+    const initialTimer = setTimeout(checkOllamaHealth, 0);
     const timer = setInterval(checkOllamaHealth, 4000);
     const handleFocus = () => checkOllamaHealth();
     window.addEventListener('focus', handleFocus);
     return () => {
+      clearTimeout(initialTimer);
       clearInterval(timer);
       window.removeEventListener('focus', handleFocus);
     };
@@ -233,12 +234,21 @@ export default function App() {
     }, 3800);
   };
 
-  const handleSelectFile = (file) => {
+  const handleSelectFile = async (file) => {
     if (!file) {
       setSelectedFilePreview(null);
       setSelectedFileRaw(null);
       return;
     }
+
+    // Security validation (MIME, Magic Bytes, Size, Traversal check)
+    const validation = await validateUploadedImage(file);
+    if (!validation.valid) {
+      addToast(validation.error || 'Invalid or untrusted file.', 'error');
+      setErrorMsg(validation.error || 'File validation failed.');
+      return;
+    }
+
     // Guarantee camera is closed and never turns on when uploading from local device
     setCameraModalOpen(false);
     setErrorMsg('');
@@ -380,21 +390,24 @@ Never claim absolute certainty. Do not use asterisks or hashtags in values. Do n
     }
   };
 
-  const handleTriggerAnalyze = () => {
+  const handleTriggerAnalyze = async () => {
     if (!selectedFileRaw) {
       setErrorMsg('Please select or capture a plant photograph first.');
       return;
     }
-    
-    // Smart Image Quality Check
-    if (selectedFileRaw.type && !selectedFileRaw.type.startsWith('image/')) {
-      addToast('Unsupported format. Please upload an image file.', 'error');
-      setErrorMsg(`Unsupported format: ${selectedFileRaw.type}`);
+
+    // Rate Limiting Protection against rapid inference spamming / API flooding
+    if (!inferenceLimiterRef.current()) {
+      addToast('Inference rate limit reached. Please wait a few seconds before trying again.', 'error');
+      setErrorMsg('Rate limit active. Please pause briefly before submitting another request.');
       return;
     }
-    if (selectedFileRaw.size > 8 * 1024 * 1024) {
-      addToast('Image too large. Please use a smaller photo (under 8MB).', 'error');
-      setErrorMsg('Image size exceeds 8MB limit.');
+    
+    // Deep Security Validation (MIME, Magic Bytes, Size, Traversal check)
+    const validation = await validateUploadedImage(selectedFileRaw);
+    if (!validation.valid) {
+      addToast(validation.error || 'Invalid or untrusted file.', 'error');
+      setErrorMsg(validation.error || 'File validation failed.');
       return;
     }
 
@@ -768,12 +781,13 @@ Never claim absolute certainty. Do not use asterisks or hashtags in values. Do n
       {/* Hidden file input */}
       <input 
         type="file" 
-        accept="image/*" 
+        accept="image/jpeg,image/png,image/webp" 
         ref={hiddenFileInputRef} 
         className="hidden" 
         onChange={(e) => {
           const f = e.target.files?.[0];
           if (f) handleSelectFile(f);
+          if (e.target) e.target.value = '';
         }}
       />
 
